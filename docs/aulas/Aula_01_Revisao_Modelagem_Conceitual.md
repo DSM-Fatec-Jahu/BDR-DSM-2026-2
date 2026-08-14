@@ -10,6 +10,7 @@
 
 Ao final desta aula você deverá ser capaz de:
 
+- Diferenciar dado, informação e conhecimento, situando o papel da modelagem de dados nesse processo;
 - Identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos;
 - Aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual;
 - Reconhecer casos especiais de relacionamento — auto-relacionamento e relacionamento ternário;
@@ -23,6 +24,14 @@ Ao final desta aula você deverá ser capaz de:
 ```mermaid
 flowchart LR
     ROOT(("Modelo Entidade-<br/>Relacionamento (MER)"))
+
+    ROOT --> DIC
+    subgraph DIC["🔢 Dado → Informação<br/>→ Conhecimento"]
+        direction TB
+        DIC1["Dado = fato bruto"]
+        DIC2["Informação = dado<br/>com contexto"]
+        DIC3["Conhecimento = padrão<br/>acumulado"]
+    end
 
     ROOT --> ENT
     subgraph ENT["🧱 Entidades"]
@@ -63,6 +72,28 @@ flowchart LR
         GE2["Total/Parcial ×<br/>Exclusiva/Sobreposta"]
     end
 ```
+
+---
+
+## 🔢 Dado, Informação e Conhecimento
+
+Antes de desenhar qualquer diagrama, vale revisar uma distinção que sustenta tudo o que vem a seguir: o que exatamente um banco de dados armazena?
+
+Um **dado** é um fato bruto, isolado, sem contexto — por exemplo, o número `2026001`. Sozinho, ele não diz nada. Quando esse número ganha contexto — *"matrícula 2026001 pertence ao aluno João Silva"* — temos uma **informação**: algo interpretável, que já orienta uma decisão. O **conhecimento** surge quando acumulamos e cruzamos informações ao longo do tempo, revelando padrões — por exemplo, perceber que alunos matriculados no primeiro semestre letivo têm uma taxa de evasão maior que os do segundo.
+
+```mermaid
+flowchart LR
+    A["🔢 Dado
+(fato bruto, sem contexto)
+Ex: 2026001"] --> B["📊 Informação
+(dado + contexto)
+Ex: matrícula do aluno João Silva"]
+    B --> C["🧠 Conhecimento
+(informação + experiência acumulada)
+Ex: padrão de evasão por semestre"]
+```
+
+Essa distinção importa porque é exatamente isso que um banco de dados existe para gerenciar: ele armazena **dados**, estruturados de forma que a aplicação consiga transformá-los em **informação** útil para quem consulta — e, com o tempo e a análise adequada, em **conhecimento** para quem decide. A modelagem — o assunto do restante desta aula — é o processo de decidir *como* estruturar esses dados para que essa transformação seja possível, consistente e eficiente.
 
 ---
 
@@ -714,6 +745,11 @@ erDiagram
 
 ## 🃏 Flashcards de Revisão
 
+??? question "Qual a diferença entre dado e informação? Dê um exemplo."
+    Dado é um fato bruto, sem contexto — como o número `2026001` isolado. Informação é
+    o dado interpretado dentro de um contexto que permite tomar decisões — como saber
+    que `2026001` é a matrícula do aluno João Silva.
+
 ??? question "Qual a diferença entre entidade forte e entidade fraca?"
     Uma entidade forte existe por si mesma (ex.: Aluno). Uma entidade fraca só existe em
     relação a outra entidade — se a entidade da qual depende for removida, ela perde
@@ -822,7 +858,9 @@ Como a FK referencia a própria tabela FUNCIONARIOS, chamá-la de `funcionario_i
 
 ## 📝 Resumo
 
-Nesta aula revisamos os três elementos centrais do Modelo Entidade-Relacionamento —
+Nesta aula revisamos a distinção entre dado, informação e conhecimento, situando a
+modelagem de dados como a etapa que estrutura os dados para que virem informação
+confiável. Revisamos também os três elementos centrais do Modelo Entidade-Relacionamento —
 entidades, atributos e relacionamentos — e como cardinalidade e participação
 descrevem as regras de negócio entre eles, incluindo os casos especiais de
 auto-relacionamento e relacionamento ternário. Vimos a notação Crow's Foot, adotada
