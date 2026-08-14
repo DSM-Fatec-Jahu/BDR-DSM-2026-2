@@ -14,6 +14,50 @@ comportar ao lidar com o repositório, não substitui o julgamento dele.
 > completa, **diga isso explicitamente ao professor** em vez de entregar uma versão
 > resumida, incompleta ou malfeita.
 
+## Convenções de Nomenclatura desta Disciplina
+
+Estas são as **9 regras oficiais** de nomenclatura SQL da disciplina (formalizadas na
+Aula 03 — SQL DDL, `docs/aulas/Aula_03_SQL_DDL.md`, Seção 1). Todo SQL, pseudo-schema
+ou notação de modelo lógico/físico gerado ou revisado neste repositório — em qualquer
+aula, não só na Aula 03 — deve seguir estas regras. Ao criar ou remodelar uma aula que
+contenha exemplos de tabelas/colunas, **verifique a aderência a cada regra abaixo** e,
+sempre que fizer sentido pedagogicamente, **aponte no texto qual regra está sendo
+aplicada** (ex.: "`id_pedido` segue a Regra 5") — isso é o que já fazemos na Aula 03 e
+ajuda o aluno a entender *por que* está aprendendo a nomear dessa forma, não só *que*
+deve nomear assim.
+
+1. **snake_case em tudo** — palavras separadas por underline, nunca espaço, hífen ou
+   camelCase. `data_nascimento`, não `DataNascimento`.
+2. **Minúsculas para nomes criados pelo usuário** — tabelas, colunas, schemas, aliases.
+   Maiúsculas são reservadas às palavras-chave do SQL.
+3. **Palavras reservadas em MAIÚSCULAS** — `SELECT`, `CREATE TABLE`, `NOT NULL`,
+   `PRIMARY KEY` etc., para contraste visual entre linguagem e dado.
+4. **Nomes de tabelas sempre no plural** — `clientes`, `pedidos`, `produtos`, nunca
+   `cliente`, `pedido`, `produto`.
+5. **Chave primária no padrão `id_nome_tabela_singular`**, tipo `BIGINT UNSIGNED
+   AUTO_INCREMENT PRIMARY KEY`. Tabela `clientes` → PK `id_cliente`.
+6. **Chave estrangeira no padrão `tabela_referencia_id`** — nome da tabela referenciada
+   no singular + `_id`, mesmo tipo da PK referenciada (`BIGINT UNSIGNED`). Ordem das
+   palavras se inverte em relação à PK (`id_cliente` → `cliente_id`).
+7. **Chave estrangeira pelo papel semântico quando a entidade referenciada exerce papéis
+   diferentes** — nunca `pessoa1_id`/`pessoa2_id`; use o papel (`cliente_id`,
+   `funcionario_id`, `supervisor_id`).
+8. **Tipos e tamanhos adequados ao dado, não ao que parece mais simples** —
+   `VARCHAR(255)` como padrão defensivo para texto de tamanho imprevisível; dimensionar
+   exatamente quando o domínio é conhecido (CEP, UF, CPF); nunca `FLOAT`/`DOUBLE` para
+   dinheiro — sempre `DECIMAL(p, s)`.
+9. **Toda tabela tem campos de log** — `criado_em`, `atualizado_em` (com `ON UPDATE
+   CURRENT_TIMESTAMP`) e `deletado_em` (soft delete, `NULL` até ser excluído).
+
+> 📌 **Nível conceitual vs. nível de convenção:** aulas de modelagem pura (ex.: Aula 01
+> — MER conceitual) usam entidades no formato clássico de Peter Chen antes de qualquer
+> convenção de nomenclatura SQL ter sido ensinada — isso é esperado e não é uma
+> violação. Já a partir do momento em que uma aula apresenta explicitamente um "modelo
+> lógico" ou schema (pseudo-SQL ou SQL de verdade), as 9 regras acima já deveriam estar
+> refletidas nos nomes usados. Se encontrar um exemplo de modelo lógico/físico que
+> contraria alguma regra, **não corrija silenciosamente** — sinalize ao professor
+> (mesma lógica da regra inegociável no topo deste arquivo).
+
 ## Stack e comandos
 
 - **MkDocs Material** (`mkdocs.yml` na raiz, `docs_dir: docs`)

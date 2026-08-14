@@ -525,6 +525,15 @@ Agora o modelo está completamente na **3FN**. Cada tabela armazena exatamente o
 
 Quando partimos de um MER bem desenhado (como fizemos na Aula 01), a passagem ao modelo lógico segue regras precisas para cada tipo de relacionamento. Este é um processo mecânico — dado o diagrama, o resultado é determinístico.
 
+> 📐 **Convenções de nomenclatura aplicadas a partir daqui:** toda chave primária
+> segue o padrão `id_` + nome da tabela no singular (**Regra 5**), e toda chave
+> estrangeira segue o padrão inverso — nome da tabela referenciada no singular + `_id`
+> (**Regra 6**). Repare que a ordem das palavras se inverte entre PK e FK: isso não é
+> estético, é o que permite distinguir visualmente "quem é dono da linha" de "quem
+> está apontando para outra tabela" só de olhar o nome da coluna. Essas regras — e as
+> outras sete que regem nomenclatura SQL nesta disciplina — são formalizadas por
+> completo na [Aula 03](./Aula_03_SQL_DDL.md#1-convenções-de-nomenclatura-desta-disciplina).
+
 ### 8.1 Regra para Relacionamentos 1:1
 
 Em um relacionamento 1:1, a chave estrangeira pode ir para qualquer um dos dois lados. A decisão se baseia em dois critérios:
@@ -537,19 +546,19 @@ Exemplo — FUNCIONARIO e CRACHA (1:1, participação total dos dois lados):
 
 ```
 FUNCIONARIO (id_funcionario PK, nome, data_admissao)
-CRACHA (id_cracha PK, numero_serie, data_emissao, id_funcionario FK UNIQUE)
+CRACHA (id_cracha PK, numero_serie, data_emissao, funcionario_id FK UNIQUE)
 ```
 
-A constraint `UNIQUE` na FK garante que o relacionamento seja realmente 1:1 no banco de dados — sem ela, a FK permitiria N crachás por funcionário.
+A constraint `UNIQUE` na FK garante que o relacionamento seja realmente 1:1 no banco de dados — sem ela, a FK permitiria N crachás por funcionário. Note que a FK se chama `funcionario_id` (Regra 6) — não `id_funcionario`, que seria o padrão de uma PK (Regra 5), não de uma FK.
 
 Exemplo — PESSOA e CNH (1:1, participação parcial de PESSOA):
 
 ```
 PESSOA (id_pessoa PK, nome, cpf)
-CNH (id_cnh PK, numero_registro, data_validade, id_pessoa FK UNIQUE)
+CNH (id_cnh PK, numero_registro, data_validade, pessoa_id FK UNIQUE)
 ```
 
-A FK fica em CNH (o lado que "depende" de PESSOA), e o UNIQUE garante o 1:1.
+A FK fica em CNH (o lado que "depende" de PESSOA), nomeada `pessoa_id` pela Regra 6, e o UNIQUE garante o 1:1.
 
 ### 8.2 Regra para Relacionamentos 1:N
 
@@ -559,10 +568,10 @@ Exemplo — DEPARTAMENTO (1) e FUNCIONARIO (N):
 
 ```
 DEPARTAMENTO (id_departamento PK, nome, localizacao)
-FUNCIONARIO (id_funcionario PK, nome, salario, id_departamento FK)
+FUNCIONARIO (id_funcionario PK, nome, salario, departamento_id FK)
 ```
 
-`id_departamento` vai para FUNCIONARIO porque um funcionário pode pertencer a apenas um departamento (lado 1), e um departamento tem muitos funcionários (lado N).
+A FK `departamento_id` (Regra 6) vai para FUNCIONARIO porque um funcionário pode pertencer a apenas um departamento (lado 1), e um departamento tem muitos funcionários (lado N).
 
 ### 8.3 Regra para Relacionamentos N:M
 
@@ -577,10 +586,10 @@ Exemplo — ALUNO e DISCIPLINA (N:M) com atributos `nota` e `semestre`:
 ```
 ALUNO (matricula PK, nome, email)
 DISCIPLINA (id_disciplina PK, nome, carga_horaria)
-HISTORICO (matricula PK FK, id_disciplina PK FK, nota, semestre)
+HISTORICO (matricula PK FK, disciplina_id PK FK, nota, semestre)
 ```
 
-A chave primária de HISTORICO é `(matricula, id_disciplina)` — composta pelas duas FKs.
+A chave primária de HISTORICO é `(matricula, disciplina_id)` — composta pelas duas FKs. A FK `disciplina_id` segue a Regra 6; a FK `matricula` mantém o mesmo nome da PK de ALUNO porque, neste exemplo, ALUNO usa a matrícula (uma chave natural) como PK em vez do padrão `id_aluno` — veja a nota sobre chaves naturais ao final desta seção.
 
 ### 8.4 Regra para Entidades Fracas
 
@@ -590,10 +599,10 @@ Exemplo — FUNCIONARIO e DEPENDENTE (entidade fraca):
 
 ```
 FUNCIONARIO (id_funcionario PK, nome, cpf)
-DEPENDENTE (id_funcionario PK FK, nome_dependente PK, parentesco, data_nascimento)
+DEPENDENTE (funcionario_id PK FK, nome_dependente PK, parentesco, data_nascimento)
 ```
 
-A chave primária de DEPENDENTE é `(id_funcionario, nome_dependente)` — o dependente é identificado dentro do contexto do funcionário.
+A chave primária de DEPENDENTE é `(funcionario_id, nome_dependente)` — o dependente é identificado dentro do contexto do funcionário. A FK `funcionario_id` segue a Regra 6, mesmo participando de uma chave composta.
 
 ### 8.5 Regra para Atributos Multivalorados
 
@@ -603,10 +612,20 @@ Exemplo — CLIENTE com atributo multivalorado `telefone`:
 
 ```
 CLIENTE (id_cliente PK, nome, email)
-TELEFONE_CLIENTE (id_cliente PK FK, numero PK, tipo)
+TELEFONE_CLIENTE (cliente_id PK FK, numero PK, tipo)
 ```
 
-A chave primária de TELEFONE_CLIENTE é `(id_cliente, numero)`, pois o número de telefone identifica cada registro dentro do contexto de um cliente.
+A chave primária de TELEFONE_CLIENTE é `(cliente_id, numero)`, pois o número de telefone identifica cada registro dentro do contexto de um cliente. A FK `cliente_id` segue a Regra 6.
+
+> 💡 **Sobre `matricula` como PK de ALUNO (Seção 8.3):** a Regra 5 estabelece
+> `id_tabela` como padrão de chave primária nesta disciplina. `matricula` é uma
+> **chave natural** (um identificador que já existe no mundo real, como um código de
+> barras ou um CPF) em vez de uma chave substituta (*surrogate key*) autoincrementada.
+> Uma chave natural só é uma PK válida quando garante, por si só, unicidade e
+> estabilidade — a matrícula de um aluno nunca muda e nunca se repete. Ainda assim,
+> **nesta disciplina o padrão é sempre a chave substituta `id_tabela`**; trate este
+> exemplo como uma exceção pontual usada para ilustrar o conceito de chave natural, não
+> como uma alternativa livre à Regra 5.
 
 ---
 
@@ -737,15 +756,15 @@ erDiagram
     }
 
     AUTORIA {
-        bigint id_autor FK
-        bigint id_livro FK
+        bigint autor_id FK
+        bigint livro_id FK
         varchar tipo
     }
 
     EMPRESTIMO {
         bigint id_emprestimo PK
-        bigint id_usuario FK
-        bigint id_livro FK
+        bigint usuario_id FK
+        bigint livro_id FK
         date data_retirada
         date data_devolucao
         varchar status
@@ -764,18 +783,21 @@ AUTOR (id_autor PK, nome, nacionalidade)
 
 CATEGORIA (id_categoria PK, nome)
 
-LIVRO (id_livro PK, titulo, isbn, ano, id_categoria FK)
+LIVRO (id_livro PK, titulo, isbn, ano, categoria_id FK)
 
-AUTORIA (id_autor PK FK, id_livro PK FK, tipo)
+AUTORIA (autor_id PK FK, livro_id PK FK, tipo)
   -- PK composta: resolve o N:M entre AUTOR e LIVRO
 
 USUARIO (id_usuario PK, nome, email)
 
-EMPRESTIMO (id_emprestimo PK, id_usuario FK, id_livro FK,
+EMPRESTIMO (id_emprestimo PK, usuario_id FK, livro_id FK,
             data_retirada, data_devolucao, status)
   -- EMPRESTIMO tem PK própria pois registra um evento histórico
   -- Um usuário pode pegar o mesmo livro em momentos diferentes
 ```
+
+> 📐 Todas as FKs acima seguem a Regra 6 (`tabela_id`) — repare que são o espelho das
+> PKs correspondentes (Regra 5, `id_tabela`) com a ordem das palavras invertida.
 
 ---
 
