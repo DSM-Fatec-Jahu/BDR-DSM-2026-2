@@ -1,0 +1,86 @@
+site_name: Banco de Dados e Aplicações — IBD951 (2026/2)
+site_description: Material de aulas, atividades e avaliações de Banco de Dados e Aplicações (IBD951) — Fatec Jahu — 2º Semestre 2026
+site_url: https://gti-fatec-jahu.github.io/BDA-GTI-2026-2/
+repo_url: https://github.com/GTI-Fatec-Jahu/BDA-GTI-2026-2
+repo_name: GTI-Fatec-Jahu/BDA-GTI-2026-2
+edit_uri: edit/main/docs/
+docs_dir: docs
+
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Alternar para modo escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Alternar para modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search:
+      lang: pt
+  - mkdocs_quiz
+
+# IMPORTANTE: o nav é explícito (não há discovery automático de arquivos).
+# Toda aula nova adicionada em docs/aulas/ precisa ganhar uma entrada aqui,
+# na seção correta, ou ela existirá como arquivo mas não aparecerá no site.
+# O pipeline descrito em CLAUDE.md cobre esse passo automaticamente.
+nav:
+  - Início: index.md
+  - Bloco 1 — Modelagem e DDL:
+      - aulas/Aula_01_Introducao_BD.md
+      - aulas/Aula_02_Modelagem_Entidades.md
+      - aulas/Aula_02_Gabarito.md
+      - aulas/Aula_03_Relacionamentos_Cardinalidade.md
+      - aulas/Aula_03_Gabarito.md
+  - Atividades e Avaliações:
+      - atividades/index.md
+      - atividades/Avaliacao_Proficiencia.md
+
+extra:
+  social:
+    - icon: fontawesome/solid/envelope
+      link: mailto:ronan.zenatti@cps.sp.gov.br
