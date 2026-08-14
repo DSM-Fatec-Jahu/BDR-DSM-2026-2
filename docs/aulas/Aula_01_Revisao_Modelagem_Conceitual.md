@@ -1,13 +1,65 @@
 # Aula 01 — Revisão de Modelagem de Dados (Conceitual)
 
-> **IBD015 — Banco de Dados Relacional** · Fatec Jahu · Prof. Ronan Adriel Zenatti
-> [← Voltar ao README](../README.md) · [Próxima Aula →](./Aula_02_Normalizacao.md)
+**Disciplina:** Banco de Dados e Aplicações (IBD951)
+**Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
+**Fatec Jahu — 2º Semestre/2026**
 
 ---
 
-## 📌 Objetivos da Aula
+## 🎯 Objetivos da Aula
 
-Ao final desta aula, você será capaz de identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos. Você também saberá aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual. Adicionalmente, você compreenderá os mecanismos de **generalização e especialização** para modelar hierarquias entre entidades.
+Ao final desta aula você deverá ser capaz de:
+
+- Identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos;
+- Aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual;
+- Compreender os mecanismos de **generalização e especialização** para modelar hierarquias entre entidades.
+
+---
+
+## 🗺️ Mapa Mental da Aula
+
+```mermaid
+flowchart LR
+    ROOT(("Modelo Entidade-<br/>Relacionamento (MER)"))
+
+    ROOT --> ENT
+    subgraph ENT["🧱 Entidades"]
+        direction TB
+        ENT1["Forte"]
+        ENT2["Fraca"]
+    end
+
+    ROOT --> ATR
+    subgraph ATR["🏷️ Atributos"]
+        direction TB
+        ATR1["Simples"]
+        ATR2["Composto"]
+        ATR3["Multivalorado"]
+        ATR4["Derivado"]
+        ATR5["Chave"]
+    end
+
+    ROOT --> REL
+    subgraph REL["🔗 Relacionamentos"]
+        direction TB
+        REL1["Cardinalidade<br/>1:1 · 1:N · N:M"]
+        REL2["Participação<br/>Total · Parcial"]
+    end
+
+    ROOT --> NOT
+    subgraph NOT["📐 Notações"]
+        direction TB
+        NOT1["Peter Chen"]
+        NOT2["Crow's Foot"]
+    end
+
+    ROOT --> GE
+    subgraph GE["🧬 Generalização /<br/>Especialização"]
+        direction TB
+        GE1["Superclasse → Subclasse<br/>(herança)"]
+        GE2["Total/Parcial ×<br/>Exclusiva/Sobreposta"]
+    end
+```
 
 ---
 
@@ -552,76 +604,7 @@ CREATE TABLE produtos_fisicos (
 
 ---
 
-## 9. Diagrama Completo — Exemplo de Sistema Acadêmico
-
-Vamos construir juntos um MER para um sistema acadêmico simplificado, com as seguintes regras de negócio:
-
-- Um **Curso** possui muitas **Disciplinas**, mas cada disciplina pertence a apenas um curso.
-- Um **Professor** pode lecionar várias **Disciplinas**, e uma disciplina pode ser lecionada por vários professores (em semestres diferentes, por exemplo).
-- Um **Aluno** está matriculado em apenas um **Curso**, e um curso possui muitos alunos.
-- Um **Aluno** pode se matricular em várias **Disciplinas**, e cada disciplina pode ter muitos alunos matriculados. Essa matrícula possui uma **nota** associada.
-
-O diagrama abaixo representa esse modelo usando a notação Crow's Foot com Mermaid:
-
-```mermaid
-erDiagram
-    CURSOS {
-        bigint id_curso PK
-        varchar nome
-        int duracao_semestres
-    }
-
-    DISCIPLINAS {
-        bigint id_disciplina PK
-        varchar nome
-        varchar sigla
-        int carga_horaria
-        bigint curso_id FK
-    }
-
-    PROFESSORES {
-        bigint id_professor PK
-        varchar nome
-        varchar email
-        varchar titulacao
-    }
-
-    ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar cpf
-        date data_nascimento
-        bigint curso_id FK
-    }
-
-    MATRICULAS {
-        bigint id_matricula PK
-        bigint aluno_id FK
-        bigint disciplina_id FK
-        decimal nota
-        varchar situacao
-    }
-
-    LECIONA {
-        bigint professor_id FK
-        bigint disciplina_id FK
-        varchar semestre
-    }
-
-    CURSOS ||--o{ DISCIPLINAS : "possui"
-    CURSOS ||--o{ ALUNOS : "possui"
-    ALUNOS ||--o{ MATRICULAS : "realiza"
-    DISCIPLINAS ||--o{ MATRICULAS : "recebe"
-    PROFESSOR }o--o{ DISCIPLINAS : "leciona"
-```
-
-> 📌 **Leitura do diagrama:** a notação `||--o{` significa "um e apenas um para zero ou muitos". Lemos a linha entre CURSO e DISCIPLINA como: *"um Curso possui zero ou muitas Disciplinas, e cada Disciplina pertence a exatamente um Curso"*.
-
-Observe que o relacionamento **N:M** entre PROFESSOR e DISCIPLINA (leciona) e entre ALUNO e DISCIPLINA (matrícula) já aparecem aqui "resolvidos" como entidades/tabelas intermediárias — **LECIONA** e **MATRICULA** — porque o Mermaid usa diretamente a notação lógica. Na modelagem conceitual pura (notação Chen), eles seriam representados como losangos. Em ferramentas profissionais, a distinção é feita de forma similar a esta.
-
----
-
-## 10. Exemplo Prático — Sistema de Streaming (prévia do T1)
+## 9. Exemplo Prático — Sistema de Streaming (prévia do T1)
 
 Como a **Atividade T1** desta disciplina envolve modelar um sistema de streaming integrado, vamos já começar a pensar nas entidades envolvidas. Tente identificar, a partir da descrição abaixo, quais seriam as entidades, seus atributos e relacionamentos — e onde caberia uma generalização ou especialização:
 
@@ -631,7 +614,7 @@ Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclass
 
 ---
 
-## 11. Erros Comuns na Modelagem Conceitual
+## 10. Erros Comuns na Modelagem Conceitual
 
 Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
@@ -655,7 +638,7 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 > *"Uma clínica médica cadastra seus pacientes e médicos. Um médico pode ter várias especialidades. Os pacientes podem agendar consultas com os médicos. Cada consulta ocorre em uma data e horário específicos e gera um prontuário com o diagnóstico e a prescrição."*
 
-**Exercício 2 — Leitura de Diagrama:** analise o diagrama da Seção 9 e responda: é possível que um Aluno exista no banco sem estar associado a nenhum Curso? Justifique sua resposta com base na notação do diagrama.
+**Exercício 2 — Leitura de Diagrama:** analise o diagrama da Seção 6 e responda: é possível que um Aluno exista no banco sem estar associado a nenhum Curso? Justifique sua resposta com base na notação do diagrama.
 
 **Exercício 3 — Modelagem Livre:** escolha um sistema do cotidiano (uma locadora, um pet shop, um restaurante) e crie um MER conceitual com pelo menos 4 entidades, identificando atributos e relacionamentos com suas cardinalidades.
 
@@ -675,10 +658,120 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 ---
 
-> **Próxima aula:** na [Aula 02 — Normalização](./Aula_02_Normalizacao.md), veremos como transformar o modelo conceitual que acabamos de estudar em um modelo lógico, aplicando as Formas Normais para garantir a consistência e eliminar redundâncias.
+## 🃏 Flashcards de Revisão
+
+??? question "Qual a diferença entre entidade forte e entidade fraca?"
+    Uma entidade forte existe por si mesma (ex.: Aluno). Uma entidade fraca só existe em
+    relação a outra entidade — se a entidade da qual depende for removida, ela perde
+    sentido (ex.: Dependente em relação a Funcionário).
+
+??? question "O que é um atributo derivado? Dê um exemplo."
+    É um atributo cujo valor pode ser calculado a partir de outro atributo, em vez de
+    ser armazenado diretamente. Exemplo: `idade`, derivada de `data_nascimento`. Na
+    notação do MER, representa-se com elipse tracejada.
+
+??? question "O que significa a notação `||--o{` em um diagrama Crow's Foot?"
+    Lê-se "um e apenas um para zero ou muitos". O lado com `||` indica participação
+    total (exatamente um), e o lado com `o{` indica participação parcial (zero ou
+    muitos).
+
+??? question "Qual a diferença entre generalização e especialização?"
+    São o mesmo resultado no diagrama (superclasse + subclasses), mas com raciocínios
+    opostos: generalização é bottom-up (parte de entidades específicas e abstrai o que
+    têm em comum); especialização é top-down (parte de uma entidade genérica e a divide
+    em subtipos).
+
+??? question "O que significa uma restrição de especialização 'Total Exclusiva'?"
+    Total = toda instância da superclasse obrigatoriamente pertence a alguma subclasse
+    (não existe instância "genérica"). Exclusiva = cada instância pertence a **no
+    máximo uma** subclasse (as subclasses não se sobrepõem).
+
+??? question "Pegadinha comum: cardinalidade 1:N sempre significa que vai existir 'muitos' registros na prática?"
+    Não. Cardinalidade 1:N significa que **pode** haver muitos — não que sempre haverá.
+    Um Departamento com um único Funcionário ainda é, estruturalmente, uma relação 1:N.
 
 ---
 
-<div align="center">
-  <sub>Fatec Jahu · IBD015 — Banco de Dados Relacional · Prof. Ronan Adriel Zenatti · 2026</sub>
-</div>
+## ✅ Quiz de Fixação
+
+<quiz>
+Quais são os três elementos principais do Modelo Entidade-Relacionamento proposto por Peter Chen?
+- [ ] Tabelas, Colunas e Chaves
+- [x] Entidades, Atributos e Relacionamentos
+- [ ] Classes, Objetos e Métodos
+- [ ] Índices, Views e Triggers
+
+O MER de Peter Chen (1976) é composto por Entidades, Atributos e Relacionamentos — a base de toda modelagem conceitual.
+</quiz>
+
+<quiz>
+Qual notação é adotada nesta disciplina para os diagramas de modelagem?
+- [ ] Notação de Peter Chen (losangos e elipses)
+- [x] Notação Crow's Foot (Pé-de-Galinha)
+- [ ] Notação UML de classes
+- [ ] Não há notação padronizada
+
+A notação Crow's Foot foi escolhida por ser o padrão em ferramentas de mercado como MySQL Workbench e dbdiagram.io, que vocês usarão profissionalmente.
+</quiz>
+
+<quiz>
+Marque todas as alternativas que são exemplos válidos de ATRIBUTO DERIVADO.
+- [x] `idade`, calculada a partir de `data_nascimento`
+- [ ] `cpf` de uma Pessoa
+- [x] `tempo_de_casa`, calculado a partir de `data_admissao`
+- [ ] `nome` de um Produto
+
+Atributos derivados nunca são armazenados diretamente — seu valor sempre pode ser recalculado a partir de outro atributo já existente na entidade.
+</quiz>
+
+<quiz>
+Na generalização de Veículos em Carros, Motos e Caminhões (Total Exclusiva), o que isso implica?
+- [ ] Um veículo pode ser carro e moto ao mesmo tempo
+- [ ] Pode existir um veículo cadastrado sem ser carro, moto ou caminhão
+- [x] Todo veículo é obrigatoriamente um carro, uma moto ou um caminhão, e nunca mais de um tipo
+- [ ] A hierarquia é opcional e pode ser ignorada na modelagem lógica
+
+"Total" garante que não existe veículo "genérico" (toda instância cai em alguma subclasse); "Exclusiva" garante que nenhuma instância pertence a mais de uma subclasse simultaneamente.
+</quiz>
+
+<quiz>
+Um Cliente pode ter feito zero pedidos, mas todo Pedido precisa estar associado a um Cliente. Como se chama, respectivamente, a participação de Cliente e de Pedido nesse relacionamento?
+- [ ] Total e Total
+- [x] Parcial (Cliente) e Total (Pedido)
+- [ ] Total (Cliente) e Parcial (Pedido)
+- [ ] Parcial e Parcial
+
+Cliente participa de forma parcial (pode não ter nenhum pedido) enquanto Pedido participa de forma total (não existe pedido sem cliente associado).
+</quiz>
+
+---
+
+## 📝 Resumo
+
+Nesta aula revisamos os três elementos centrais do Modelo Entidade-Relacionamento —
+entidades, atributos e relacionamentos — e como cardinalidade e participação
+descrevem as regras de negócio entre eles. Vimos a notação Crow's Foot, adotada nesta
+disciplina, e o mecanismo de generalização/especialização para modelar hierarquias com
+herança, incluindo suas quatro combinações de restrição (total/parcial ×
+exclusiva/sobreposta). Também já demos uma prévia do sistema de streaming que será a
+base da Atividade T1. Na próxima aula, esse modelo conceitual vira modelo lógico
+relacional, através da Normalização.
+
+---
+
+## 🏆 Conquista da Aula
+
+!!! success "Selo desbloqueado: 🧭 Explorador(a) de Dados"
+    Você completou a Aula 01 e já domina a leitura e construção de diagramas MER. A
+    próxima parada da Trilha do(a) Modelador(a) de Dados é transformar esse modelo
+    conceitual em um modelo lógico consistente, livre de redundâncias.
+
+---
+
+## 🔗 Navegação
+
+⬅️ Você está na primeira aula · ➡️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md)
+
+---
+
+*Fatec Jahu · IBD951 · Prof. Ronan Adriel Zenatti · 2026*
