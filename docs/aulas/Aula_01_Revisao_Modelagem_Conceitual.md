@@ -1,13 +1,99 @@
 # Aula 01 — Revisão de Modelagem de Dados (Conceitual)
 
-> **IBD015 — Banco de Dados Relacional** · Fatec Jahu · Prof. Ronan Adriel Zenatti
-> [← Voltar ao README](../README.md) · [Próxima Aula →](./Aula_02_Normalizacao.md)
+**Disciplina:** Banco de Dados e Aplicações (IBD951)
+**Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
+**Fatec Jahu — 2º Semestre/2026**
 
 ---
 
-## 📌 Objetivos da Aula
+## 🎯 Objetivos da Aula
 
-Ao final desta aula, você será capaz de identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos. Você também saberá aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual. Adicionalmente, você compreenderá os mecanismos de **generalização e especialização** para modelar hierarquias entre entidades.
+Ao final desta aula você deverá ser capaz de:
+
+- Diferenciar dado, informação e conhecimento, situando o papel da modelagem de dados nesse processo;
+- Identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos;
+- Aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual;
+- Reconhecer casos especiais de relacionamento — auto-relacionamento e relacionamento ternário;
+- Aplicar um método prático (as "quatro perguntas-chave") para decidir, sem dúvida, se uma informação deve virar entidade ou atributo;
+- Compreender os mecanismos de **generalização e especialização** para modelar hierarquias entre entidades.
+
+---
+
+## 🗺️ Mapa Mental da Aula
+
+```mermaid
+flowchart LR
+    ROOT(("Modelo Entidade-<br/>Relacionamento (MER)"))
+
+    ROOT --> DIC
+    subgraph DIC["🔢 Dado → Informação<br/>→ Conhecimento"]
+        direction TB
+        DIC1["Dado = fato bruto"]
+        DIC2["Informação = dado<br/>com contexto"]
+        DIC3["Conhecimento = padrão<br/>acumulado"]
+    end
+
+    ROOT --> ENT
+    subgraph ENT["🧱 Entidades"]
+        direction TB
+        ENT1["Forte"]
+        ENT2["Fraca"]
+    end
+
+    ROOT --> ATR
+    subgraph ATR["🏷️ Atributos"]
+        direction TB
+        ATR1["Simples"]
+        ATR2["Composto"]
+        ATR3["Multivalorado"]
+        ATR4["Derivado"]
+        ATR5["Chave"]
+    end
+
+    ROOT --> REL
+    subgraph REL["🔗 Relacionamentos"]
+        direction TB
+        REL1["Cardinalidade<br/>1:1 · 1:N · N:M"]
+        REL2["Participação<br/>Total · Parcial"]
+        REL3["Casos especiais<br/>Auto-relac. · Ternário"]
+    end
+
+    ROOT --> NOT
+    subgraph NOT["📐 Notações"]
+        direction TB
+        NOT1["Peter Chen"]
+        NOT2["Crow's Foot"]
+    end
+
+    ROOT --> GE
+    subgraph GE["🧬 Generalização /<br/>Especialização"]
+        direction TB
+        GE1["Superclasse → Subclasse<br/>(herança)"]
+        GE2["Total/Parcial ×<br/>Exclusiva/Sobreposta"]
+    end
+```
+
+---
+
+## 🔢 Dado, Informação e Conhecimento
+
+Antes de desenhar qualquer diagrama, vale revisar uma distinção que sustenta tudo o que vem a seguir: o que exatamente um banco de dados armazena?
+
+Um **dado** é um fato bruto, isolado, sem contexto — por exemplo, o número `2026001`. Sozinho, ele não diz nada. Quando esse número ganha contexto — *"matrícula 2026001 pertence ao aluno João Silva"* — temos uma **informação**: algo interpretável, que já orienta uma decisão. O **conhecimento** surge quando acumulamos e cruzamos informações ao longo do tempo, revelando padrões — por exemplo, perceber que alunos matriculados no primeiro semestre letivo têm uma taxa de evasão maior que os do segundo.
+
+```mermaid
+flowchart LR
+    A["🔢 Dado
+(fato bruto, sem contexto)
+Ex: 2026001"] --> B["📊 Informação
+(dado + contexto)
+Ex: matrícula do aluno João Silva"]
+    B --> C["🧠 Conhecimento
+(informação + experiência acumulada)
+Ex: padrão de evasão por semestre"]
+```
+
+Essa distinção importa porque é exatamente isso que um banco de dados existe para gerenciar: ele armazena **dados**, estruturados de forma que a aplicação consiga transformá-los em **informação** útil para quem consulta — e, com o tempo e a análise adequada, em **conhecimento** para quem decide. A modelagem — o assunto do restante desta aula — é o processo de decidir *como* estruturar esses dados para que essa transformação seja possível, consistente e eficiente.
 
 ---
 
@@ -103,6 +189,35 @@ A **participação total** (obrigatória) indica que toda instância da entidade
 A **participação parcial** (opcional) indica que a entidade *pode* participar do relacionamento, mas não é obrigada. Exemplo: um **Cliente** pode ter feito zero pedidos (é um cliente cadastrado que ainda não comprou nada).
 
 💡[Material completo sobre Cardinalidade](Cardinalidade_MER_Completo.md)
+
+### 4.3 Casos Especiais: Auto-Relacionamento e Relacionamento Ternário
+
+Além dos relacionamentos "normais" entre duas entidades diferentes, existem dois casos especiais que aparecem com frequência suficiente para merecer atenção própria.
+
+**Auto-relacionamento:** ocorre quando uma entidade se relaciona **com ela mesma**. O exemplo clássico é uma hierarquia de supervisão: um **Funcionário** pode supervisionar outros funcionários, e cada funcionário tem (ou não) um supervisor — que também é um funcionário.
+
+```mermaid
+erDiagram
+    FUNCIONARIOS {
+        bigint id_funcionario PK
+        varchar nome
+        bigint supervisor_id FK
+    }
+    FUNCIONARIOS ||--o{ FUNCIONARIOS : "supervisiona"
+```
+
+> 🔑 **Repare no nome da chave estrangeira:** ela não se chama `funcionario_id` — se chamasse, seria impossível saber, só pelo nome da coluna, se ela representa "o funcionário" ou "o supervisor dele" (afinal, ambos são registros da mesma tabela). Por isso, quando a FK referencia uma tabela cuja entidade pode exercer **papéis diferentes** dentro do relacionamento, o nome usa o **papel** em vez do nome da tabela: `supervisor_id`. Você vai ver essa e outras convenções de nomenclatura formalizadas na Aula 03.
+
+**Relacionamento ternário:** ocorre quando **três entidades** participam de um único relacionamento, e a combinação das três é que define a ocorrência — não faz sentido analisar duas delas isoladamente. Exemplo: um **Médico** prescreve um **Medicamento** para um **Paciente**. Registrar apenas "médico prescreve medicamento" sem saber para qual paciente perde informação essencial da regra de negócio.
+
+```mermaid
+erDiagram
+    MEDICOS }o--o{ MEDICAMENTOS : "prescreve"
+    MEDICAMENTOS }o--o{ PACIENTES : "prescrito a"
+    MEDICOS }o--o{ PACIENTES : "atende"
+```
+
+> 💡 Relacionamentos ternários são mais raros e mais complexos de mapear para o modelo lógico — use-os apenas quando o negócio realmente exigir que as três entidades sejam analisadas em conjunto. Na dúvida, verifique se o relacionamento não pode ser decomposto em dois relacionamentos binários mais simples.
 
 ---
 
@@ -490,138 +605,42 @@ Restrição: **Total Exclusiva** — todo conteúdo cadastrado é música ou fil
 
 ### 8.7 Passagem para o Modelo Lógico
 
-A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens:
+A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens. Nesta aula descrevemos as três apenas **conceitualmente**; a sintaxe SQL para de fato criar essas tabelas fica para a Aula 03 (DDL).
 
-**Estratégia 1 — Uma tabela por hierarquia inteira:** cria-se uma única tabela com todas as colunas da superclasse e de todas as subclasses. Colunas que não se aplicam a uma subclasse ficam NULL. Simples de implementar, mas gera muitos NULLs e mistura dados de naturezas diferentes.
+> 📐 **Duas convenções de nomenclatura que você vai ver o tempo todo a partir daqui:** toda **PK** (chave primária) segue o padrão `id_` + nome da tabela no singular (ex.: `id_produto`). Toda **FK** (chave estrangeira) segue o padrão inverso: nome da tabela referenciada no singular + `_id` (ex.: `produto_id`). Repare que a ordem das palavras se inverte entre PK e FK — não é acidente, é assim que se distingue visualmente "quem é dono da linha" de "quem está apontando para outra tabela". Essas regras serão detalhadas com nomes formais (Regra 5 e Regra 6) na Aula 03.
 
-```sql
--- Exemplo: Produto com tudo em uma tabela
-CREATE TABLE produtos (
-    id_produto    BIGINT UNSIGNED            NOT NULL AUTO_INCREMENT,
-    nome          VARCHAR(255)               NOT NULL,
-    preco         DECIMAL(10, 2)             NOT NULL,
-    tipo          ENUM('fisico', 'digital')  NOT NULL,  -- discriminador
-    -- colunas de produto físico (NULL para digitais):
-    peso_kg       DECIMAL(8, 3)                  NULL,
-    -- colunas de produto digital (NULL para físicos):
-    url_download  VARCHAR(255)                   NULL,
-    tamanho_mb    DECIMAL(10, 2)                 NULL,
-    criado_em     DATETIME                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME                   NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                                      ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME                       NULL,
-    CONSTRAINT pk_produto PRIMARY KEY (id_produto)
-);
+**Estratégia 1 — Uma tabela por hierarquia inteira:** cria-se uma única tabela com todas as colunas da superclasse e de todas as subclasses, mais uma coluna discriminadora indicando o tipo de cada linha (ex.: uma coluna `tipo` com valores `fisico`/`digital`). Colunas que não se aplicam a uma subclasse ficam vazias para aquela linha. Simples de implementar, mas gera muitas colunas vazias e mistura dados de naturezas diferentes na mesma tabela.
+
+```
+produtos (tabela única)
+    id_produto      — PK
+    nome
+    preco
+    tipo            — discriminador: 'fisico' ou 'digital'
+    peso_kg         — só preenchido quando tipo = 'fisico'
+    url_download    — só preenchido quando tipo = 'digital'
+    tamanho_mb       — só preenchido quando tipo = 'digital'
 ```
 
-**Estratégia 2 — Uma tabela por subclasse (com JOIN):** cria-se uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse tem PK própria e referencia a superclasse por FK com `UNIQUE` (garantindo o 1:1). É o padrão adotado nesta disciplina.
+**Estratégia 2 — Uma tabela por subclasse (com JOIN):** cria-se uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse tem PK própria e referencia a superclasse por FK única (garantindo o 1:1). É o padrão adotado nesta disciplina.
 
-```sql
--- Tabela da superclasse
-CREATE TABLE produtos (
-    id_produto    BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    nome          VARCHAR(255)     NOT NULL,
-    preco         DECIMAL(10, 2)   NOT NULL,
-    criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                            ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME             NULL,
-    CONSTRAINT pk_produto PRIMARY KEY (id_produto)
-);
+```
+produtos (superclasse)
+    id_produto          — PK
 
--- Tabela da subclasse: PK própria (Regra 5) + FK para a superclasse (Regra 6)
--- O UNIQUE em produto_id garante que cada produto físico aponte para um único produto
-CREATE TABLE produtos_fisicos (
-    id_produto_fisico  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    produto_id         BIGINT UNSIGNED  NOT NULL,
-    peso_kg            DECIMAL(8, 3)    NOT NULL,
-    criado_em          DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                                 ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em        DATETIME             NULL,
-    CONSTRAINT pk_produto_fisico  PRIMARY KEY (id_produto_fisico),
-    CONSTRAINT uq_produto_fisico  UNIQUE (produto_id),  -- garante o 1:1 da especialização
-    CONSTRAINT fk_produto_fisico  FOREIGN KEY (produto_id)
-        REFERENCES produtos (id_produto) ON DELETE CASCADE
-);
+produtos_fisicos (subclasse)
+    id_produto_fisico   — PK própria
+    produto_id          — FK para produtos (única, garante o 1:1)
+    peso_kg
 ```
 
-**Estratégia 3 — Uma tabela por subclasse (sem superclasse):** cada subclasse tem sua própria tabela com todos os atributos, inclusive os herdados da superclasse. Evita JOINs, mas duplica a definição dos atributos comuns.
+**Estratégia 3 — Uma tabela por subclasse (sem superclasse):** cada subclasse tem sua própria tabela com todos os atributos, inclusive os herdados da superclasse. Evita a necessidade de juntar tabelas nas consultas, mas duplica a definição dos atributos comuns em cada subclasse.
 
-> 📌 **Nesta disciplina, adotaremos sempre a Estratégia 2** — uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse mantém sua própria PK (Regra 5) e referencia a superclasse por FK com `UNIQUE` (Regra 6), preservando o 1:1 da especialização sem violar as convenções de nomenclatura.
+> 📌 **Nesta disciplina, adotaremos sempre a Estratégia 2** — uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse mantém sua própria PK e referencia a superclasse por FK única, preservando o 1:1 da especialização sem duplicar atributos comuns.
 
 ---
 
-## 9. Diagrama Completo — Exemplo de Sistema Acadêmico
-
-Vamos construir juntos um MER para um sistema acadêmico simplificado, com as seguintes regras de negócio:
-
-- Um **Curso** possui muitas **Disciplinas**, mas cada disciplina pertence a apenas um curso.
-- Um **Professor** pode lecionar várias **Disciplinas**, e uma disciplina pode ser lecionada por vários professores (em semestres diferentes, por exemplo).
-- Um **Aluno** está matriculado em apenas um **Curso**, e um curso possui muitos alunos.
-- Um **Aluno** pode se matricular em várias **Disciplinas**, e cada disciplina pode ter muitos alunos matriculados. Essa matrícula possui uma **nota** associada.
-
-O diagrama abaixo representa esse modelo usando a notação Crow's Foot com Mermaid:
-
-```mermaid
-erDiagram
-    CURSOS {
-        bigint id_curso PK
-        varchar nome
-        int duracao_semestres
-    }
-
-    DISCIPLINAS {
-        bigint id_disciplina PK
-        varchar nome
-        varchar sigla
-        int carga_horaria
-        bigint curso_id FK
-    }
-
-    PROFESSORES {
-        bigint id_professor PK
-        varchar nome
-        varchar email
-        varchar titulacao
-    }
-
-    ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar cpf
-        date data_nascimento
-        bigint curso_id FK
-    }
-
-    MATRICULAS {
-        bigint id_matricula PK
-        bigint aluno_id FK
-        bigint disciplina_id FK
-        decimal nota
-        varchar situacao
-    }
-
-    LECIONA {
-        bigint professor_id FK
-        bigint disciplina_id FK
-        varchar semestre
-    }
-
-    CURSOS ||--o{ DISCIPLINAS : "possui"
-    CURSOS ||--o{ ALUNOS : "possui"
-    ALUNOS ||--o{ MATRICULAS : "realiza"
-    DISCIPLINAS ||--o{ MATRICULAS : "recebe"
-    PROFESSOR }o--o{ DISCIPLINAS : "leciona"
-```
-
-> 📌 **Leitura do diagrama:** a notação `||--o{` significa "um e apenas um para zero ou muitos". Lemos a linha entre CURSO e DISCIPLINA como: *"um Curso possui zero ou muitas Disciplinas, e cada Disciplina pertence a exatamente um Curso"*.
-
-Observe que o relacionamento **N:M** entre PROFESSOR e DISCIPLINA (leciona) e entre ALUNO e DISCIPLINA (matrícula) já aparecem aqui "resolvidos" como entidades/tabelas intermediárias — **LECIONA** e **MATRICULA** — porque o Mermaid usa diretamente a notação lógica. Na modelagem conceitual pura (notação Chen), eles seriam representados como losangos. Em ferramentas profissionais, a distinção é feita de forma similar a esta.
-
----
-
-## 10. Exemplo Prático — Sistema de Streaming (prévia do T1)
+## 9. Exemplo Prático — Sistema de Streaming (prévia do T1)
 
 Como a **Atividade T1** desta disciplina envolve modelar um sistema de streaming integrado, vamos já começar a pensar nas entidades envolvidas. Tente identificar, a partir da descrição abaixo, quais seriam as entidades, seus atributos e relacionamentos — e onde caberia uma generalização ou especialização:
 
@@ -631,7 +650,7 @@ Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclass
 
 ---
 
-## 11. Erros Comuns na Modelagem Conceitual
+## 10. Erros Comuns na Modelagem Conceitual
 
 Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
@@ -647,6 +666,55 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 **Confundir generalização com relacionamento comum:** a relação "é um" (herança) é fundamentalmente diferente de "tem um" (associação). Gerente **é um** Funcionário — isso é herança. Funcionário **tem um** Departamento — isso é relacionamento. Aplique generalização somente quando a relação semântica for realmente de subtipagem.
 
+### 10.1 Método Prático: Entidade ou Atributo?
+
+O erro mais frequente da lista acima — confundir atributo com entidade — tem um método simples para resolver a dúvida: faça estas quatro perguntas, nesta ordem, para cada informação que você identificar em um enunciado ou documento real.
+
+1. **"Essa informação se repete várias vezes dentro do mesmo registro, com valores diferentes a cada repetição?"** Se sim, é forte sinal de **entidade** (ou entidade associativa) — um atributo simples não se repete dentro do mesmo registro.
+2. **"Essa informação continuaria fazendo sentido e poderia ser consultada mesmo sem este registro específico existir?"** Se sim, é sinal de **entidade independente**. Se a informação só existe *dentro* deste documento e morre com ele, é mais provável que seja **atributo**.
+3. **"Essa informação está apenas descrevendo/qualificando outra coisa específica?"** Se sim, é **atributo** daquilo que ela descreve.
+4. **"Essa informação é o resultado do encontro entre duas outras entidades?"** Se sim, é atributo de uma **entidade associativa** — não de nenhuma das duas entidades originais isoladamente.
+
+**Exemplo guiado — Ficha de Empréstimo da Biblioteca:** voltando ao sistema de biblioteca que abriu esta aula, imagine a ficha de empréstimo abaixo, preenchida no balcão:
+
+```text
+BIBLIOTECA CENTRAL FATEC JAHU
+Ficha de Empréstimo Nº 4821
+
+Aluno: João Silva          Matrícula: 2026001
+Livro: Sistemas de Banco de Dados     ISBN: 978-85-352-0000-0
+Data do empréstimo: 10/08/2026
+Data prevista de devolução: 24/08/2026
+Status: Em andamento
+```
+
+Aplicando as quatro perguntas: **nome e matrícula do aluno** descrevem o aluno (pergunta 3) e continuariam fazendo sentido em outra ficha (pergunta 2) → atributos da entidade `ALUNO`. **Título e ISBN do livro** descrevem o livro (pergunta 3) e continuariam existindo mesmo que esta ficha fosse cancelada (pergunta 2) → atributos da entidade `LIVRO`. Já a **data do empréstimo, a data prevista de devolução e o status** só fazem sentido no encontro específico entre *este* aluno e *este* livro (pergunta 4) → são atributos da entidade associativa `EMPRESTIMO`, não do Aluno nem do Livro isoladamente.
+
+```mermaid
+erDiagram
+    ALUNOS {
+        bigint id_aluno PK
+        varchar nome
+        varchar matricula
+    }
+    LIVROS {
+        bigint id_livro PK
+        varchar titulo
+        varchar isbn
+    }
+    EMPRESTIMOS {
+        bigint aluno_id FK
+        bigint livro_id FK
+        date data_emprestimo
+        date data_devolucao_prevista
+        varchar status
+    }
+    ALUNOS ||--o{ EMPRESTIMOS : "realiza"
+    LIVROS ||--o{ EMPRESTIMOS : "é objeto de"
+```
+
+> 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal, um formulário de matrícula) e refaça as quatro perguntas, item por item. É o mesmo raciocínio sempre — só muda o domínio.
+
 ---
 
 ## 📝 Exercícios de Fixação
@@ -655,7 +723,7 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 > *"Uma clínica médica cadastra seus pacientes e médicos. Um médico pode ter várias especialidades. Os pacientes podem agendar consultas com os médicos. Cada consulta ocorre em uma data e horário específicos e gera um prontuário com o diagnóstico e a prescrição."*
 
-**Exercício 2 — Leitura de Diagrama:** analise o diagrama da Seção 9 e responda: é possível que um Aluno exista no banco sem estar associado a nenhum Curso? Justifique sua resposta com base na notação do diagrama.
+**Exercício 2 — Leitura de Diagrama:** analise o diagrama da Seção 6 e responda: é possível que um Aluno exista no banco sem estar associado a nenhum Curso? Justifique sua resposta com base na notação do diagrama.
 
 **Exercício 3 — Modelagem Livre:** escolha um sistema do cotidiano (uma locadora, um pet shop, um restaurante) e crie um MER conceitual com pelo menos 4 entidades, identificando atributos e relacionamentos com suas cardinalidades.
 
@@ -675,10 +743,149 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 ---
 
-> **Próxima aula:** na [Aula 02 — Normalização](./Aula_02_Normalizacao.md), veremos como transformar o modelo conceitual que acabamos de estudar em um modelo lógico, aplicando as Formas Normais para garantir a consistência e eliminar redundâncias.
+## 🃏 Flashcards de Revisão
+
+??? question "Qual a diferença entre dado e informação? Dê um exemplo."
+    Dado é um fato bruto, sem contexto — como o número `2026001` isolado. Informação é
+    o dado interpretado dentro de um contexto que permite tomar decisões — como saber
+    que `2026001` é a matrícula do aluno João Silva.
+
+??? question "Qual a diferença entre entidade forte e entidade fraca?"
+    Uma entidade forte existe por si mesma (ex.: Aluno). Uma entidade fraca só existe em
+    relação a outra entidade — se a entidade da qual depende for removida, ela perde
+    sentido (ex.: Dependente em relação a Funcionário).
+
+??? question "O que é um atributo derivado? Dê um exemplo."
+    É um atributo cujo valor pode ser calculado a partir de outro atributo, em vez de
+    ser armazenado diretamente. Exemplo: `idade`, derivada de `data_nascimento`. Na
+    notação do MER, representa-se com elipse tracejada.
+
+??? question "O que significa a notação `||--o{` em um diagrama Crow's Foot?"
+    Lê-se "um e apenas um para zero ou muitos". O lado com `||` indica participação
+    total (exatamente um), e o lado com `o{` indica participação parcial (zero ou
+    muitos).
+
+??? question "Qual a diferença entre generalização e especialização?"
+    São o mesmo resultado no diagrama (superclasse + subclasses), mas com raciocínios
+    opostos: generalização é bottom-up (parte de entidades específicas e abstrai o que
+    têm em comum); especialização é top-down (parte de uma entidade genérica e a divide
+    em subtipos).
+
+??? question "O que significa uma restrição de especialização 'Total Exclusiva'?"
+    Total = toda instância da superclasse obrigatoriamente pertence a alguma subclasse
+    (não existe instância "genérica"). Exclusiva = cada instância pertence a **no
+    máximo uma** subclasse (as subclasses não se sobrepõem).
+
+??? question "Pegadinha comum: cardinalidade 1:N sempre significa que vai existir 'muitos' registros na prática?"
+    Não. Cardinalidade 1:N significa que **pode** haver muitos — não que sempre haverá.
+    Um Departamento com um único Funcionário ainda é, estruturalmente, uma relação 1:N.
+
+??? question "O que é um auto-relacionamento? Dê um exemplo."
+    É quando uma entidade se relaciona com ela mesma. Exemplo: FUNCIONARIOS supervisiona
+    FUNCIONARIOS (hierarquia de supervisão) — nesse caso a FK usa o papel semântico no
+    nome (`supervisor_id`), não o nome da tabela, para evitar ambiguidade.
+
+??? question "Quando um relacionamento é considerado ternário?"
+    Quando três entidades participam de um único relacionamento e a combinação das três
+    — não de duas isoladamente — é que define a ocorrência. Exemplo: Médico prescreve
+    Medicamento para Paciente.
 
 ---
 
-<div align="center">
-  <sub>Fatec Jahu · IBD015 — Banco de Dados Relacional · Prof. Ronan Adriel Zenatti · 2026</sub>
-</div>
+## ✅ Quiz de Fixação
+
+<quiz>
+Quais são os três elementos principais do Modelo Entidade-Relacionamento proposto por Peter Chen?
+- [ ] Tabelas, Colunas e Chaves
+- [x] Entidades, Atributos e Relacionamentos
+- [ ] Classes, Objetos e Métodos
+- [ ] Índices, Views e Triggers
+
+O MER de Peter Chen (1976) é composto por Entidades, Atributos e Relacionamentos — a base de toda modelagem conceitual.
+</quiz>
+
+<quiz>
+Qual notação é adotada nesta disciplina para os diagramas de modelagem?
+- [ ] Notação de Peter Chen (losangos e elipses)
+- [x] Notação Crow's Foot (Pé-de-Galinha)
+- [ ] Notação UML de classes
+- [ ] Não há notação padronizada
+
+A notação Crow's Foot foi escolhida por ser o padrão em ferramentas de mercado como MySQL Workbench e dbdiagram.io, que vocês usarão profissionalmente.
+</quiz>
+
+<quiz>
+Marque todas as alternativas que são exemplos válidos de ATRIBUTO DERIVADO.
+- [x] `idade`, calculada a partir de `data_nascimento`
+- [ ] `cpf` de uma Pessoa
+- [x] `tempo_de_casa`, calculado a partir de `data_admissao`
+- [ ] `nome` de um Produto
+
+Atributos derivados nunca são armazenados diretamente — seu valor sempre pode ser recalculado a partir de outro atributo já existente na entidade.
+</quiz>
+
+<quiz>
+Na generalização de Veículos em Carros, Motos e Caminhões (Total Exclusiva), o que isso implica?
+- [ ] Um veículo pode ser carro e moto ao mesmo tempo
+- [ ] Pode existir um veículo cadastrado sem ser carro, moto ou caminhão
+- [x] Todo veículo é obrigatoriamente um carro, uma moto ou um caminhão, e nunca mais de um tipo
+- [ ] A hierarquia é opcional e pode ser ignorada na modelagem lógica
+
+"Total" garante que não existe veículo "genérico" (toda instância cai em alguma subclasse); "Exclusiva" garante que nenhuma instância pertence a mais de uma subclasse simultaneamente.
+</quiz>
+
+<quiz>
+Um Cliente pode ter feito zero pedidos, mas todo Pedido precisa estar associado a um Cliente. Como se chama, respectivamente, a participação de Cliente e de Pedido nesse relacionamento?
+- [ ] Total e Total
+- [x] Parcial (Cliente) e Total (Pedido)
+- [ ] Total (Cliente) e Parcial (Pedido)
+- [ ] Parcial e Parcial
+
+Cliente participa de forma parcial (pode não ter nenhum pedido) enquanto Pedido participa de forma total (não existe pedido sem cliente associado).
+</quiz>
+
+<quiz>
+Em uma entidade FUNCIONARIOS que se relaciona consigo mesma (supervisão), por que a chave estrangeira se chama `supervisor_id` e não `funcionario_id`?
+- [ ] Porque `funcionario_id` já é usado como nome da chave primária
+- [x] Porque, em um auto-relacionamento, nomear a FK só com o nome da tabela seria ambíguo — o papel no relacionamento precisa aparecer no nome
+- [ ] Não há diferença, os dois nomes são equivalentes
+- [ ] Porque toda FK deve terminar em "_id" exatamente uma vez
+
+Como a FK referencia a própria tabela FUNCIONARIOS, chamá-la de `funcionario_id` não diria se ela representa "o funcionário" ou "o supervisor dele". Usar o papel semântico (`supervisor_id`) resolve a ambiguidade.
+</quiz>
+
+---
+
+## 📝 Resumo
+
+Nesta aula revisamos a distinção entre dado, informação e conhecimento, situando a
+modelagem de dados como a etapa que estrutura os dados para que virem informação
+confiável. Revisamos também os três elementos centrais do Modelo Entidade-Relacionamento —
+entidades, atributos e relacionamentos — e como cardinalidade e participação
+descrevem as regras de negócio entre eles, incluindo os casos especiais de
+auto-relacionamento e relacionamento ternário. Vimos a notação Crow's Foot, adotada
+nesta disciplina, um método prático de quatro perguntas para nunca mais confundir
+entidade com atributo, e o mecanismo de generalização/especialização para modelar
+hierarquias com herança, incluindo suas quatro combinações de restrição (total/parcial
+× exclusiva/sobreposta). Também já demos uma prévia do sistema de streaming que será a
+base da Atividade T1. Na próxima aula, esse modelo conceitual vira modelo lógico
+relacional, através da Normalização.
+
+---
+
+## 🏆 Conquista da Aula
+
+!!! success "Selo desbloqueado: 🧭 Explorador(a) de Dados"
+    Você completou a Aula 01 e já domina a leitura e construção de diagramas MER. A
+    próxima parada da Trilha do(a) Modelador(a) de Dados é transformar esse modelo
+    conceitual em um modelo lógico consistente, livre de redundâncias.
+
+---
+
+## 🔗 Navegação
+
+⬅️ Você está na primeira aula · ➡️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md)
+
+---
+
+*Fatec Jahu · IBD951 · Prof. Ronan Adriel Zenatti · 2026*

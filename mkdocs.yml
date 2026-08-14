@@ -1,8 +1,8 @@
 site_name: Banco de Dados e Aplicações — IBD951 (2026/2)
 site_description: Material de aulas, atividades e avaliações de Banco de Dados e Aplicações (IBD951) — Fatec Jahu — 2º Semestre 2026
-site_url: https://gti-fatec-jahu.github.io/BDA-GTI-2026-2/
-repo_url: https://github.com/GTI-Fatec-Jahu/BDA-GTI-2026-2
-repo_name: GTI-Fatec-Jahu/BDA-GTI-2026-2
+site_url: https://dsm-fatec-jahu.github.io/bdr-dsm-2026-2/
+repo_url: https://github.com/dsm-fatec-jahu/bdr-dsm-2026-2
+repo_name: dsm-fatec-jahu/bdr-dsm-2026-2
 edit_uri: edit/main/docs/
 docs_dir: docs
 
@@ -71,14 +71,10 @@ plugins:
 nav:
   - Início: index.md
   - Bloco 1 — Modelagem e DDL:
-      - aulas/Aula_01_Introducao_BD.md
-      - aulas/Aula_02_Modelagem_Entidades.md
-      - aulas/Aula_02_Gabarito.md
-      - aulas/Aula_03_Relacionamentos_Cardinalidade.md
-      - aulas/Aula_03_Gabarito.md
-  - Atividades e Avaliações:
-      - atividades/index.md
-      - atividades/Avaliacao_Proficiencia.md
+      - aulas/Aula_01_Revisao_Modelagem_Conceitual.md
+      - aulas/Cardinalidade_MER_Completo.md
+      - aulas/Aula_02_Normalizacao.md
+      - aulas/Aula_03_SQL_DDL.md
 
 extra:
   social:
