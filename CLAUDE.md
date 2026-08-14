@@ -1,6 +1,6 @@
-# CLAUDE.md — Banco de Dados e Aplicações (IBD951) — 2º Semestre/2026
+# CLAUDE.md — Banco de Dados — Relacional (IBD015) — 2º Semestre/2026
 
-Este repositório é o material publicado da disciplina IBD951 (Fatec Jahu), servido como
+Este repositório é o material publicado da disciplina IBD015 (Fatec Jahu, curso DSM), servido como
 site estático via **MkDocs Material + GitHub Pages**. O professor (Ronan) é a única
 autoridade sobre conteúdo pedagógico — este arquivo governa como o Claude Code deve se
 comportar ao lidar com o repositório, não substitui o julgamento dele.
@@ -112,17 +112,28 @@ conteúdo — ex. aulas que são só enunciado de prova não precisam de mapa me
    **Tema de gamificação do semestre — "Trilha do(a) Arquiteto(a) de Dados":** a
    jornada do aluno é enquadrada como uma progressão de carreira em BD, do primeiro
    contato até o domínio prático. Cada bloco tem um arco, e cada aula um selo dentro
-   dele — mantenha o tom técnico/profissional, nunca infantil.
-   - **Bloco 1 (Aulas 1–9) — "Trilha do(a) Modelador(a) de Dados"**: ex. Aula 1 → `🧭
-     Explorador(a) de Dados`, Aula 2 → `🗺️ Cartógrafo(a) de Entidades`, Aula 3 → `🔗
-     Mestre dos Relacionamentos`, Aula 4 → `🏛️ Arquiteto(a) Relacional`, Aula 5 → `🧹
-     Guardião(ã) da Normalização`, Aula 6 (T1) → `📐 Modelador(a) Certificado(a)`,
-     Aula 7 → `🛠️ Construtor(a) DDL`, Aula 8 → `🔒 Guardião(ã) da Integridade`,
-     Aula 9 (P1) → `🎖️ Veterano(a) do Bloco 1`.
-   - **Bloco 2 (Aulas 10–20) — "Trilha do(a) Consultor(a) SQL"**: nomes seguem o mesmo
-     espírito (ex. `🔍 Investigador(a) de Dados` para consultas, `🧩 Mestre dos Joins`
-     para as aulas de junção), culminando na Aula 20 com o selo final `🏆
-     Arquiteto(a) de Dados — IBD951`.
+   dele — mantenha o tom técnico/profissional, nunca infantil. O plano de 20 aulas
+   desta disciplina (IBD015) é organizado em **4 blocos** — veja `docs/index.md` para
+   o Sumário de Aulas completo:
+
+   - **Bloco 1 — "Trilha do(a) Modelador(a) de Dados" (Aulas 1–5, Fundamentos e
+     Modelagem)**: Aula 1 → `🧭 Explorador(a) de Dados`, Aula 2 → `🧹 Guardião(ã) da
+     Normalização`, Aula 3 → `🛠️ Construtor(a) DDL`, Aula 4 → `✍️ Manipulador(a) de
+     Dados`, Aula 5 (T1 — Modelagem Streaming) → `📐 Modelador(a) Certificado(a)`.
+   - **Bloco 2 — "Trilha do(a) Consultor(a) SQL" (Aulas 6–9, Consultas e Visões)**:
+     Aula 6 → `🔍 Investigador(a) de Dados`, Aula 7 → `📊 Analista de Agregações`,
+     Aula 8 → `🧩 Mestre dos Joins`, Aula 9 (P1) → `🎖️ Veterano(a) de Modelagem e
+     Consultas`.
+   - **Bloco 3 — "Trilha do(a) Programador(a) de Banco de Dados" (Aulas 10–15,
+     Programação e Administração de BD)**: Aula 10 → `🔒 Guardião(ã) da Integridade`,
+     Aula 11 → `⚙️ Engenheiro(a) de Procedures`, Aula 12 → `⚡ Vigilante de Gatilhos`,
+     Aula 13 → `🔁 Mestre das Transações`, Aula 14 → `🛡️ Guardião(ã) da Segurança`,
+     Aula 15 → `🚀 Otimizador(a) de Consultas`.
+   - **Bloco 4 — "Trilha do(a) Arquiteto(a) Sênior" (Aulas 16–20, Encerramento e
+     Avaliações Finais)**: Aula 16 → `🧠 Revisor(a) Mestre`, Aula 17 (T2) → `🤝
+     Integrador(a) de Sistemas`, Aula 18 (P2) → `🎓 Especialista Certificado(a)`,
+     Aula 19 (R) → `🔄 Persistente`, Aula 20 → selo final `🏆 Arquiteto(a) de Dados —
+     IBD015`.
    - Ao remodelar uma aula fora dessa lista de exemplos, escolha um nome de selo
      consistente com o tema (progressão de carreira/habilidade em BD) em vez de
      inventar temas novos a cada aula.

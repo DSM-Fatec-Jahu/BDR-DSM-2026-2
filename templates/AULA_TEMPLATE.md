@@ -9,7 +9,7 @@ na dúvida, pergunte ao professor em vez de forçar uma seção vazia.
 
 # Aula NN — [Título da Aula]
 
-**Disciplina:** Banco de Dados e Aplicações (IBD951)
+**Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
@@ -130,4 +130,4 @@ consigo, não uma repetição do conteúdo.]
 
 ---
 
-*Fatec Jahu · IBD951 · Prof. Ronan Adriel Zenatti · 2026*
+*Fatec Jahu · IBD015 · Prof. Ronan Adriel Zenatti · 2026*
