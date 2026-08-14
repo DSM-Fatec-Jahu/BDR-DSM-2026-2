@@ -1,13 +1,51 @@
 # Aula 02 — Normalização e Passagem ao Modelo Lógico Relacional
 
-> **IBD015 — Banco de Dados Relacional** · Fatec Jahu · Prof. Ronan Adriel Zenatti
-> [← Aula 01](./Aula_01_Revisao_Modelagem_Conceitual.md) · [Voltar ao README](../README.md) · [Próxima Aula →](./Aula_03_SQL_DDL.md)
+**Disciplina:** Banco de Dados — Relacional (IBD015)
+**Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
+**Fatec Jahu — 2º Semestre/2026**
 
 ---
 
-## 📌 Objetivos da Aula
+## 🎯 Objetivos da Aula
 
-Ao final desta aula, você será capaz de identificar dependências funcionais em um conjunto de dados, reconhecer anomalias de inserção, atualização e exclusão causadas por uma estrutura mal projetada, aplicar as três primeiras Formas Normais para reorganizar tabelas de forma consistente e não redundante, e realizar a passagem do modelo conceitual (MER) para o modelo lógico relacional com critérios formais.
+Ao final desta aula você deverá ser capaz de:
+
+- Identificar dependências funcionais — parciais e transitivas — em um conjunto de dados;
+- Reconhecer anomalias de inserção, atualização e exclusão causadas por uma estrutura mal projetada;
+- Aplicar as três primeiras Formas Normais (1FN, 2FN, 3FN) para reorganizar tabelas de forma consistente e não redundante;
+- Realizar a passagem do modelo conceitual (MER) para o modelo lógico relacional, com regras formais para cada tipo de relacionamento.
+
+---
+
+## 🗺️ Mapa Mental da Aula
+
+```mermaid
+flowchart LR
+    ROOT(("Normalização e<br/>Modelo Lógico"))
+
+    ROOT --> DF
+    subgraph DF["🔗 Dependências<br/>Funcionais"]
+        direction TB
+        DF1["Parcial"]
+        DF2["Transitiva"]
+    end
+
+    ROOT --> FN
+    subgraph FN["🧮 Formas Normais"]
+        direction TB
+        FN1["1FN — atomicidade"]
+        FN2["2FN — sem dep. parcial"]
+        FN3["3FN — sem dep. transitiva"]
+    end
+
+    ROOT --> ML
+    subgraph ML["📐 Passagem ao<br/>Modelo Lógico"]
+        direction TB
+        ML1["1:1 · 1:N · N:M"]
+        ML2["Entidade fraca"]
+        ML3["Atributo multivalorado"]
+    end
+```
 
 ---
 
@@ -763,10 +801,120 @@ EMPRESTIMO (id_emprestimo PK, id_usuario FK, id_livro FK,
 
 ---
 
-> **Próxima aula:** na [Aula 03 — SQL DDL](./Aula_03_SQL_DDL.md), vamos implementar em SQL o modelo lógico que aprendemos a construir aqui, usando os comandos `CREATE TABLE`, `ALTER TABLE` e `DROP TABLE`, com todas as constraints de integridade que representam as regras que acabamos de modelar.
+## 🃏 Flashcards de Revisão
+
+??? question "O que é uma dependência funcional? Dê a notação."
+    Dizemos que B é funcionalmente dependente de A (notação A → B) quando, para cada
+    valor de A, existe exatamente um valor correspondente de B. Exemplo: `cpf →
+    nome_cliente`.
+
+??? question "Qual a diferença entre dependência funcional parcial e transitiva?"
+    Parcial: um atributo não-chave depende de apenas parte de uma chave composta (viola
+    a 2FN). Transitiva: um atributo não-chave depende de outro atributo não-chave, que
+    por sua vez depende da chave primária (viola a 3FN).
+
+??? question "Quais são os três requisitos da Primeira Forma Normal (1FN)?"
+    Valores atômicos em todos os atributos, ausência de grupos repetidos ou atributos
+    multivalorados, e existência de uma chave primária que identifique unicamente cada
+    linha.
+
+??? question "A 2FN é relevante em toda tabela, ou só em algumas?"
+    Só é relevante quando a chave primária é composta (dois ou mais atributos). Uma
+    tabela com chave simples satisfaz a 2FN automaticamente, desde que já esteja na 1FN.
+
+??? question "Em um relacionamento 1:N, em qual tabela a chave estrangeira deve ficar?"
+    Sempre na tabela do lado N (muitos). Ela recebe uma cópia do tipo da chave primária
+    da entidade do lado 1 — nunca o contrário.
+
+??? question "Pegadinha comum: uma tabela sem valores múltiplos por célula já está totalmente normalizada?"
+    Não. Estar livre de valores não-atômicos garante apenas a 1FN. É preciso verificar
+    também dependências parciais (2FN) e transitivas (3FN) antes de declarar o modelo
+    normalizado.
 
 ---
 
-<div align="center">
-  <sub>Fatec Jahu · IBD015 — Banco de Dados Relacional · Prof. Ronan Adriel Zenatti · 2026</sub>
-</div>
+## ✅ Quiz de Fixação
+
+<quiz>
+Uma tabela FATURA armazena as colunas item1_nome, item1_valor, item2_nome, item2_valor, item3_nome e item3_valor. Qual forma normal está sendo violada?
+- [x] 1FN — grupos repetidos representados como colunas numeradas
+- [ ] 2FN — dependência parcial da chave composta
+- [ ] 3FN — dependência transitiva entre não-chaves
+- [ ] Nenhuma — a tabela já está normalizada
+
+Colunas numeradas (item1, item2, item3...) são o sintoma clássico de grupo repetido, que viola a atomicidade exigida pela 1FN.
+</quiz>
+
+<quiz>
+Em uma tabela ITEM_VENDA com PK composta (id_venda, id_produto), o atributo categoria_produto depende apenas de id_produto. Isso viola qual forma normal?
+- [ ] 1FN
+- [x] 2FN
+- [ ] 3FN
+- [ ] Não viola nenhuma forma normal
+
+categoria_produto depende de apenas parte da chave composta (id_produto), não da chave inteira — isso é uma dependência parcial, que viola especificamente a 2FN.
+</quiz>
+
+<quiz>
+Marque todas as afirmações corretas sobre a Terceira Forma Normal (3FN).
+- [x] Exige que a tabela já esteja na 2FN
+- [x] Elimina dependências entre atributos não-chave
+- [ ] Só se aplica quando a chave primária é composta
+- [x] Uma cadeia como id_funcionario → id_departamento → nome_departamento viola a 3FN
+
+A 3FN pressupõe a 2FN e elimina dependências transitivas (atributo não-chave dependendo de outro atributo não-chave). Diferente da 2FN, ela se aplica mesmo com chave simples.
+</quiz>
+
+<quiz>
+Qual anomalia ocorre quando não é possível cadastrar um novo produto no sistema porque ele ainda não foi vinculado a nenhum pedido?
+- [x] Anomalia de inserção
+- [ ] Anomalia de atualização
+- [ ] Anomalia de exclusão
+- [ ] Anomalia de normalização (não existe esse termo)
+
+É uma anomalia de inserção: a estrutura desnormalizada obriga a existência de um pedido para que um produto possa ser registrado, mesmo que o produto exista independentemente do pedido.
+</quiz>
+
+<quiz>
+Em um relacionamento N:M entre ALUNO e DISCIPLINA, com atributos nota e situação na matrícula, qual é a regra de passagem ao modelo lógico?
+- [ ] A FK vai para o lado de participação parcial
+- [ ] Cria-se apenas uma FK na tabela ALUNO
+- [x] Cria-se uma tabela intermediária com PK composta pelas duas FKs, mais os atributos do relacionamento
+- [ ] O N:M é implementado diretamente, sem tabela nova
+
+Todo N:M sempre gera uma nova tabela intermediária, cuja chave primária é composta pelas FKs das duas entidades originais — e é essa tabela que recebe os atributos que pertencem ao relacionamento em si, como nota e situação.
+</quiz>
+
+---
+
+## 📝 Resumo
+
+Nesta aula vimos que a normalização resolve anomalias de inserção, atualização e
+exclusão através da eliminação sistemática de dependências funcionais parciais e
+transitivas. Percorremos as três primeiras Formas Normais — 1FN (atomicidade), 2FN
+(sem dependência parcial da chave composta) e 3FN (sem dependência transitiva entre
+não-chaves) — com um exemplo completo do zero até a 3FN. Também vimos as regras
+formais e determinísticas de passagem do MER ao modelo lógico relacional, para
+relacionamentos 1:1, 1:N, N:M, entidades fracas e atributos multivalorados. Na
+próxima aula, esse modelo lógico já normalizado vira SQL de verdade, com `CREATE
+TABLE`.
+
+---
+
+## 🏆 Conquista da Aula
+
+!!! success "Selo desbloqueado: 🧹 Guardião(ã) da Normalização"
+    Você aprendeu a identificar e eliminar as três principais fontes de redundância e
+    inconsistência em um banco de dados, e já sabe traduzir qualquer MER em tabelas
+    relacionais corretas. A próxima parada da Trilha do(a) Modelador(a) de Dados:
+    transformar esse modelo lógico em SQL de verdade.
+
+---
+
+## 🔗 Navegação
+
+⬅️ [Aula 01 — Revisão de Modelagem Conceitual](./Aula_01_Revisao_Modelagem_Conceitual.md) · ➡️ [Aula 03 — SQL DDL](./Aula_03_SQL_DDL.md)
+
+---
+
+*Fatec Jahu · IBD015 · Prof. Ronan Adriel Zenatti · 2026*

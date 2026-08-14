@@ -1,13 +1,68 @@
 # Aula 03 — SQL e DDL: Definição de Estruturas
 
-> **IBD015 — Banco de Dados Relacional** · Fatec Jahu · Prof. Ronan Adriel Zenatti
-> [← Aula 02](./Aula_02_Normalizacao.md) · [Voltar ao README](../README.md) · [Próxima Aula →](./Aula_04_SQL_DML.md)
+**Disciplina:** Banco de Dados — Relacional (IBD015)
+**Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
+**Fatec Jahu — 2º Semestre/2026**
 
 ---
 
-## 📌 Objetivos da Aula
+## 🎯 Objetivos da Aula
 
-Ao final desta aula, você será capaz de criar e manipular estruturas de banco de dados usando os comandos DDL do SQL. Você entenderá as convenções de nomenclatura adotadas nesta disciplina, saberá escolher os tipos de dados mais adequados para cada situação, aplicará todas as principais constraints de integridade e compreenderá as diferenças práticas entre MariaDB (nosso ambiente principal via XAMPP) e PostgreSQL — o segundo SGBD mais adotado no mercado.
+Ao final desta aula você deverá ser capaz de:
+
+- Criar e manipular estruturas de banco de dados usando os comandos DDL do SQL (`CREATE`, `ALTER`, `DROP`);
+- Aplicar as convenções de nomenclatura adotadas nesta disciplina;
+- Escolher os tipos de dados mais adequados para cada situação;
+- Aplicar as principais constraints de integridade (`PRIMARY KEY`, `FOREIGN KEY`, `UNIQUE`, `CHECK`, `NOT NULL`);
+- Compreender as diferenças práticas entre MariaDB (nosso ambiente principal via XAMPP) e PostgreSQL.
+
+---
+
+## 🗺️ Mapa Mental da Aula
+
+```mermaid
+flowchart LR
+    ROOT(("SQL DDL —<br/>Definição de Estruturas"))
+
+    ROOT --> CONV
+    subgraph CONV["📐 Convenções de<br/>Nomenclatura"]
+        direction TB
+        CONV1["snake_case"]
+        CONV2["PK: id_tabela"]
+        CONV3["FK: tabela_id /<br/>papel_id"]
+        CONV4["Campos de log<br/>(Regra 9)"]
+    end
+
+    ROOT --> TIPOS
+    subgraph TIPOS["🔤 Tipos de Dados"]
+        direction TB
+        TIPOS1["Numéricos"]
+        TIPOS2["Texto"]
+        TIPOS3["Data/Hora"]
+    end
+
+    ROOT --> DDL
+    subgraph DDL["🛠️ Comandos DDL"]
+        direction TB
+        DDL1["CREATE TABLE"]
+        DDL2["ALTER TABLE"]
+        DDL3["DROP"]
+    end
+
+    ROOT --> CONS
+    subgraph CONS["🔒 Constraints"]
+        direction TB
+        CONS1["PRIMARY KEY"]
+        CONS2["FOREIGN KEY<br/>ON DELETE/UPDATE"]
+        CONS3["UNIQUE · CHECK"]
+    end
+
+    ROOT --> SGBD
+    subgraph SGBD["⚖️ MariaDB ×<br/>PostgreSQL"]
+        direction TB
+        SGBD1["Database vs Schema"]
+    end
+```
 
 ---
 
@@ -1093,10 +1148,123 @@ CREATE TABLE IF NOT EXISTS produtos (
 
 ---
 
-> **Próxima aula:** na [Aula 04 — SQL DML](./Aula_04_SQL_DML.md), vamos popular as tabelas que criamos aqui usando `INSERT`, `UPDATE` e `DELETE`, e aprender sobre o controle básico de transações com `BEGIN`, `COMMIT` e `ROLLBACK`.
+## 🃏 Flashcards de Revisão
+
+??? question "Pelas convenções desta disciplina, como se nomeia a PK de uma tabela `pedidos`? E a FK em `itens_pedidos` que referencia `produtos`?"
+    PK de `pedidos`: `id_pedido` (Regra 5 — `id_` + nome da tabela no singular). FK em
+    `itens_pedidos` para `produtos`: `produto_id` (Regra 6 — nome da tabela referenciada
+    no singular + `_id`). A ordem das palavras se inverte entre PK e FK.
+
+??? question "Por que usar `utf8mb4` em vez de `utf8` no MariaDB/MySQL?"
+    O tipo `utf8` do MySQL/MariaDB é uma implementação incompleta do UTF-8, suportando
+    apenas caracteres de até 3 bytes — o que exclui emojis e diversos símbolos modernos.
+    O `utf8mb4` é a implementação completa, suportando todos os pontos de código
+    Unicode. Deve ser sempre a escolha padrão.
+
+??? question "Por que nunca usar FLOAT ou DOUBLE para valores monetários?"
+    Porque usam representação de ponto flutuante binário (IEEE 754), que não representa
+    exatamente todos os decimais — `0.1 + 0.2` pode resultar em `0.30000000000000004`.
+    Para dinheiro, use sempre `DECIMAL(p, s)`, que tem precisão exata.
+
+??? question "Qual a diferença entre DATETIME e TIMESTAMP no MariaDB?"
+    TIMESTAMP armazena o valor convertido para UTC e o reconverte para o fuso do
+    servidor ao exibir — e sofre do problema do ano 2038 (estoura com inteiro de 32
+    bits). DATETIME armazena o valor exatamente como foi inserido, sem conversão de
+    fuso, e é o padrão desta disciplina para colunas de log.
+
+??? question "O que a ação ON DELETE CASCADE faz em uma FOREIGN KEY?"
+    Propaga a exclusão: se o registro pai for excluído, todos os registros filhos que o
+    referenciam também são excluídos automaticamente. Útil quando o filho não faz
+    sentido sem o pai (ex.: excluir um pedido remove seus itens).
+
+??? question "O que são os 'campos de log' da Regra 9, e por que usamos deletado_em em vez de excluir a linha de verdade?"
+    Toda tabela desta disciplina tem `criado_em`, `atualizado_em` e `deletado_em`. Em
+    vez de fisicamente remover um registro, marcamos `deletado_em` com a data da
+    exclusão (soft delete) e filtramos com `WHERE deletado_em IS NULL` nas consultas —
+    isso preserva histórico e protege contra deleções acidentais.
 
 ---
 
-<div align="center">
-  <sub>Fatec Jahu · IBD015 — Banco de Dados Relacional · Prof. Ronan Adriel Zenatti · 2026</sub>
-</div>
+## ✅ Quiz de Fixação
+
+<quiz>
+Qual tipo de dado é o correto para armazenar o preço de um produto?
+- [ ] FLOAT
+- [ ] DOUBLE
+- [x] DECIMAL(10, 2)
+- [ ] INT
+
+FLOAT e DOUBLE usam ponto flutuante binário, que não representa decimais com exatidão — inadequado para dinheiro. DECIMAL(p, s) tem precisão exata e é o padrão desta disciplina para valores monetários.
+</quiz>
+
+<quiz>
+Pela Regra 6 de nomenclatura desta disciplina, como deve se chamar a chave estrangeira, na tabela `pedidos`, que referencia a tabela `pessoas` no papel de "vendedor"?
+- [ ] pessoa_id
+- [ ] id_pessoa
+- [x] funcionario_id (ou o papel semântico correspondente, não "pessoa_id")
+- [ ] vendedor_pessoa_id
+
+Pela Regra 7, quando a FK referencia uma tabela cuja entidade pode exercer papéis diferentes, usa-se o papel semântico no nome — não o nome da tabela — para evitar ambiguidade entre, por exemplo, cliente_id e funcionario_id apontando para a mesma tabela pessoas.
+</quiz>
+
+<quiz>
+Marque todas as ações válidas de ON DELETE em uma FOREIGN KEY no MariaDB.
+- [x] CASCADE
+- [x] SET NULL
+- [x] RESTRICT
+- [ ] TRUNCATE
+
+CASCADE, SET NULL, RESTRICT, NO ACTION e SET DEFAULT são as ações válidas de ON DELETE/ON UPDATE. TRUNCATE não é uma ação de FK — é um comando separado que esvazia uma tabela inteira.
+</quiz>
+
+<quiz>
+Constraints CHECK funcionam corretamente no MariaDB a partir de qual versão?
+- [ ] Nunca funcionaram no MariaDB
+- [x] A partir da versão 10.2.1
+- [ ] Apenas a partir do MariaDB 11
+- [ ] Desde a primeira versão do MariaDB
+
+No MySQL, CHECK era aceito na sintaxe mas ignorado até a versão 8.0.15. No MariaDB, CHECK funciona corretamente desde a versão 10.2.1 (2016) — versão amplamente disponível no XAMPP usado nesta disciplina.
+</quiz>
+
+<quiz>
+Por que a tabela itens_pedidos armazena preco_unitario, em vez de apenas consultar o preço atual em produtos via JOIN?
+- [ ] Porque JOIN é proibido nesta disciplina
+- [x] Porque o preço do produto pode mudar depois da compra, e o valor do pedido histórico não deve mudar retroativamente
+- [ ] Porque produtos não tem coluna de preço
+- [ ] Para economizar espaço em disco
+
+preco_unitario é um snapshot (fotografia) do preço no momento da compra. Se dependêssemos só do preço atual em produtos, o valor de pedidos antigos mudaria toda vez que o preço do produto fosse atualizado — um erro grave em qualquer sistema comercial.
+</quiz>
+
+---
+
+## 📝 Resumo
+
+Nesta aula saímos do papel para o banco de dados de verdade: aplicamos as 9 regras de
+nomenclatura desta disciplina, escolhemos os tipos de dados corretos para cada
+situação (com atenção especial a `DECIMAL` para dinheiro e `utf8mb4` para texto),
+e construímos um schema completo de e-commerce com `CREATE TABLE`, incluindo todas
+as constraints de integridade (`PRIMARY KEY`, `FOREIGN KEY` com `ON DELETE`/`ON
+UPDATE`, `UNIQUE`, `CHECK`). Vimos também `ALTER TABLE` e `DROP` para evoluir e
+remover estruturas, e as principais diferenças práticas entre MariaDB e PostgreSQL.
+Na próxima aula, essas tabelas ganham vida com `INSERT`, `UPDATE` e `DELETE`.
+
+---
+
+## 🏆 Conquista da Aula
+
+!!! success "Selo desbloqueado: 🛠️ Construtor(a) DDL"
+    Você já sabe transformar qualquer modelo lógico em um schema SQL real, seguindo
+    convenções profissionais de nomenclatura e tipos de dados. A próxima parada da
+    Trilha do(a) Modelador(a) de Dados: popular essas tabelas com dados de verdade.
+
+---
+
+## 🔗 Navegação
+
+⬅️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md) · ➡️ 🔒 Aula 04 — em breve.
+
+---
+
+*Fatec Jahu · IBD015 · Prof. Ronan Adriel Zenatti · 2026*

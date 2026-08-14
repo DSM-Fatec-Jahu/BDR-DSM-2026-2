@@ -1,7 +1,49 @@
 # Cardinalidade no Modelo Entidade-Relacionamento
 
-> **IBD015 — Banco de Dados Relacional** · Fatec Jahu · Prof. Ronan Adriel Zenatti
-> [← Voltar à Aula 01](./Aula_01_Revisao_Modelagem_Conceitual.md) · [← Voltar ao README](../README.md)
+**Disciplina:** Banco de Dados — Relacional (IBD015)
+**Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
+**Fatec Jahu — 2º Semestre/2026**
+
+> 📎 Material de apoio complementar à [Aula 01](./Aula_01_Revisao_Modelagem_Conceitual.md), com foco total no conceito que mais confunde os alunos da disciplina.
+
+---
+
+## 🗺️ Mapa Mental deste Material
+
+```mermaid
+flowchart LR
+    ROOT(("Cardinalidade<br/>no MER"))
+
+    ROOT --> CONC
+    subgraph CONC["🎯 Conceito"]
+        direction TB
+        CONC1["Mínimo e Máximo"]
+        CONC2["3 Perguntas-Chave"]
+    end
+
+    ROOT --> NOT
+    subgraph NOT["📐 Notações"]
+        direction TB
+        NOT1["Min-Max"]
+        NOT2["Crow's Foot"]
+        NOT3["Segredo da Posição"]
+    end
+
+    ROOT --> TIPOS
+    subgraph TIPOS["🔢 Tipos"]
+        direction TB
+        TIPOS1["1:1"]
+        TIPOS2["1:N"]
+        TIPOS3["N:M"]
+    end
+
+    ROOT --> PART
+    subgraph PART["✅ Participação"]
+        direction TB
+        PART1["Total (mín. 1)"]
+        PART2["Parcial (mín. 0)"]
+    end
+```
 
 ---
 
@@ -640,6 +682,109 @@ c) **1:N** — TURMA (1) para ALUNOS (N). A FK `id_turma` vai na tabela ALUNOS.
 
 ---
 
-<div align="center">
-  <sub>Fatec Jahu · IBD015 — Banco de Dados Relacional · Prof. Ronan Adriel Zenatti · 2026</sub>
-</div>
+## 🃏 Flashcards de Revisão
+
+??? question "Quais são as três perguntas-chave para determinar a cardinalidade entre A e B?"
+    (1) Um A precisa obrigatoriamente ter pelo menos um B? → define o mínimo. (2) Um A
+    pode ter mais de um B? → define o máximo. (3) Repita as duas perguntas no sentido
+    contrário, de B para A.
+
+??? question "Na notação Crow's Foot, o símbolo próximo à entidade A descreve o quê?"
+    Descreve a entidade do **outro lado** (B) — não a entidade ao lado da qual o
+    símbolo está desenhado. Essa é a fonte da maior confusão da disciplina: o instinto
+    humano é associar o número ao objeto mais próximo, e a notação faz o oposto.
+
+??? question "Na notação Min-Max, o par (mínimo, máximo) fica perto de qual entidade?"
+    Fica perto da entidade que ele **descreve** — o oposto da Crow's Foot. Em `CLIENTES
+    (0,N)————(1,1) PEDIDOS`, o par (1,1) descreve PEDIDOS (fica do lado de PEDIDOS).
+
+??? question "Qual a diferença entre participação total e parcial?"
+    Participação total (mínimo 1): a entidade deve obrigatoriamente participar do
+    relacionamento — não pode existir uma instância "solta". Participação parcial
+    (mínimo 0): a entidade pode existir sem participar do relacionamento.
+
+??? question "Como um relacionamento N:M é implementado no modelo lógico?"
+    Sempre através de uma tabela intermediária (entidade associativa), com chave
+    primária composta pelas FKs das duas entidades originais — nunca diretamente, pois
+    o modelo relacional não suporta N:M sem decomposição.
+
+??? question "Pegadinha: em um relacionamento 1:N com participação parcial de um dos lados, isso é uma exceção rara?"
+    Não. É perfeitamente comum e válido — participação (total/parcial) e cardinalidade
+    máxima (1:1, 1:N, N:M) são dimensões independentes. Um 1:N pode ter participação
+    parcial em qualquer um dos lados sem contradição.
+
+---
+
+## ✅ Quiz de Fixação
+
+<quiz>
+No diagrama EDITORAS ||--o{ LIVROS ("publica"), o que o símbolo `o{` (próximo a LIVROS) significa sobre EDITORAS?
+- [ ] Uma editora deve ter pelo menos um livro
+- [x] Uma editora pode ter zero ou muitos livros
+- [ ] Um livro pode ter várias editoras
+- [ ] O símbolo descreve LIVROS, não EDITORAS
+
+O símbolo `o{` está do lado de LIVROS, mas — pela regra da posição oposta — descreve EDITORAS: uma editora pode ter zero (círculo) ou muitos (pé de galinha) livros.
+</quiz>
+
+<quiz>
+Na notação Min-Max, como se escreve "um pedido pertence a exatamente um cliente, e um cliente pode ter zero ou muitos pedidos"?
+- [ ] PEDIDOS (0,N) ———— (1,1) CLIENTES
+- [x] CLIENTES (0,N) ———— (1,1) PEDIDOS
+- [ ] CLIENTES (1,1) ———— (0,N) PEDIDOS
+- [ ] Não é possível representar isso em Min-Max
+
+O par perto de cada entidade a descreve: (0,N) perto de CLIENTES diz que um cliente tem zero ou muitos pedidos; (1,1) perto de PEDIDOS diz que um pedido pertence a exatamente um cliente.
+</quiz>
+
+<quiz>
+Marque todos os tipos de relacionamento válidos entre duas entidades no MER.
+- [x] 1:1
+- [x] 1:N
+- [x] N:M
+- [ ] 0:0
+
+Os três tipos de cardinalidade máxima são 1:1, 1:N e N:M — não existe "0:0" como classificação de relacionamento.
+</quiz>
+
+<quiz>
+Um Professor pode ter zero ou muitos orientandos; um Aluno tem zero ou um orientador. Qual é a participação de PROFESSORES e de ALUNOS, respectivamente?
+- [ ] Total e Total
+- [x] Parcial (Professores) e Parcial (Alunos)
+- [ ] Total (Professores) e Parcial (Alunos)
+- [ ] Parcial (Professores) e Total (Alunos)
+
+Ambos têm mínimo 0: um professor pode não ter orientandos (parcial), e um aluno pode ainda não ter escolhido orientador (parcial). Participação total exigiria mínimo 1 em algum dos lados.
+</quiz>
+
+<quiz>
+Qual é a "Armadilha 1" mais comum ao desenhar diagramas Crow's Foot, segundo este material?
+- [x] Inverter os símbolos, colocando o pé de galinha do lado errado
+- [ ] Esquecer de nomear o relacionamento
+- [ ] Usar notação Min-Max em vez de Crow's Foot
+- [ ] Desenhar entidades em letras minúsculas
+
+A armadilha mais comum é inverter a posição dos símbolos. A regra é: o pé de galinha (muitos) fica do lado da entidade que aparece em quantidade — não do lado da entidade "dona" da regra.
+</quiz>
+
+---
+
+## 📝 Resumo
+
+Este material atacou de frente o conceito que mais confunde na disciplina: a posição
+dos símbolos na notação Crow's Foot, que descrevem a entidade do lado *oposto* a onde
+estão desenhados. Vimos o método das três perguntas-chave para determinar cardinalidade
+sem depender de intuição, as duas notações mais usadas (Min-Max e Crow's Foot) com seu
+dicionário de tradução, os três tipos de relacionamento com múltiplos exemplos cada, e
+a diferença entre participação total e parcial. Use este material como referência
+sempre que tiver dúvida ao ler ou construir um diagrama MER.
+
+---
+
+## 🔗 Navegação
+
+⬅️ [Voltar à Aula 01 — Revisão de Modelagem Conceitual](./Aula_01_Revisao_Modelagem_Conceitual.md)
+
+---
+
+*Fatec Jahu · IBD015 · Prof. Ronan Adriel Zenatti · 2026*
