@@ -12,6 +12,8 @@ Ao final desta aula você deverá ser capaz de:
 
 - Identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos;
 - Aplicar corretamente os conceitos de cardinalidade e participação para representar as regras de negócio de um sistema real em um diagrama conceitual;
+- Reconhecer casos especiais de relacionamento — auto-relacionamento e relacionamento ternário;
+- Aplicar um método prático (as "quatro perguntas-chave") para decidir, sem dúvida, se uma informação deve virar entidade ou atributo;
 - Compreender os mecanismos de **generalização e especialização** para modelar hierarquias entre entidades.
 
 ---
@@ -44,6 +46,7 @@ flowchart LR
         direction TB
         REL1["Cardinalidade<br/>1:1 · 1:N · N:M"]
         REL2["Participação<br/>Total · Parcial"]
+        REL3["Casos especiais<br/>Auto-relac. · Ternário"]
     end
 
     ROOT --> NOT
@@ -155,6 +158,35 @@ A **participação total** (obrigatória) indica que toda instância da entidade
 A **participação parcial** (opcional) indica que a entidade *pode* participar do relacionamento, mas não é obrigada. Exemplo: um **Cliente** pode ter feito zero pedidos (é um cliente cadastrado que ainda não comprou nada).
 
 💡[Material completo sobre Cardinalidade](Cardinalidade_MER_Completo.md)
+
+### 4.3 Casos Especiais: Auto-Relacionamento e Relacionamento Ternário
+
+Além dos relacionamentos "normais" entre duas entidades diferentes, existem dois casos especiais que aparecem com frequência suficiente para merecer atenção própria.
+
+**Auto-relacionamento:** ocorre quando uma entidade se relaciona **com ela mesma**. O exemplo clássico é uma hierarquia de supervisão: um **Funcionário** pode supervisionar outros funcionários, e cada funcionário tem (ou não) um supervisor — que também é um funcionário.
+
+```mermaid
+erDiagram
+    FUNCIONARIOS {
+        bigint id_funcionario PK
+        varchar nome
+        bigint supervisor_id FK
+    }
+    FUNCIONARIOS ||--o{ FUNCIONARIOS : "supervisiona"
+```
+
+> 🔑 **Repare no nome da chave estrangeira:** ela não se chama `funcionario_id` — se chamasse, seria impossível saber, só pelo nome da coluna, se ela representa "o funcionário" ou "o supervisor dele" (afinal, ambos são registros da mesma tabela). Por isso, quando a FK referencia uma tabela cuja entidade pode exercer **papéis diferentes** dentro do relacionamento, o nome usa o **papel** em vez do nome da tabela: `supervisor_id`. Você vai ver essa e outras convenções de nomenclatura formalizadas na Aula 03.
+
+**Relacionamento ternário:** ocorre quando **três entidades** participam de um único relacionamento, e a combinação das três é que define a ocorrência — não faz sentido analisar duas delas isoladamente. Exemplo: um **Médico** prescreve um **Medicamento** para um **Paciente**. Registrar apenas "médico prescreve medicamento" sem saber para qual paciente perde informação essencial da regra de negócio.
+
+```mermaid
+erDiagram
+    MEDICOS }o--o{ MEDICAMENTOS : "prescreve"
+    MEDICAMENTOS }o--o{ PACIENTES : "prescrito a"
+    MEDICOS }o--o{ PACIENTES : "atende"
+```
+
+> 💡 Relacionamentos ternários são mais raros e mais complexos de mapear para o modelo lógico — use-os apenas quando o negócio realmente exigir que as três entidades sejam analisadas em conjunto. Na dúvida, verifique se o relacionamento não pode ser decomposto em dois relacionamentos binários mais simples.
 
 ---
 
@@ -542,65 +574,38 @@ Restrição: **Total Exclusiva** — todo conteúdo cadastrado é música ou fil
 
 ### 8.7 Passagem para o Modelo Lógico
 
-A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens:
+A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens. Nesta aula descrevemos as três apenas **conceitualmente**; a sintaxe SQL para de fato criar essas tabelas fica para a Aula 03 (DDL).
 
-**Estratégia 1 — Uma tabela por hierarquia inteira:** cria-se uma única tabela com todas as colunas da superclasse e de todas as subclasses. Colunas que não se aplicam a uma subclasse ficam NULL. Simples de implementar, mas gera muitos NULLs e mistura dados de naturezas diferentes.
+> 📐 **Duas convenções de nomenclatura que você vai ver o tempo todo a partir daqui:** toda **PK** (chave primária) segue o padrão `id_` + nome da tabela no singular (ex.: `id_produto`). Toda **FK** (chave estrangeira) segue o padrão inverso: nome da tabela referenciada no singular + `_id` (ex.: `produto_id`). Repare que a ordem das palavras se inverte entre PK e FK — não é acidente, é assim que se distingue visualmente "quem é dono da linha" de "quem está apontando para outra tabela". Essas regras serão detalhadas com nomes formais (Regra 5 e Regra 6) na Aula 03.
 
-```sql
--- Exemplo: Produto com tudo em uma tabela
-CREATE TABLE produtos (
-    id_produto    BIGINT UNSIGNED            NOT NULL AUTO_INCREMENT,
-    nome          VARCHAR(255)               NOT NULL,
-    preco         DECIMAL(10, 2)             NOT NULL,
-    tipo          ENUM('fisico', 'digital')  NOT NULL,  -- discriminador
-    -- colunas de produto físico (NULL para digitais):
-    peso_kg       DECIMAL(8, 3)                  NULL,
-    -- colunas de produto digital (NULL para físicos):
-    url_download  VARCHAR(255)                   NULL,
-    tamanho_mb    DECIMAL(10, 2)                 NULL,
-    criado_em     DATETIME                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME                   NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                                      ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME                       NULL,
-    CONSTRAINT pk_produto PRIMARY KEY (id_produto)
-);
+**Estratégia 1 — Uma tabela por hierarquia inteira:** cria-se uma única tabela com todas as colunas da superclasse e de todas as subclasses, mais uma coluna discriminadora indicando o tipo de cada linha (ex.: uma coluna `tipo` com valores `fisico`/`digital`). Colunas que não se aplicam a uma subclasse ficam vazias para aquela linha. Simples de implementar, mas gera muitas colunas vazias e mistura dados de naturezas diferentes na mesma tabela.
+
+```
+produtos (tabela única)
+    id_produto      — PK
+    nome
+    preco
+    tipo            — discriminador: 'fisico' ou 'digital'
+    peso_kg         — só preenchido quando tipo = 'fisico'
+    url_download    — só preenchido quando tipo = 'digital'
+    tamanho_mb       — só preenchido quando tipo = 'digital'
 ```
 
-**Estratégia 2 — Uma tabela por subclasse (com JOIN):** cria-se uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse tem PK própria e referencia a superclasse por FK com `UNIQUE` (garantindo o 1:1). É o padrão adotado nesta disciplina.
+**Estratégia 2 — Uma tabela por subclasse (com JOIN):** cria-se uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse tem PK própria e referencia a superclasse por FK única (garantindo o 1:1). É o padrão adotado nesta disciplina.
 
-```sql
--- Tabela da superclasse
-CREATE TABLE produtos (
-    id_produto    BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    nome          VARCHAR(255)     NOT NULL,
-    preco         DECIMAL(10, 2)   NOT NULL,
-    criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                            ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME             NULL,
-    CONSTRAINT pk_produto PRIMARY KEY (id_produto)
-);
+```
+produtos (superclasse)
+    id_produto          — PK
 
--- Tabela da subclasse: PK própria (Regra 5) + FK para a superclasse (Regra 6)
--- O UNIQUE em produto_id garante que cada produto físico aponte para um único produto
-CREATE TABLE produtos_fisicos (
-    id_produto_fisico  BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    produto_id         BIGINT UNSIGNED  NOT NULL,
-    peso_kg            DECIMAL(8, 3)    NOT NULL,
-    criado_em          DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                                 ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em        DATETIME             NULL,
-    CONSTRAINT pk_produto_fisico  PRIMARY KEY (id_produto_fisico),
-    CONSTRAINT uq_produto_fisico  UNIQUE (produto_id),  -- garante o 1:1 da especialização
-    CONSTRAINT fk_produto_fisico  FOREIGN KEY (produto_id)
-        REFERENCES produtos (id_produto) ON DELETE CASCADE
-);
+produtos_fisicos (subclasse)
+    id_produto_fisico   — PK própria
+    produto_id          — FK para produtos (única, garante o 1:1)
+    peso_kg
 ```
 
-**Estratégia 3 — Uma tabela por subclasse (sem superclasse):** cada subclasse tem sua própria tabela com todos os atributos, inclusive os herdados da superclasse. Evita JOINs, mas duplica a definição dos atributos comuns.
+**Estratégia 3 — Uma tabela por subclasse (sem superclasse):** cada subclasse tem sua própria tabela com todos os atributos, inclusive os herdados da superclasse. Evita a necessidade de juntar tabelas nas consultas, mas duplica a definição dos atributos comuns em cada subclasse.
 
-> 📌 **Nesta disciplina, adotaremos sempre a Estratégia 2** — uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse mantém sua própria PK (Regra 5) e referencia a superclasse por FK com `UNIQUE` (Regra 6), preservando o 1:1 da especialização sem violar as convenções de nomenclatura.
+> 📌 **Nesta disciplina, adotaremos sempre a Estratégia 2** — uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse mantém sua própria PK e referencia a superclasse por FK única, preservando o 1:1 da especialização sem duplicar atributos comuns.
 
 ---
 
@@ -629,6 +634,55 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 **Usar generalização quando não há atributos específicos:** se as subclasses candidatas não têm nenhum atributo ou relacionamento próprio além dos herdados, a hierarquia provavelmente é desnecessária. Use uma coluna `tipo` com `CHECK` na própria entidade e evite complexidade sem benefício.
 
 **Confundir generalização com relacionamento comum:** a relação "é um" (herança) é fundamentalmente diferente de "tem um" (associação). Gerente **é um** Funcionário — isso é herança. Funcionário **tem um** Departamento — isso é relacionamento. Aplique generalização somente quando a relação semântica for realmente de subtipagem.
+
+### 10.1 Método Prático: Entidade ou Atributo?
+
+O erro mais frequente da lista acima — confundir atributo com entidade — tem um método simples para resolver a dúvida: faça estas quatro perguntas, nesta ordem, para cada informação que você identificar em um enunciado ou documento real.
+
+1. **"Essa informação se repete várias vezes dentro do mesmo registro, com valores diferentes a cada repetição?"** Se sim, é forte sinal de **entidade** (ou entidade associativa) — um atributo simples não se repete dentro do mesmo registro.
+2. **"Essa informação continuaria fazendo sentido e poderia ser consultada mesmo sem este registro específico existir?"** Se sim, é sinal de **entidade independente**. Se a informação só existe *dentro* deste documento e morre com ele, é mais provável que seja **atributo**.
+3. **"Essa informação está apenas descrevendo/qualificando outra coisa específica?"** Se sim, é **atributo** daquilo que ela descreve.
+4. **"Essa informação é o resultado do encontro entre duas outras entidades?"** Se sim, é atributo de uma **entidade associativa** — não de nenhuma das duas entidades originais isoladamente.
+
+**Exemplo guiado — Ficha de Empréstimo da Biblioteca:** voltando ao sistema de biblioteca que abriu esta aula, imagine a ficha de empréstimo abaixo, preenchida no balcão:
+
+```text
+BIBLIOTECA CENTRAL FATEC JAHU
+Ficha de Empréstimo Nº 4821
+
+Aluno: João Silva          Matrícula: 2026001
+Livro: Sistemas de Banco de Dados     ISBN: 978-85-352-0000-0
+Data do empréstimo: 10/08/2026
+Data prevista de devolução: 24/08/2026
+Status: Em andamento
+```
+
+Aplicando as quatro perguntas: **nome e matrícula do aluno** descrevem o aluno (pergunta 3) e continuariam fazendo sentido em outra ficha (pergunta 2) → atributos da entidade `ALUNO`. **Título e ISBN do livro** descrevem o livro (pergunta 3) e continuariam existindo mesmo que esta ficha fosse cancelada (pergunta 2) → atributos da entidade `LIVRO`. Já a **data do empréstimo, a data prevista de devolução e o status** só fazem sentido no encontro específico entre *este* aluno e *este* livro (pergunta 4) → são atributos da entidade associativa `EMPRESTIMO`, não do Aluno nem do Livro isoladamente.
+
+```mermaid
+erDiagram
+    ALUNOS {
+        bigint id_aluno PK
+        varchar nome
+        varchar matricula
+    }
+    LIVROS {
+        bigint id_livro PK
+        varchar titulo
+        varchar isbn
+    }
+    EMPRESTIMOS {
+        bigint aluno_id FK
+        bigint livro_id FK
+        date data_emprestimo
+        date data_devolucao_prevista
+        varchar status
+    }
+    ALUNOS ||--o{ EMPRESTIMOS : "realiza"
+    LIVROS ||--o{ EMPRESTIMOS : "é objeto de"
+```
+
+> 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal, um formulário de matrícula) e refaça as quatro perguntas, item por item. É o mesmo raciocínio sempre — só muda o domínio.
 
 ---
 
@@ -690,6 +744,16 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
     Não. Cardinalidade 1:N significa que **pode** haver muitos — não que sempre haverá.
     Um Departamento com um único Funcionário ainda é, estruturalmente, uma relação 1:N.
 
+??? question "O que é um auto-relacionamento? Dê um exemplo."
+    É quando uma entidade se relaciona com ela mesma. Exemplo: FUNCIONARIOS supervisiona
+    FUNCIONARIOS (hierarquia de supervisão) — nesse caso a FK usa o papel semântico no
+    nome (`supervisor_id`), não o nome da tabela, para evitar ambiguidade.
+
+??? question "Quando um relacionamento é considerado ternário?"
+    Quando três entidades participam de um único relacionamento e a combinação das três
+    — não de duas isoladamente — é que define a ocorrência. Exemplo: Médico prescreve
+    Medicamento para Paciente.
+
 ---
 
 ## ✅ Quiz de Fixação
@@ -744,16 +808,28 @@ Um Cliente pode ter feito zero pedidos, mas todo Pedido precisa estar associado 
 Cliente participa de forma parcial (pode não ter nenhum pedido) enquanto Pedido participa de forma total (não existe pedido sem cliente associado).
 </quiz>
 
+<quiz>
+Em uma entidade FUNCIONARIOS que se relaciona consigo mesma (supervisão), por que a chave estrangeira se chama `supervisor_id` e não `funcionario_id`?
+- [ ] Porque `funcionario_id` já é usado como nome da chave primária
+- [x] Porque, em um auto-relacionamento, nomear a FK só com o nome da tabela seria ambíguo — o papel no relacionamento precisa aparecer no nome
+- [ ] Não há diferença, os dois nomes são equivalentes
+- [ ] Porque toda FK deve terminar em "_id" exatamente uma vez
+
+Como a FK referencia a própria tabela FUNCIONARIOS, chamá-la de `funcionario_id` não diria se ela representa "o funcionário" ou "o supervisor dele". Usar o papel semântico (`supervisor_id`) resolve a ambiguidade.
+</quiz>
+
 ---
 
 ## 📝 Resumo
 
 Nesta aula revisamos os três elementos centrais do Modelo Entidade-Relacionamento —
 entidades, atributos e relacionamentos — e como cardinalidade e participação
-descrevem as regras de negócio entre eles. Vimos a notação Crow's Foot, adotada nesta
-disciplina, e o mecanismo de generalização/especialização para modelar hierarquias com
-herança, incluindo suas quatro combinações de restrição (total/parcial ×
-exclusiva/sobreposta). Também já demos uma prévia do sistema de streaming que será a
+descrevem as regras de negócio entre eles, incluindo os casos especiais de
+auto-relacionamento e relacionamento ternário. Vimos a notação Crow's Foot, adotada
+nesta disciplina, um método prático de quatro perguntas para nunca mais confundir
+entidade com atributo, e o mecanismo de generalização/especialização para modelar
+hierarquias com herança, incluindo suas quatro combinações de restrição (total/parcial
+× exclusiva/sobreposta). Também já demos uma prévia do sistema de streaming que será a
 base da Atividade T1. Na próxima aula, esse modelo conceitual vira modelo lógico
 relacional, através da Normalização.
 
