@@ -1,41 +1,38 @@
-# 🗄️ Banco de Dados e Aplicações (IBD951)
+# 🗄️ Banco de Dados — Relacional (IBD015)
 
-> **Fatec Jahu** · Tecnologia em Desenvolvimento de Software Multiplataforma · 2º Semestre/2026
+<div align="center" markdown>
 
-Bem-vindo(a) à **Trilha do(a) Arquiteto(a) de Dados** — a jornada desta disciplina, do
-primeiro contato com modelagem até o domínio prático de consultas SQL. Cada aula
-desbloqueia um selo; ao final dos dois blocos, você terá o selo de **🏆 Arquiteto(a) de
-Dados — IBD951**.
+![Fatec Jahu](https://img.shields.io/badge/Fatec-Jahu-blue?style=for-the-badge)
+![Semestre](https://img.shields.io/badge/2º%20Semestre-2026-green?style=for-the-badge)
+![Carga Horária](https://img.shields.io/badge/Carga%20Horária-80h-orange?style=for-the-badge)
+
+</div>
+
+!!! info "Conteúdo em construção progressiva"
+    As aulas deste semestre são publicadas semanalmente. A tabela abaixo mostra o planejamento completo — os itens marcados com 🔒 ainda não foram liberados.
 
 ---
 
-## 👨‍🏫 Informações do Professor
+## 🏫 Informações da Disciplina
 
 | Campo | Informação |
 |---|---|
-| **Professor** | Ronan Adriel Zenatti |
-| **E-mail** | ronan.zenatti@cps.sp.gov.br |
 | **Instituição** | Fatec Jahu — Centro Paula Souza |
 | **Curso** | Tecnologia em Desenvolvimento de Software Multiplataforma |
-| **Disciplina** | Banco de Dados e Aplicações |
-| **Sigla** | IBD951 |
-| **Semestre** | 2º Semestre / 2026 |
+| **Disciplina** | Banco de Dados — Relacional |
+| **Sigla** | IBD015 |
+| **Semestre/Ano** | 2º Semestre / 2026 |
+| **Professor** | Ronan Adriel Zenatti |
+| **E-mail** | ronan.zenatti@cps.sp.gov.br |
+| **Carga Horária Semestral** | 80 horas |
 
 ---
 
 ## 📋 Ementa
 
-Esta disciplina abrange o projeto e a implementação de bancos de dados relacionais,
-desde a modelagem conceitual até a construção de consultas SQL complexas. Os principais
-temas trabalhados são:
+Esta disciplina abrange o projeto e a implementação de bancos de dados relacionais, desde a modelagem conceitual até aspectos avançados de programação e administração. Os principais temas trabalhados são:
 
-Modelagem conceitual (MER) e lógica de dados; normalização; definição de estruturas com
-DDL; manipulação e consulta de dados com DML/DQL; junções (JOINs), subconsultas e
-visões; e restrições de integridade.
-
-> ⚠️ **Nota:** a ementa acima cobre o que já está confirmado pelas 3 primeiras aulas
-> publicadas. O plano completo das Aulas 4–20 ainda não foi definido neste repositório —
-> veja o aviso no Sumário de Aulas abaixo.
+Projeto e implementação de banco de dados relacionais; consultas complexas com agrupamentos e subconsultas; implementação de restrições de integridade; criação de consultas utilizando visões; aspectos de programação em ambiente de banco de dados com procedimentos armazenados, gatilhos e funções; cópia de segurança e restauração de bancos de dados; estruturas de índices; processamento e otimização de consultas; processamento de transações e controle de concorrência; recuperação de falhas; e novas tecnologias aplicadas a banco de dados.
 
 ---
 
@@ -43,101 +40,83 @@ visões; e restrições de integridade.
 
 Ao final da disciplina, o aluno será capaz de:
 
-- Aplicar modelagem conceitual e normalização na concepção de um banco de dados relacional;
-- Implementar estruturas de banco de dados utilizando adequadamente os conceitos de
-  linguagem de definição, manipulação e consulta de dados (DDL, DML e DQL);
-- Construir consultas SQL complexas com junções, subconsultas e visões.
-
----
-
-## ⏱️ Carga Horária
-
-| Tipo | Horas |
-|---|---|
-| Carga Horária Semanal | 4 horas |
-| **Carga Horária Semestral** | **80 horas** |
+- Aplicar normalização para implementação de Banco de Dados, utilizando adequadamente os conceitos de linguagem de definição, manipulação e consulta de dados (DDL, DML e DQL);
+- Implementar *Stored Procedures* e Gatilhos (*Triggers*) para soluções de problemas em sistemas;
+- Identificar as características de recuperação após falha e de segurança dos SGBDs.
 
 ---
 
 ## 📐 Metodologia
 
-As aulas são conduzidas no formato **expositivo e prático**, combinando explicações
-conceituais com exercícios aplicados diretamente no SGBD. A ênfase é sempre na resolução
-de problemas reais, preparando o aluno para o mercado de trabalho.
+As aulas são conduzidas no formato **expositivo e prático**, combinando explicações conceituais com exercícios aplicados diretamente no SGBD. A ênfase é sempre na resolução de problemas reais, preparando o aluno para o mercado de trabalho.
 
 ---
 
 ## 📊 Critérios de Avaliação
 
-```
-Nota Final = (T1 + P1 + T2 + P2) × 1 + R
-```
+A nota final é calculada pela seguinte fórmula:
 
-| Componente | Descrição |
-|---|---|
-| **T1** | Modelagem de um sistema de Streaming (Conceitual, Lógico e DDL) |
-| **P1** | Avaliação individual teórica e prática sobre modelagem e SQL fundamental |
-| **T2** | Trabalho prático envolvendo consultas complexas e *views* |
-| **P2** | Avaliação individual sobre consultas avançadas |
-| **R** | Avaliação Substitutiva — substitui a menor nota entre P1 e P2 |
+> **Nota Final = (T1 + P1 + T2 + P2) × 1 + R**
 
-> ⚠️ **Nota:** posição exata (em qual aula cai cada avaliação) ainda não confirmada além
-> do que já está nas aulas publicadas — a Aula 1 já referencia o T1 (streaming) como
-> próxima atividade prática do bloco.
+| Componente | Descrição | Peso |
+|---|---|---|
+| **T1** | Modelagem de um sistema de Streaming (Conceitual, Lógico e DDL) | 2 pts |
+| **P1** | Avaliação individual teórica e prática sobre modelagem e SQL fundamental | 3 pts |
+| **T2** | Desenvolvimento de relatórios complexos e *views* para tomada de decisão | 2 pts |
+| **P2** | Avaliação individual sobre consultas avançadas e programação em banco de dados | 3 pts |
+| **R** | Avaliação Substitutiva — substitui a menor nota entre P1 e P2 | 3 pts** |
+
+> 💡 **Dica:** o Trabalho 2 (T2 — Aula 17) é interdisciplinar e integrado com as disciplinas de **Desenvolvimento Web II** e **Engenharia de Software II**. Planeje-se com antecedência!
 
 ---
 
-## 🗺️ Trilha do(a) Arquiteto(a) de Dados
+## 📑 Sumário de Aulas
 
-```mermaid
-flowchart LR
-    START(("🧭 Início"))
+### 🔵 Bloco 1 — Fundamentos e Modelagem
 
-    START --> B1
-    subgraph B1["🗺️ Bloco 1 — Trilha do(a) Modelador(a) de Dados<br/>(Aulas 1–9)"]
-        direction TB
-        A1["✅ Aula 1"]
-        A2["✅ Aula 2"]
-        A3["✅ Aula 3"]
-        A49["🔒 Aulas 4–9"]
-    end
+| # | Aula | Conteúdo Principal | Status |
+|---|---|---|---|
+| 01 | [Revisão de Modelagem de Dados (Conceitual)](aulas/Aula_01_Revisao_Modelagem_Conceitual.md) | Abordagem Entidade-Relacionamento (MER); Entidades, Atributos e Relacionamentos | ✅ Disponível |
+| 02 | [Normalização](aulas/Aula_02_Normalizacao.md) | Dependências funcionais; 1ª, 2ª e 3ª Formas Normais; modelo conceitual ao lógico relacional | ✅ Disponível |
+| 03 | [SQL — DDL: Definição de Estruturas](aulas/Aula_03_SQL_DDL.md) | Comandos DDL (CREATE, ALTER, DROP); Tipos de dados; Restrições básicas (PK) | ✅ Disponível |
+| 04 | SQL — DML: Manipulação de Dados | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | 🔒 Em breve |
+| 05 | Atividade Prática — Modelagem Streaming | Modelagem completa de um sistema de Streaming (Conceitual, Lógico e DDL) | 🔒 Em breve |
 
-    B1 --> B2
-    subgraph B2["🔍 Bloco 2 — Trilha do(a) Consultor(a) SQL<br/>(Aulas 10–20)"]
-        direction TB
-        A1020["🔒 Aulas 10–20"]
-    end
+### 🟢 Bloco 2 — Consultas e Visões
 
-    B2 --> END(("🏆 Arquiteto(a) de Dados<br/>IBD951"))
-```
+| # | Aula | Conteúdo Principal | Status |
+|---|---|---|---|
+| 06 | SQL: Consultas Básicas | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | 🔒 Em breve |
+| 07 | SQL — DQL: Consultas e Agregação | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | 🔒 Em breve |
+| 08 | Junções (JOINs), Subconsultas e Visões | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | 🔒 Em breve |
+| 09 | ✏️ Avaliação P1 | Avaliação individual — Modelagem e SQL fundamental | 🔒 Em breve |
+
+### 🟠 Bloco 3 — Programação e Administração de BD
+
+| # | Aula | Conteúdo Principal | Status |
+|---|---|---|---|
+| 10 | Integridade Referencial e Restrições | FOREIGN KEY com ON DELETE/UPDATE CASCADE e RESTRICT; CHECK; Índices básicos | 🔒 Em breve |
+| 11 | Stored Procedures | Lógica procedural; PROCEDURE com parâmetros IN/OUT; Tratamento de erros | 🔒 Em breve |
+| 12 | Triggers (Gatilhos) | Gatilhos BEFORE/AFTER (ROW e STATEMENT); Auditoria de dados; Boas práticas | 🔒 Em breve |
+| 13 | Functions (UDF) e Transações | UDFs escalares e de tabela; diferença entre FUNCTION e PROCEDURE; ACID; BEGIN, COMMIT, ROLLBACK; Controle de concorrência | 🔒 Em breve |
+| 14 | Backup, Restauração e Segurança | Backup completo, incremental e diferencial; DUMP e restauração; CREATE USER, GRANT, REVOKE | 🔒 Em breve |
+| 15 | Otimização de Consultas e Índices | Estruturas B-Tree e Hash; EXPLAIN / EXPLAIN ANALYZE; Otimização de JOINs e subconsultas | 🔒 Em breve |
+
+### 🔴 Bloco 4 — Encerramento e Avaliações Finais
+
+| # | Aula | Conteúdo Principal | Status |
+|---|---|---|---|
+| 16 | Revisão Geral | Consolidação de todos os tópicos; Exercícios integradores | 🔒 Em breve |
+| 17 | 📦 T2 — Trabalho Interdisciplinar | Entrega do Projeto Integrado com Desenvolvimento Web II e Engenharia de Software II | 🔒 Em breve |
+| 18 | ✏️ Avaliação P2 | Avaliação individual — Consultas avançadas, Procedures, Triggers, Transações, Backup e Otimização | 🔒 Em breve |
+| 19 | ✏️ Avaliação Substitutiva | Substitui a menor nota entre P1 e P2 | 🔒 Em breve |
+| 20 | Novas Tecnologias em BD e Encerramento | NewSQL, DBaaS, Big Data, introdução a BD Não Relacional; Fechamento e portfólio | 🔒 Em breve |
 
 ---
 
-## 📚 Sumário de Aulas
+## 📝 Atividades e Avaliações
 
-Cada aula está organizada em `docs/aulas/` e chega progressivamente ao longo do
-semestre.
-
-### Bloco 1 — Trilha do(a) Modelador(a) de Dados (Aulas 1–9)
-
-| Aula | Título | Selo | Status |
-|---|---|---|---|
-| 01 | [Revisão de Modelagem de Dados (Conceitual)](./aulas/Aula_01_Revisao_Modelagem_Conceitual.md) | 🧭 Explorador(a) de Dados | ✅ Disponível |
-| 02 | [Normalização e Passagem ao Modelo Lógico](./aulas/Aula_02_Normalizacao.md) | 🧹 Guardião(ã) da Normalização | ✅ Disponível |
-| 03 | [SQL — DDL: Definição de Estruturas](./aulas/Aula_03_SQL_DDL.md) | 🛠️ Construtor(a) DDL | ✅ Disponível |
-| 04–09 | — | — | 🔒 Em breve |
-
-### Bloco 2 — Trilha do(a) Consultor(a) SQL (Aulas 10–20)
-
-| Aula | Título | Selo | Status |
-|---|---|---|---|
-| 10–20 | — | — | 🔒 Em breve |
-
-> ⚠️ **Nota:** as Aulas 4–20 ainda não foram adicionadas a este repositório. Os selos
-> das Aulas 2 e 3 acima foram escolhidos pelo conteúdo real de cada arquivo publicado
-> (Normalização e DDL), e não necessariamente coincidem com os exemplos de selo
-> originalmente listados no `CLAUDE.md` para essas posições — vale alinhar isso com o
-> professor conforme as próximas aulas forem chegando.
+Confira a lista completa, sempre atualizada, na página [Atividades e Avaliações](atividades/index.md).
 
 ---
 
@@ -166,14 +145,14 @@ semestre.
 
 ---
 
-## 💬 Contato e Dúvidas
+## 💬 Contato
 
-📧 **ronan.zenatti@cps.sp.gov.br**
+📧 [ronan.zenatti@cps.sp.gov.br](mailto:ronan.zenatti@cps.sp.gov.br)
 
 > *"Dados bem modelados são a fundação de qualquer sistema confiável."*
 
 ---
 
 <div align="center">
-  <sub>Fatec Jahu · Centro Paula Souza · Governo do Estado de São Paulo · 2026</sub>
+<sub>Fatec Jahu · Centro Paula Souza · Governo do Estado de São Paulo · 2026</sub>
 </div>

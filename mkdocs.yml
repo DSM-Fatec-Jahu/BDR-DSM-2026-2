@@ -1,5 +1,5 @@
-site_name: Banco de Dados e Aplicações — IBD951 (2026/2)
-site_description: Material de aulas, atividades e avaliações de Banco de Dados e Aplicações (IBD951) — Fatec Jahu — 2º Semestre 2026
+site_name: Banco de Dados — Relacional (IBD015) — 2026/2
+site_description: Material de aulas, atividades e avaliações de Banco de Dados — Relacional (IBD015) — Fatec Jahu — DSM — 2º Semestre 2026
 site_url: https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/
 repo_url: https://github.com/DSM-Fatec-Jahu/BDR-DSM-2026-2
 repo_name: DSM-Fatec-Jahu/BDR-DSM-2026-2
@@ -70,11 +70,13 @@ plugins:
 # O pipeline descrito em CLAUDE.md cobre esse passo automaticamente.
 nav:
   - Início: index.md
-  - Bloco 1 — Modelagem e DDL:
+  - Bloco 1 — Fundamentos e Modelagem:
       - aulas/Aula_01_Revisao_Modelagem_Conceitual.md
       - aulas/Cardinalidade_MER_Completo.md
       - aulas/Aula_02_Normalizacao.md
       - aulas/Aula_03_SQL_DDL.md
+  - Atividades e Avaliações:
+      - atividades/index.md
 
 extra:
   social:

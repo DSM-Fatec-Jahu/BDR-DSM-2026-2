@@ -1,6 +1,6 @@
 # Aula 01 — Revisão de Modelagem de Dados (Conceitual)
 
-**Disciplina:** Banco de Dados e Aplicações (IBD951)
+**Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
@@ -888,4 +888,4 @@ relacional, através da Normalização.
 
 ---
 
-*Fatec Jahu · IBD951 · Prof. Ronan Adriel Zenatti · 2026*
+*Fatec Jahu · IBD015 · Prof. Ronan Adriel Zenatti · 2026*
