@@ -314,6 +314,28 @@ Olhando a linha entre **ALUNOS** e **MATRICULAS**: o `||` do lado do Aluno indic
 
 Até aqui modelamos entidades de forma independente. Mas e quando percebemos que duas ou mais entidades compartilham um conjunto de atributos em comum, diferindo apenas em alguns atributos específicos? É para esse cenário que existe o mecanismo de **generalização e especialização**.
 
+**O problema que motiva o conceito.** Imagine que você está modelando o sistema de uma locadora de veículos que trabalha com **carros**, **motos** e **caminhões**. Todos eles têm `placa`, `ano_fabricacao`, `cor` e `quilometragem` — mas cada tipo também tem atributos que só fazem sentido para ele: carros têm `numero_portas`, motos têm `cilindrada`, caminhões têm `capacidade_carga`. Como representar isso no modelo? Há duas saídas ingênuas e uma correta:
+
+- ❌ **Abordagem 1 — uma entidade só:** criar uma única entidade `Veículo` com *todos* os atributos de todos os tipos. Resultado: cada carro fica com `cilindrada` vazia, cada moto fica com `capacidade_carga` vazia — muitos campos nulos e a impossibilidade de exigir corretamente o que é obrigatório para cada tipo.
+- ❌ **Abordagem 2 — três entidades totalmente separadas:** criar `Carro`, `Moto` e `Caminhão` independentes, repetindo `placa`, `ano_fabricacao`, `cor` e `quilometragem` em cada uma. Resultado: redundância e risco de inconsistência (a mesma ideia de "veículo" definida em três lugares diferentes).
+- ✅ **Abordagem correta — generalizar/especializar:** criar uma entidade genérica `Veículo` com os atributos **comuns**, e entidades especializadas `Carro`, `Moto` e `Caminhão` só com os atributos **exclusivos** de cada uma, herdando o resto de `Veículo`.
+
+Visualmente, essa terceira abordagem forma uma **hierarquia** — uma superclasse no topo e as subclasses abaixo, cada uma acrescentando o que lhe é próprio:
+
+```mermaid
+flowchart TB
+    VEIC["🚗 VEÍCULO (superclasse)<br/>placa · ano_fabricacao<br/>cor · quilometragem"]
+    CAR["🚘 CARRO<br/>numero_portas · tipo_cambio"]
+    MOT["🏍️ MOTO<br/>cilindrada · tem_sidecar"]
+    CAM["🚛 CAMINHÃO<br/>capacidade_carga · numero_eixos"]
+
+    VEIC -->|"é um"| CAR
+    VEIC -->|"é um"| MOT
+    VEIC -->|"é um"| CAM
+```
+
+Guarde essa imagem mental — todo o restante desta seção é sobre como ler, restringir e implementar esse tipo de hierarquia. Vamos aos conceitos formais.
+
 ### 8.1 O que é Generalização?
 
 A **generalização** é um processo **bottom-up** (de baixo para cima): você parte de entidades específicas já identificadas e abstrai o que elas têm em comum para criar uma entidade mais genérica — chamada de **superclasse** ou **entidade genérica**.
@@ -375,6 +397,44 @@ A combinação dessas duas dimensões gera quatro tipos possíveis:
 | Total Sobreposta | Todo indivíduo está em pelo menos uma subclasse | Pode estar em mais de uma | Nenhum "genérico"; subclasses podem se sobrepor |
 | Parcial Exclusiva | Pode existir "genérico" | Em no máximo uma | Subclasses não se sobrepõem |
 | Parcial Sobreposta | Pode existir "genérico" | Pode estar em mais de uma | Caso mais flexível |
+
+**Visualizando a exclusividade.** A diferença entre *exclusiva* e *sobreposta* é a que mais confunde — e um desenho resolve. Compare os dois casos abaixo: no primeiro, cada instância cai em **no máximo uma** subclasse; no segundo, uma mesma instância pode estar em **mais de uma** ao mesmo tempo.
+
+```mermaid
+flowchart TB
+    V["🚗 VEÍCULO"]
+    C["🚘 CARRO"]
+    M["🏍️ MOTO"]
+    V -->|"d — no máximo uma"| C
+    V -->|"d"| M
+```
+
+*Exclusiva (disjunta, **d**): um veículo é carro **ou** moto — nunca os dois.*
+
+```mermaid
+flowchart TB
+    P["👤 PESSOA"]
+    CLI["🛒 CLIENTE"]
+    FUN["💼 FUNCIONÁRIO"]
+    P -->|"o — pode mais de uma"| CLI
+    P -->|"o"| FUN
+```
+
+*Sobreposta (**o**): uma pessoa pode ser cliente **e** funcionário ao mesmo tempo.*
+
+#### Quando (e quando não) usar generalização/especialização
+
+Nem toda diferença entre instâncias justifica uma hierarquia. Use esta tabela como checklist ao ler um enunciado — se um dos sinais da esquerda aparecer, a hierarquia provavelmente se justifica:
+
+| Sinal no enunciado | O que costuma indicar |
+|---|---|
+| *"Existem dois (ou mais) tipos de X…"* | Provável especialização de `X` |
+| *"Todo Y é também um X, mas com características a mais…"* | Hierarquia de herança (`Y` é subclasse de `X`) |
+| *"X pode ser A, B ou C"* (sempre um só) | Especialização **exclusiva (disjunta)** |
+| *"X pode ser A e B ao mesmo tempo"* | Especialização **sobreposta** |
+| *"Alguns campos só se aplicam a certos tipos de X"* | Atributos exclusivos de subclasse |
+
+> ⚠️ **Não force a hierarquia.** Se as subclasses candidatas não têm nenhum atributo ou relacionamento próprio além dos herdados, a hierarquia é desnecessária — resolva com uma coluna `tipo` na própria entidade e evite complexidade sem ganho. Voltaremos a esse ponto nos Erros Comuns (Seção 10).
 
 ### 8.5 Exemplos de Generalização
 
@@ -654,7 +714,36 @@ Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclass
 
 Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
-**Criar atributo quando deveria ser entidade:** se você percebe que aquele atributo tem atributos próprios e se relaciona com outras coisas, ele provavelmente deveria ser uma entidade. Exemplo: `cidade` pode ser só um atributo de texto em Endereço, mas se o sistema precisar de dados sobre cada cidade (como estado, CEP base, etc.), `Cidade` vira uma entidade.
+**Criar atributo quando deveria ser entidade:** se você percebe que aquele atributo tem atributos próprios e se relaciona com outras coisas, ele provavelmente deveria ser uma entidade. Exemplo: `cidade` pode ser só um atributo de texto em Cliente, mas se o sistema precisar de dados sobre cada cidade (como estado, CEP base, etc.), `Cidade` vira uma entidade.
+
+❌ **Enquanto for só um rótulo, atributo basta:**
+
+```mermaid
+erDiagram
+    CLIENTES {
+        bigint id_cliente PK
+        varchar nome
+        varchar cidade
+    }
+```
+
+✅ **Quando a cidade precisa ter dados próprios, promova-a a entidade:**
+
+```mermaid
+erDiagram
+    CIDADES {
+        bigint id_cidade PK
+        varchar nome
+        char uf
+        varchar cep_base
+    }
+    CLIENTES {
+        bigint id_cliente PK
+        varchar nome
+        bigint cidade_id FK
+    }
+    CIDADES ||--o{ CLIENTES : "localiza"
+```
 
 **Esquecer de nomear o relacionamento:** o nome do relacionamento deve expressar claramente a associação entre as entidades — evite nomes genéricos como "tem" ou "possui" quando algo mais preciso como "leciona" ou "pertence_a" descreve melhor o negócio.
 
@@ -666,6 +755,49 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 
 **Confundir generalização com relacionamento comum:** a relação "é um" (herança) é fundamentalmente diferente de "tem um" (associação). Gerente **é um** Funcionário — isso é herança. Funcionário **tem um** Departamento — isso é relacionamento. Aplique generalização somente quando a relação semântica for realmente de subtipagem.
 
+✅ **"é um" → herança (generalização/especialização):**
+
+```mermaid
+erDiagram
+    FUNCIONARIOS {
+        bigint id_funcionario PK
+        varchar nome
+    }
+    GERENTES {
+        bigint id_funcionario PK, FK
+        decimal bonus_anual
+    }
+    FUNCIONARIOS ||--o| GERENTES : "é um"
+```
+
+✅ **"tem um" → relacionamento comum (associação), nunca herança:**
+
+```mermaid
+erDiagram
+    DEPARTAMENTOS {
+        bigint id_departamento PK
+        varchar nome
+    }
+    FUNCIONARIOS {
+        bigint id_funcionario PK
+        bigint departamento_id FK
+    }
+    DEPARTAMENTOS ||--o{ FUNCIONARIOS : "lotado em"
+```
+
+### Resumo dos Erros Comuns
+
+Use esta tabela como revisão rápida antes de dar um modelo por pronto:
+
+| Erro | Sintoma | Como evitar |
+|---|---|---|
+| Atributo que deveria ser entidade | Um "atributo" que tem dados próprios e se relaciona com outras coisas | Pergunte: *"isso tem vida própria ou só descreve outra coisa?"* |
+| Relacionamento sem nome (ou genérico) | Verbo "tem"/"possui" que não descreve o negócio | Nomeie com o verbo real: *"leciona"*, *"pertence_a"*, *"realiza"* |
+| Cardinalidade confundida com quantidade | Ler "1:N" como "sempre haverá muitos" | 1:N significa que *pode* haver muitos, não que sempre haverá |
+| N:M onde é 1:N (ou o contrário) | Cardinalidade escolhida sem checar os dois sentidos | Pergunte: *"um A tem muitos B?"* **e** *"um B tem muitos A?"* |
+| Generalização sem atributo próprio | Subclasses sem nada exclusivo além do herdado | Resolva com uma coluna `tipo`; só especialize se houver atributo/relacionamento próprio |
+| "é um" confundido com "tem um" | Herança usada onde havia só uma associação | *"é um"* = herança (Gerente é Funcionário); *"tem um"* = relacionamento (Funcionário tem Departamento) |
+
 ### 10.1 Método Prático: Entidade ou Atributo?
 
 O erro mais frequente da lista acima — confundir atributo com entidade — tem um método simples para resolver a dúvida: faça estas quatro perguntas, nesta ordem, para cada informação que você identificar em um enunciado ou documento real.
@@ -675,7 +807,11 @@ O erro mais frequente da lista acima — confundir atributo com entidade — tem
 3. **"Essa informação está apenas descrevendo/qualificando outra coisa específica?"** Se sim, é **atributo** daquilo que ela descreve.
 4. **"Essa informação é o resultado do encontro entre duas outras entidades?"** Se sim, é atributo de uma **entidade associativa** — não de nenhuma das duas entidades originais isoladamente.
 
-**Exemplo guiado — Ficha de Empréstimo da Biblioteca:** voltando ao sistema de biblioteca que abriu esta aula, imagine a ficha de empréstimo abaixo, preenchida no balcão:
+A melhor forma de fixar esse método é aplicá-lo, passo a passo, a um documento real. Vamos fazer isso duas vezes, com documentos de domínios diferentes — o raciocínio é sempre o mesmo.
+
+#### Exemplo guiado 1 — Ficha de Empréstimo da Biblioteca
+
+Voltando ao sistema de biblioteca que abriu esta aula, imagine a ficha de empréstimo abaixo, preenchida no balcão:
 
 ```text
 BIBLIOTECA CENTRAL FATEC JAHU
@@ -688,7 +824,22 @@ Data prevista de devolução: 24/08/2026
 Status: Em andamento
 ```
 
-Aplicando as quatro perguntas: **nome e matrícula do aluno** descrevem o aluno (pergunta 3) e continuariam fazendo sentido em outra ficha (pergunta 2) → atributos da entidade `ALUNO`. **Título e ISBN do livro** descrevem o livro (pergunta 3) e continuariam existindo mesmo que esta ficha fosse cancelada (pergunta 2) → atributos da entidade `LIVRO`. Já a **data do empréstimo, a data prevista de devolução e o status** só fazem sentido no encontro específico entre *este* aluno e *este* livro (pergunta 4) → são atributos da entidade associativa `EMPRESTIMO`, não do Aluno nem do Livro isoladamente.
+**Passo 1 — Liste tudo que aparece, sem julgar ainda.** Antes de decidir o que é entidade e o que é atributo, faça um brainstorm cru: nome do aluno, matrícula, título do livro, ISBN, número da ficha, data do empréstimo, data prevista de devolução, status.
+
+**Passo 2 — Aplique as quatro perguntas** (as mesmas quatro listadas acima), item por item.
+
+**Passo 3 — Registre as conclusões numa tabela:**
+
+| Elemento da ficha | Pergunta que decide | Conclusão |
+|---|---|---|
+| Nome, matrícula do aluno | Descreve o aluno (P3); continua valendo em outra ficha (P2) | Atributos da entidade `ALUNO` |
+| Título, ISBN do livro | Descrevem o livro (P3); continuam existindo mesmo que esta ficha seja cancelada (P2) | Atributos da entidade `LIVRO` |
+| Nº da ficha | Identifica este empréstimo específico | Atributo (chave) da entidade `EMPRESTIMO` |
+| Data do empréstimo, data prevista de devolução, status | Só fazem sentido no encontro entre *este* aluno e *este* livro (P4) | Atributos da entidade associativa `EMPRESTIMO` |
+
+Resumindo o raciocínio: **nome e matrícula** descrevem o aluno e continuariam fazendo sentido em outra ficha → atributos de `ALUNO`. **Título e ISBN** descrevem o livro → atributos de `LIVRO`. Já **data do empréstimo, data prevista de devolução e status** só existem no encontro específico entre este aluno e este livro → são atributos da entidade associativa `EMPRESTIMO`, não do Aluno nem do Livro isoladamente.
+
+**Passo 4 — Monte o modelo:**
 
 ```mermaid
 erDiagram
@@ -713,7 +864,74 @@ erDiagram
     LIVROS ||--o{ EMPRESTIMOS : "é objeto de"
 ```
 
-> 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal, um formulário de matrícula) e refaça as quatro perguntas, item por item. É o mesmo raciocínio sempre — só muda o domínio.
+#### Exemplo guiado 2 — Nota Fiscal de Venda
+
+Agora um documento de outro domínio, com uma diferença importante: ele tem **linhas que se repetem** (os itens). Observe como a pergunta 1 (repetição dentro do mesmo registro) passa a fazer diferença aqui.
+
+```text
+FATEC LIVRARIA E PAPELARIA LTDA
+CNPJ: 12.345.678/0001-90          Nota Fiscal Nº 5573
+Data: 12/08/2026
+
+CLIENTE: João Silva              CPF: 123.456.789-00
+
+ITEM  DESCRIÇÃO                 QTD   VL.UNIT   VL.TOTAL
+001   Caneta Azul                5      2,50      12,50
+002   Caderno 96 folhas          2     18,90      37,80
+003   Marca-texto Amarelo        3      6,00      18,00
+
+VALOR TOTAL R$: 68,30
+FORMA DE PAGAMENTO: PIX
+```
+
+**Passo 1 — Liste tudo:** nome/CNPJ da loja, número da nota, data, nome/CPF do cliente, descrição/quantidade/valor unitário/valor total de cada item, valor total da nota, forma de pagamento.
+
+**Passo 2 — Aplique as quatro perguntas.** Repare que a **linha de item** (descrição, qtd, valores) aparece *três vezes* na mesma nota, com valores diferentes → pela pergunta 1, isso é forte sinal de que ali há uma entidade (ou associativa), não um atributo simples.
+
+**Passo 3 — Tabela de conclusões:**
+
+| Elemento da nota | Pergunta que decide | Conclusão |
+|---|---|---|
+| Nome do cliente, CPF | Descrevem o cliente (P3); continuam valendo em outra nota (P2) | Atributos da entidade `CLIENTE` |
+| Nº da nota, data, valor total, forma de pagamento | Descrevem a nota em si; não se repetem dentro dela (P3) | Atributos da entidade `NOTA_FISCAL` |
+| Descrição e valor unitário do produto | Continuam existindo em outra nota, outro dia (P2) | Atributos da entidade `PRODUTO`, independente da nota |
+| Quantidade e valor total daquele item | Resultado do encontro entre *esta* nota e *este* produto (P4) | Atributos da entidade associativa `ITEM_NOTA` |
+
+**Passo 4 — Monte o modelo:**
+
+```mermaid
+erDiagram
+    CLIENTES {
+        bigint id_cliente PK
+        varchar nome
+        varchar cpf
+    }
+    NOTAS_FISCAIS {
+        bigint id_nota PK
+        date data_emissao
+        decimal valor_total
+        varchar forma_pagamento
+        bigint cliente_id FK
+    }
+    PRODUTOS {
+        bigint id_produto PK
+        varchar descricao
+        decimal valor_unitario
+    }
+    ITENS_NOTA {
+        bigint nota_id FK
+        bigint produto_id FK
+        int quantidade
+        decimal valor_total_item
+    }
+    CLIENTES ||--o{ NOTAS_FISCAIS : "recebe"
+    NOTAS_FISCAIS ||--o{ ITENS_NOTA : "contém"
+    PRODUTOS ||--o{ ITENS_NOTA : "aparece em"
+```
+
+> 🔑 **O mesmo produto pode aparecer em várias notas, com quantidades diferentes a cada venda.** Por isso `quantidade` e `valor_total_item` não pertencem à entidade `PRODUTO` (que é fixa), e sim à entidade associativa `ITEM_NOTA`, que representa o encontro entre uma nota e um produto. Este é exatamente o padrão que resolve todo relacionamento N:M com atributos próprios — você o reverá na Aula 02, ao normalizar o modelo.
+
+> 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal de serviço, um formulário de matrícula) e refaça os quatro passos, item por item. É o mesmo raciocínio sempre — só muda o domínio.
 
 ---
 
