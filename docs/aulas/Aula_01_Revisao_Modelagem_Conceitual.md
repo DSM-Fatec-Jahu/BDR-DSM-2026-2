@@ -158,6 +158,8 @@ Entender os tipos de atributos é fundamental para fazer uma modelagem precisa. 
 
 **Atributo Chave (ou Identificador):** é o atributo cujo valor identifica unicamente cada instância da entidade. Exemplo: `cpf` para Pessoa, `matricula` para Aluno. Na notação do MER, é sublinhado.
 
+> 🔑 **Nível conceitual vs. chave real de banco de dados:** aqui, no MER, identificar `cpf` ou `matricula` como atributo chave é só reconhecer o que identifica cada instância no mundo real — é assim que a literatura acadêmica costuma nomear. Quando esse modelo virar tabela de verdade (Aula 02 em diante), a chave primária efetivamente usada **não** vai ser o `cpf` nem a `matricula`, e sim um identificador substituto `id_` criado pelo banco — você vai entender exatamente o porquê na Aula 02.
+
 ![Atributos](../imgs/Aula_01_IMG_02.png)
 
 ---

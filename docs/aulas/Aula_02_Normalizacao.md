@@ -44,6 +44,7 @@ flowchart LR
         ML1["1:1 · 1:N · N:M"]
         ML2["Entidade fraca"]
         ML3["Atributo multivalorado"]
+        ML4["Chave substituta (id_)<br/>× chave natural"]
     end
 ```
 
@@ -180,23 +181,32 @@ Aqui, tentou-se representar múltiplos produtos por pedido criando colunas repet
 
 Para resolver valores não-atômicos, criamos uma tabela separada para o atributo multivalorado:
 
+> 📐 **Por que os diagramas desta aula já usam nomes no plural (`CLIENTES`, `PEDIDOS`...)?**
+> É comum — e correto — encontrar entidades nomeadas no singular na literatura acadêmica
+> de modelagem conceitual, seguindo a notação clássica de Peter Chen (como fizemos na
+> Aula 01). A partir desta aula, porém, já estamos falando de **modelo lógico** — um
+> passo mais perto da tabela SQL de verdade, que a Regra 4 (Aula 03) exige no plural.
+> Adotamos o plural já aqui, e não só a partir da Aula 03, para que a transição entre
+> "entidade no diagrama" e "tabela no banco" não vire uma fonte extra de confusão — o
+> nome não muda no meio do caminho.
+
 ```mermaid
 erDiagram
-    CLIENTE {
+    CLIENTES {
         bigint id_cliente PK
         varchar nome
         varchar email
         varchar cidade
     }
 
-    TELEFONE_CLIENTE {
+    TELEFONES_CLIENTES {
         bigint id_telefone PK
         bigint cliente_id FK
         varchar numero
         varchar tipo
     }
 
-    CLIENTE ||--o{ TELEFONE_CLIENTE : "possui"
+    CLIENTES ||--o{ TELEFONES_CLIENTES : "possui"
 ```
 
 **Problema com grupos repetidos:**
@@ -205,13 +215,13 @@ Para resolver grupos repetidos em pedidos, criamos uma tabela de itens:
 
 ```mermaid
 erDiagram
-    PEDIDO {
+    PEDIDOS {
         bigint id_pedido PK
         date data_pedido
         bigint cliente_id FK
     }
 
-    ITEM_PEDIDO {
+    ITENS_PEDIDOS {
         bigint id_item PK
         bigint pedido_id FK
         varchar produto_nome
@@ -219,7 +229,7 @@ erDiagram
         decimal preco_unitario
     }
 
-    PEDIDO ||--o{ ITEM_PEDIDO : "contém"
+    PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
 ```
 
 > 💡 **Dica de reconhecimento:** se você ver colunas com nomes terminando em números (produto_1, produto_2, produto_3...) ou células com vírgulas separando valores, é quase certo que a 1FN está sendo violada.
@@ -239,7 +249,7 @@ A 2FN só é relevante quando a chave primária é **composta** (formada por doi
 
 ### 4.2 Identificando a Violação da 2FN
 
-Considere a tabela ITEM_PEDIDO que criamos, agora com mais atributos:
+Considere a tabela ITENS_PEDIDOS que criamos, agora com mais atributos:
 
 | id_pedido | id_produto | quantidade | preco_unitario | nome_produto   | categoria_produto |
 |-----------|------------|------------|----------------|----------------|-------------------|
@@ -269,34 +279,34 @@ A solução é **separar os atributos com dependência parcial** em uma nova tab
 
 ```mermaid
 erDiagram
-    PEDIDO {
+    PEDIDOS {
         bigint id_pedido PK
         date data_pedido
         bigint cliente_id FK
     }
 
-    PRODUTO {
+    PRODUTOS {
         bigint id_produto PK
         varchar nome_produto
         varchar categoria
         decimal preco_unitario
     }
 
-    ITEM_PEDIDO {
+    ITENS_PEDIDOS {
         bigint id_pedido PK "FK"
         bigint id_produto PK "FK"
         int quantidade
     }
 
-    PEDIDO ||--o{ ITEM_PEDIDO : "contém"
-    PRODUTO ||--o{ ITEM_PEDIDO : "aparece em"
+    PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
+    PRODUTOS ||--o{ ITENS_PEDIDOS : "aparece em"
 ```
 
 Agora cada tabela armazena apenas o que lhe compete:
 
-- PRODUTO armazena dados do produto (incluindo o preço base);
-- ITEM_PEDIDO armazena apenas o que é específico da relação entre pedido e produto — a `quantidade`;
-- PEDIDO armazena os dados do pedido em si.
+- PRODUTOS armazena dados do produto (incluindo o preço base);
+- ITENS_PEDIDOS armazena apenas o que é específico da relação entre pedido e produto — a `quantidade`;
+- PEDIDOS armazena os dados do pedido em si.
 
 > 📌 **Regra prática:** quando você encontrar informações que se repetem identicamente em múltiplas linhas (como o nome e preço de um produto aparecendo em todos os itens que o contêm), isso é quase sempre sinal de violação da 2FN — os dados repetidos provavelmente pertencem a uma tabela separada.
 
@@ -343,24 +353,24 @@ Novamente, a solução é extrair os atributos transitivos para sua própria tab
 
 ```mermaid
 erDiagram
-    CIDADE {
+    CIDADES {
         bigint id_cidade PK
         varchar nome_cidade
         varchar nome_estado
         varchar sigla_estado
     }
 
-    CLIENTE {
+    CLIENTES {
         bigint id_cliente PK
         varchar nome
         varchar email
         bigint cidade_id FK
     }
 
-    CIDADE ||--o{ CLIENTE : "pertence a"
+    CIDADES ||--o{ CLIENTES : "pertence a"
 ```
 
-Agora `nome_cidade` e `nome_estado` residem apenas em CIDADE. Um cliente referencia sua cidade pela FK `id_cidade`, e qualquer alteração no nome da cidade é feita em um único lugar.
+Agora `nome_cidade` e `nome_estado` residem apenas em CIDADES. Um cliente referencia sua cidade pela FK `cidade_id` (Regra 6), e qualquer alteração no nome da cidade é feita em um único lugar.
 
 > 💡 **Dica de reconhecimento da violação da 3FN:** procure atributos que se repetem em grupos. No exemplo acima, "São Paulo" e "SP" aparecem sempre juntos para clientes de São Paulo — isso sugere que essas duas informações pertencem a outra entidade, e estão chegando aqui "carregadas" por um intermediário.
 
@@ -399,7 +409,7 @@ Vamos aplicar todo o processo a uma única tabela inicial e transformá-la progr
 - `notas` também contém múltiplos valores;
 - Ambas formam um "grupo repetido" implícito.
 
-**Solução:** eliminar os valores múltiplos e criar linhas separadas para cada disciplina cursada. Também identificamos e separamos as entidades ALUNO, TURMA e MATRICULA.
+**Solução:** eliminar os valores múltiplos e criar linhas separadas para cada disciplina cursada. Também identificamos e separamos as entidades ALUNOS, TURMAS e HISTORICOS.
 
 Tabela em 1FN (expandida com linhas atômicas):
 
@@ -431,40 +441,43 @@ cod_disciplina              → disciplina_nome ⚠️  Dependência PARCIAL
 
 ```mermaid
 erDiagram
-    ALUNO {
-        varchar matricula PK
+    ALUNOS {
+        bigint id_aluno PK
+        varchar matricula
         varchar nome
         varchar email
         varchar cod_turma FK
     }
 
-    TURMA {
+    TURMAS {
         varchar cod_turma PK
         varchar nome
         varchar professor_nome
     }
 
-    DISCIPLINA {
+    DISCIPLINAS {
         varchar cod_disciplina PK
         varchar nome
     }
 
-    HISTORICO {
-        varchar matricula PK "FK"
+    HISTORICOS {
+        bigint aluno_id PK "FK"
         varchar cod_disciplina PK "FK"
         decimal nota
     }
 
-    ALUNO ||--o{ HISTORICO : "possui"
-    DISCIPLINA ||--o{ HISTORICO : "aparece em"
-    TURMA ||--o{ ALUNO : "contém"
+    ALUNOS ||--o{ HISTORICOS : "possui"
+    DISCIPLINAS ||--o{ HISTORICOS : "aparece em"
+    TURMAS ||--o{ ALUNOS : "contém"
 ```
 
-A tabela está na 2FN. Mas ainda existe um problema: na tabela TURMA, o `professor_nome` depende de quê?
+Repare que `id_aluno` (Regra 5) aparece aqui pela primeira vez, e `matricula` — que era a chave da tabela ainda desnormalizada — vira um atributo comum (com restrição `UNIQUE`, já que continua identificando o aluno de forma única no mundo real). Veja a nota **Por que uma chave substituta, e não a matrícula (ou o CPF)?** ao final desta seção para o porquê dessa troca.
+
+A tabela está na 2FN. Mas ainda existe um problema: na tabela TURMAS, o `professor_nome` depende de quê?
 
 ### Passo 3 — Aplicar a 3FN
 
-**Problema encontrado em TURMA:**
+**Problema encontrado em TURMAS:**
 
 A turma T01 tem "Prof. Ronan" como professor. Suponha que o professor tenha e-mail e titulação registrados. Então:
 
@@ -474,47 +487,48 @@ professor_nome  → professor_email   ⚠️  Transitiva (se armazenarmos aqui)
 professor_nome  → professor_titulo  ⚠️  Transitiva
 ```
 
-**Solução:** criar a entidade PROFESSOR e referenciar pela FK:
+**Solução:** criar a entidade PROFESSORES e referenciar pela FK:
 
 ```mermaid
 erDiagram
-    PROFESSOR {
+    PROFESSORES {
         bigint id_professor PK
         varchar nome
         varchar email
         varchar titulacao
     }
 
-    TURMA {
+    TURMAS {
         varchar cod_turma PK
         varchar nome
         bigint professor_id FK
     }
 
-    DISCIPLINA {
+    DISCIPLINAS {
         varchar cod_disciplina PK
         varchar nome
         int carga_horaria
     }
 
-    ALUNO {
-        varchar matricula PK
+    ALUNOS {
+        bigint id_aluno PK
+        varchar matricula
         varchar nome
         varchar email
         varchar cod_turma FK
     }
 
-    HISTORICO {
-        varchar matricula PK "FK"
+    HISTORICOS {
+        bigint aluno_id PK "FK"
         varchar cod_disciplina PK "FK"
         decimal nota
         varchar semestre
     }
 
-    PROFESSOR ||--o{ TURMA : "responsável por"
-    TURMA ||--o{ ALUNO : "contém"
-    ALUNO ||--o{ HISTORICO : "possui"
-    DISCIPLINA ||--o{ HISTORICO : "aparece em"
+    PROFESSORES ||--o{ TURMAS : "responsável por"
+    TURMAS ||--o{ ALUNOS : "contém"
+    ALUNOS ||--o{ HISTORICOS : "possui"
+    DISCIPLINAS ||--o{ HISTORICOS : "aparece em"
 ```
 
 Agora o modelo está completamente na **3FN**. Cada tabela armazena exatamente o que lhe compete, sem redundâncias, sem dependências parciais e sem dependências transitivas.
@@ -532,7 +546,7 @@ Quando partimos de um MER bem desenhado (como fizemos na Aula 01), a passagem ao
 > estético, é o que permite distinguir visualmente "quem é dono da linha" de "quem
 > está apontando para outra tabela" só de olhar o nome da coluna. Essas regras — e as
 > outras sete que regem nomenclatura SQL nesta disciplina — são formalizadas por
-> completo na [Aula 03](./Aula_03_SQL_DDL.md#1-convenções-de-nomenclatura-desta-disciplina).
+> completo na [Aula 03](./Aula_03_SQL_DDL.md#1-convencoes-de-nomenclatura-desta-disciplina).
 
 ### 8.1 Regra para Relacionamentos 1:1
 
@@ -542,36 +556,36 @@ Em um relacionamento 1:1, a chave estrangeira pode ir para qualquer um dos dois 
 
 **Critério 2 — Semântica:** a FK vai para a entidade que "depende" ou "pertence a" a outra conceitualmente.
 
-Exemplo — FUNCIONARIO e CRACHA (1:1, participação total dos dois lados):
+Exemplo — FUNCIONARIOS e CRACHAS (1:1, participação total dos dois lados):
 
 ```
-FUNCIONARIO (id_funcionario PK, nome, data_admissao)
-CRACHA (id_cracha PK, numero_serie, data_emissao, funcionario_id FK UNIQUE)
+FUNCIONARIOS (id_funcionario PK, nome, data_admissao)
+CRACHAS (id_cracha PK, numero_serie, data_emissao, funcionario_id FK UNIQUE)
 ```
 
 A constraint `UNIQUE` na FK garante que o relacionamento seja realmente 1:1 no banco de dados — sem ela, a FK permitiria N crachás por funcionário. Note que a FK se chama `funcionario_id` (Regra 6) — não `id_funcionario`, que seria o padrão de uma PK (Regra 5), não de uma FK.
 
-Exemplo — PESSOA e CNH (1:1, participação parcial de PESSOA):
+Exemplo — PESSOAS e CNHS (1:1, participação parcial de PESSOAS):
 
 ```
-PESSOA (id_pessoa PK, nome, cpf)
-CNH (id_cnh PK, numero_registro, data_validade, pessoa_id FK UNIQUE)
+PESSOAS (id_pessoa PK, nome, cpf)
+CNHS (id_cnh PK, numero_registro, data_validade, pessoa_id FK UNIQUE)
 ```
 
-A FK fica em CNH (o lado que "depende" de PESSOA), nomeada `pessoa_id` pela Regra 6, e o UNIQUE garante o 1:1.
+A FK fica em CNHS (o lado que "depende" de PESSOAS), nomeada `pessoa_id` pela Regra 6, e o UNIQUE garante o 1:1.
 
 ### 8.2 Regra para Relacionamentos 1:N
 
 Esta é a regra mais simples e mais usada: **a chave estrangeira vai sempre para o lado N** (para a tabela do lado "muitos"). Ela recebe o valor da chave primária da entidade do lado 1.
 
-Exemplo — DEPARTAMENTO (1) e FUNCIONARIO (N):
+Exemplo — DEPARTAMENTOS (1) e FUNCIONARIOS (N):
 
 ```
-DEPARTAMENTO (id_departamento PK, nome, localizacao)
-FUNCIONARIO (id_funcionario PK, nome, salario, departamento_id FK)
+DEPARTAMENTOS (id_departamento PK, nome, localizacao)
+FUNCIONARIOS (id_funcionario PK, nome, salario, departamento_id FK)
 ```
 
-A FK `departamento_id` (Regra 6) vai para FUNCIONARIO porque um funcionário pode pertencer a apenas um departamento (lado 1), e um departamento tem muitos funcionários (lado N).
+A FK `departamento_id` (Regra 6) vai para FUNCIONARIOS porque um funcionário pode pertencer a apenas um departamento (lado 1), e um departamento tem muitos funcionários (lado N).
 
 ### 8.3 Regra para Relacionamentos N:M
 
@@ -581,51 +595,97 @@ Relacionamentos N:M **sempre geram uma nova tabela** no modelo lógico. Essa tab
 2. Juntas, essas FKs formam a **chave primária composta** da tabela intermediária;
 3. Quaisquer **atributos do próprio relacionamento** (como `nota` em uma matrícula, ou `quantidade` em um item de pedido).
 
-Exemplo — ALUNO e DISCIPLINA (N:M) com atributos `nota` e `semestre`:
+Exemplo — ALUNOS e DISCIPLINAS (N:M) com atributos `nota` e `semestre`:
 
 ```
-ALUNO (matricula PK, nome, email)
-DISCIPLINA (id_disciplina PK, nome, carga_horaria)
-HISTORICO (matricula PK FK, disciplina_id PK FK, nota, semestre)
+ALUNOS (id_aluno PK, matricula, nome, email)
+DISCIPLINAS (id_disciplina PK, nome, carga_horaria)
+HISTORICOS (aluno_id PK FK, disciplina_id PK FK, nota, semestre)
 ```
 
-A chave primária de HISTORICO é `(matricula, disciplina_id)` — composta pelas duas FKs. A FK `disciplina_id` segue a Regra 6; a FK `matricula` mantém o mesmo nome da PK de ALUNO porque, neste exemplo, ALUNO usa a matrícula (uma chave natural) como PK em vez do padrão `id_aluno` — veja a nota sobre chaves naturais ao final desta seção.
+A chave primária de HISTORICOS é `(aluno_id, disciplina_id)` — composta pelas duas FKs, ambas seguindo a Regra 6. Note que `matricula` continua em ALUNOS como um atributo comum (com `UNIQUE`) — ela identifica o aluno perante a instituição, mas quem identifica a linha na tabela é `id_aluno`.
 
 ### 8.4 Regra para Entidades Fracas
 
 Uma entidade fraca não tem chave própria — ela depende da entidade forte para ser identificada. No modelo lógico, sua tabela inclui a FK da entidade forte como parte de sua chave primária.
 
-Exemplo — FUNCIONARIO e DEPENDENTE (entidade fraca):
+Exemplo — FUNCIONARIOS e DEPENDENTES (entidade fraca):
 
 ```
-FUNCIONARIO (id_funcionario PK, nome, cpf)
-DEPENDENTE (funcionario_id PK FK, nome_dependente PK, parentesco, data_nascimento)
+FUNCIONARIOS (id_funcionario PK, nome, cpf)
+DEPENDENTES (funcionario_id PK FK, nome_dependente PK, parentesco, data_nascimento)
 ```
 
-A chave primária de DEPENDENTE é `(funcionario_id, nome_dependente)` — o dependente é identificado dentro do contexto do funcionário. A FK `funcionario_id` segue a Regra 6, mesmo participando de uma chave composta.
+A chave primária de DEPENDENTES é `(funcionario_id, nome_dependente)` — o dependente é identificado dentro do contexto do funcionário. A FK `funcionario_id` segue a Regra 6, mesmo participando de uma chave composta.
 
 ### 8.5 Regra para Atributos Multivalorados
 
 Atributos multivalorados do MER sempre se tornam uma tabela separada, com FK referenciando a entidade original.
 
-Exemplo — CLIENTE com atributo multivalorado `telefone`:
+Exemplo — CLIENTES com atributo multivalorado `telefone`:
 
 ```
-CLIENTE (id_cliente PK, nome, email)
-TELEFONE_CLIENTE (cliente_id PK FK, numero PK, tipo)
+CLIENTES (id_cliente PK, nome, email)
+TELEFONES_CLIENTES (cliente_id PK FK, numero PK, tipo)
 ```
 
-A chave primária de TELEFONE_CLIENTE é `(cliente_id, numero)`, pois o número de telefone identifica cada registro dentro do contexto de um cliente. A FK `cliente_id` segue a Regra 6.
+A chave primária de TELEFONES_CLIENTES é `(cliente_id, numero)`, pois o número de telefone identifica cada registro dentro do contexto de um cliente. A FK `cliente_id` segue a Regra 6.
 
-> 💡 **Sobre `matricula` como PK de ALUNO (Seção 8.3):** a Regra 5 estabelece
-> `id_tabela` como padrão de chave primária nesta disciplina. `matricula` é uma
-> **chave natural** (um identificador que já existe no mundo real, como um código de
-> barras ou um CPF) em vez de uma chave substituta (*surrogate key*) autoincrementada.
-> Uma chave natural só é uma PK válida quando garante, por si só, unicidade e
-> estabilidade — a matrícula de um aluno nunca muda e nunca se repete. Ainda assim,
-> **nesta disciplina o padrão é sempre a chave substituta `id_tabela`**; trate este
-> exemplo como uma exceção pontual usada para ilustrar o conceito de chave natural, não
-> como uma alternativa livre à Regra 5.
+### 8.6 Por que uma Chave Substituta, e não a Matrícula (ou o CPF)?
+
+Você deve ter reparado que, na Seção 7, a `matricula` era a chave primária de ALUNOS
+enquanto a tabela ainda estava desnormalizada — mas ao formalizarmos o modelo lógico
+(Passo 2 em diante), ela deu lugar a `id_aluno`, virando um atributo comum. Essa troca
+não foi acidental, e vale entender o porquê, porque é uma dúvida que aparece o
+semestre inteiro: *"por que não uso logo o CPF, ou a matrícula, como chave primária?
+Já é único, não é?"*
+
+Existem dois tipos de chave primária:
+
+**Chave natural** é um identificador que já existe no mundo real, independente do seu
+banco de dados — CPF, matrícula, código de barras, placa de veículo, ISBN. **Chave
+substituta** (*surrogate key*) é um identificador criado *pelo* banco de dados, sem
+nenhum significado de negócio — é exatamente o `id_tabela` da Regra 5, um número que
+só existe para dar nome único a cada linha.
+
+**Nesta disciplina, a chave primária é sempre a chave substituta `id_tabela`.** Os
+motivos práticos são:
+
+- **Estabilidade:** um identificador de negócio pode, em algum momento, mudar — uma
+  matrícula pode ser reemitida após uma transferência de curso, um CPF pode ser
+  retificado pela Receita Federal em casos raros, um código de produto pode ser
+  renumerado em uma reestruturação de catálogo. Quando a PK muda, a mudança precisa se
+  propagar para **toda FK que a referencia** — um problema que simplesmente não existe
+  quando a PK é um `id_` que nunca teve significado de negócio para começo de conversa.
+- **Disponibilidade no momento do cadastro:** em alguns sistemas, o identificador de
+  negócio só é conhecido depois (ex.: um cliente que se cadastra antes de informar CPF
+  completo, um produto que ainda não tem código de barras definido pelo fornecedor). Um
+  `id_` autoincrementado sempre existe, desde o primeiro `INSERT`.
+- **Tamanho e desempenho de índice:** `BIGINT UNSIGNED` ocupa 8 bytes fixos e é
+  extremamente rápido de comparar e indexar. Um CPF como `CHAR(11)` ou uma matrícula em
+  `VARCHAR` são mais lentos de indexar e comparar, especialmente quando essa mesma
+  chave se repete como FK em várias outras tabelas.
+- **Privacidade e segurança:** se o CPF fosse a PK de PESSOAS, ele apareceria como FK
+  em toda tabela relacionada — pedidos, matrículas, prontuários — espalhando um dado
+  sensível pelo esquema inteiro. Com `id_pessoa`, o CPF fica isolado como atributo em
+  uma única tabela, mais fácil de proteger e de excluir seletivamente (ex.: LGPD).
+- **Desacoplamento:** a identidade da linha no banco não deveria depender de uma regra
+  de negócio externa que pode mudar (ex.: o formato da matrícula ser redefinido pela
+  instituição). O `id_` garante que o banco continua íntegro mesmo que essas regras
+  externas mudem.
+
+Isso **não** significa que a matrícula ou o CPF deixem de existir na tabela — eles
+continuam lá como atributos comuns, protegidos por uma constraint `UNIQUE` (a mesma
+lógica que a Aula 03 vai formalizar com `CONSTRAINT uq_cpf UNIQUE (cpf)`). Você ganha
+o melhor dos dois mundos: a garantia de unicidade do mundo real, e a estabilidade e
+performance da chave substituta como identidade interna da linha.
+
+> 🎯 **Fixe desde já:** toda PK criada por você, em qualquer aula ou atividade daqui em
+> diante, é `id_` + nome da tabela no singular — nunca um CPF, matrícula, código de
+> barras ou e-mail, por mais "único" que pareçam. Alunos que se acostumam com exemplos
+> de chave natural nas primeiras aulas costumam travar mais à frente, quando o modelo
+> cresce e a FK de uma chave de negócio muda de tabela em tabela. Comece certo agora e
+> essa dúvida nunca mais aparece.
 
 ---
 
@@ -652,19 +712,19 @@ A chave primária de TELEFONE_CLIENTE é `(cliente_id, numero)`, pois o número 
 
 Para cada situação abaixo, identifique qual forma normal está sendo violada e explique o motivo:
 
-**a)** Uma tabela FATURA com chave primária `id_fatura` contém as colunas `item1_nome`, `item1_valor`, `item2_nome`, `item2_valor`, `item3_nome`, `item3_valor`.
+**a)** Uma tabela FATURAS com chave primária `id_fatura` contém as colunas `item1_nome`, `item1_valor`, `item2_nome`, `item2_valor`, `item3_nome`, `item3_valor`.
 
-**b)** Uma tabela ITEM_VENDA com chave primária composta `(id_venda, id_produto)` contém a coluna `categoria_produto`, que depende apenas de `id_produto`.
+**b)** Uma tabela ITENS_VENDAS com chave primária composta `(venda_id, produto_id)` contém a coluna `categoria_produto`, que depende apenas de `produto_id`.
 
-**c)** Uma tabela FUNCIONARIO com chave primária `id_funcionario` contém `id_departamento`, `nome_departamento` e `localizacao_departamento`.
+**c)** Uma tabela FUNCIONARIOS com chave primária `id_funcionario` contém `departamento_id`, `nome_departamento` e `localizacao_departamento`.
 
 **Gabarito:**
 
-**a)** Viola a **1FN** — há grupos repetidos (colunas numeradas representando uma lista de itens). A solução é criar a tabela ITEM_FATURA com FK para FATURA.
+**a)** Viola a **1FN** — há grupos repetidos (colunas numeradas representando uma lista de itens). A solução é criar a tabela ITENS_FATURAS com FK `fatura_id` para FATURAS.
 
-**b)** Viola a **2FN** — `categoria_produto` tem dependência parcial (depende apenas de `id_produto`, e não da chave composta inteira). A solução é mover `categoria_produto` para a tabela PRODUTO.
+**b)** Viola a **2FN** — `categoria_produto` tem dependência parcial (depende apenas de `produto_id`, e não da chave composta inteira). A solução é mover `categoria_produto` para a tabela PRODUTOS.
 
-**c)** Viola a **3FN** — `nome_departamento` e `localizacao_departamento` são transitivamente dependentes de `id_funcionario` (a cadeia é `id_funcionario → id_departamento → nome_departamento`). A solução é criar a tabela DEPARTAMENTO e manter apenas a FK `id_departamento` em FUNCIONARIO.
+**c)** Viola a **3FN** — `nome_departamento` e `localizacao_departamento` são transitivamente dependentes de `id_funcionario` (a cadeia é `id_funcionario → departamento_id → nome_departamento`). A solução é criar a tabela DEPARTAMENTOS e manter apenas a FK `departamento_id` em FUNCIONARIOS.
 
 ---
 
@@ -686,41 +746,41 @@ Normalize a tabela abaixo até a 3FN, apresentando o diagrama final:
 - `cliente_cpf`, `cliente_nome`, `cliente_cidade`, `data` dependem apenas de `cod_pedido`;
 - `produto_desc` e `preco_unit` dependem apenas de `cod_produto`.
 
-Separamos em três tabelas: CLIENTE, PEDIDO e PRODUTO, mantendo ITEM_PEDIDO com apenas `(cod_pedido, cod_produto, qtd)`.
+Separamos em três tabelas: CLIENTES, PEDIDOS e PRODUTOS, mantendo ITENS_PEDIDOS com apenas `(cod_pedido, cod_produto, qtd)`.
 
-**3FN:** verificamos se há dependências transitivas. Em PEDIDO temos `cod_pedido → cliente_cpf`, e o cliente poderia determinar cidade (`cliente_cpf → cliente_cidade`). Isso é transitivo! Separamos CLIENTE de PEDIDO.
+**3FN:** verificamos se há dependências transitivas. Em PEDIDOS temos `cod_pedido → cliente_cpf`, e o cliente poderia determinar cidade (`cliente_cpf → cliente_cidade`). Isso é transitivo! Separamos CLIENTES de PEDIDOS.
 
 Resultado final:
 
 ```mermaid
 erDiagram
-    CLIENTE {
+    CLIENTES {
         varchar cpf PK
         varchar nome
         varchar cidade
     }
 
-    PEDIDO {
+    PEDIDOS {
         varchar cod_pedido PK
         date data
         varchar cliente_cpf FK
     }
 
-    PRODUTO {
+    PRODUTOS {
         varchar cod_produto PK
         varchar descricao
         decimal preco_unitario
     }
 
-    ITEM_PEDIDO {
+    ITENS_PEDIDOS {
         varchar cod_pedido PK "FK"
         varchar cod_produto PK "FK"
         int quantidade
     }
 
-    CLIENTE ||--o{ PEDIDO : "realiza"
-    PEDIDO ||--o{ ITEM_PEDIDO : "contém"
-    PRODUTO ||--o{ ITEM_PEDIDO : "aparece em"
+    CLIENTES ||--o{ PEDIDOS : "realiza"
+    PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
+    PRODUTOS ||--o{ ITENS_PEDIDOS : "aparece em"
 ```
 
 ---
@@ -731,37 +791,37 @@ Dado o diagrama conceitual abaixo (sistema de uma biblioteca), escreva o modelo 
 
 ```mermaid
 erDiagram
-    AUTOR {
+    AUTORES {
         bigint id_autor PK
         varchar nome
         varchar nacionalidade
     }
 
-    LIVRO {
+    LIVROS {
         bigint id_livro PK
         varchar titulo
         varchar isbn
         int ano
     }
 
-    CATEGORIA {
+    CATEGORIAS {
         bigint id_categoria PK
         varchar nome
     }
 
-    USUARIO {
+    USUARIOS {
         bigint id_usuario PK
         varchar nome
         varchar email
     }
 
-    AUTORIA {
+    AUTORIAS {
         bigint autor_id FK
         bigint livro_id FK
         varchar tipo
     }
 
-    EMPRESTIMO {
+    EMPRESTIMOS {
         bigint id_emprestimo PK
         bigint usuario_id FK
         bigint livro_id FK
@@ -770,29 +830,29 @@ erDiagram
         varchar status
     }
 
-    AUTOR }o--o{ LIVRO : "escreve"
-    LIVRO }o--|| CATEGORIA : "pertence a"
-    USUARIO ||--o{ EMPRESTIMO : "realiza"
-    LIVRO ||--o{ EMPRESTIMO : "é emprestado em"
+    AUTORES }o--o{ LIVROS : "escreve"
+    LIVROS }o--|| CATEGORIAS : "pertence a"
+    USUARIOS ||--o{ EMPRESTIMOS : "realiza"
+    LIVROS ||--o{ EMPRESTIMOS : "é emprestado em"
 ```
 
 **Gabarito — Modelo Lógico:**
 
 ```
-AUTOR (id_autor PK, nome, nacionalidade)
+AUTORES (id_autor PK, nome, nacionalidade)
 
-CATEGORIA (id_categoria PK, nome)
+CATEGORIAS (id_categoria PK, nome)
 
-LIVRO (id_livro PK, titulo, isbn, ano, categoria_id FK)
+LIVROS (id_livro PK, titulo, isbn, ano, categoria_id FK)
 
-AUTORIA (autor_id PK FK, livro_id PK FK, tipo)
-  -- PK composta: resolve o N:M entre AUTOR e LIVRO
+AUTORIAS (autor_id PK FK, livro_id PK FK, tipo)
+  -- PK composta: resolve o N:M entre AUTORES e LIVROS
 
-USUARIO (id_usuario PK, nome, email)
+USUARIOS (id_usuario PK, nome, email)
 
-EMPRESTIMO (id_emprestimo PK, usuario_id FK, livro_id FK,
+EMPRESTIMOS (id_emprestimo PK, usuario_id FK, livro_id FK,
             data_retirada, data_devolucao, status)
-  -- EMPRESTIMO tem PK própria pois registra um evento histórico
+  -- EMPRESTIMOS tem PK própria pois registra um evento histórico
   -- Um usuário pode pegar o mesmo livro em momentos diferentes
 ```
 
@@ -811,7 +871,7 @@ EMPRESTIMO (id_emprestimo PK, usuario_id FK, livro_id FK,
 
 **Erro 4 — Não colocar UNIQUE em FK de relacionamento 1:1:** ao implementar um 1:1, a FK sem a constraint UNIQUE se comportará como um 1:N no banco de dados. O SGBD não saberá que você quer restringir a um único relacionamento.
 
-**Erro 5 — Esquecer atributos do relacionamento N:M:** quando um N:M é resolvido com tabela intermediária, os atributos que pertencem ao *relacionamento* (como `quantidade` em ITEM_PEDIDO, ou `nota` em HISTORICO) devem ir para essa tabela — não para nenhuma das entidades originais.
+**Erro 5 — Esquecer atributos do relacionamento N:M:** quando um N:M é resolvido com tabela intermediária, os atributos que pertencem ao *relacionamento* (como `quantidade` em ITENS_PEDIDOS, ou `nota` em HISTORICOS) devem ir para essa tabela — não para nenhuma das entidades originais.
 
 ---
 
@@ -852,6 +912,13 @@ EMPRESTIMO (id_emprestimo PK, usuario_id FK, livro_id FK,
     Não. Estar livre de valores não-atômicos garante apenas a 1FN. É preciso verificar
     também dependências parciais (2FN) e transitivas (3FN) antes de declarar o modelo
     normalizado.
+
+??? question "Por que usamos id_tabela como chave primária em vez do CPF ou da matrícula, que já são únicos?"
+    Porque um identificador de negócio (chave natural) pode mudar, pode não estar
+    disponível no momento do cadastro, é mais lento de indexar que um `BIGINT`, e — no
+    caso do CPF — espalha um dado sensível como FK por várias tabelas. A chave
+    substituta (`id_`) nunca muda, sempre existe, e mantém o dado sensível isolado como
+    atributo comum, protegido por `UNIQUE`.
 
 ---
 
@@ -898,13 +965,23 @@ Qual anomalia ocorre quando não é possível cadastrar um novo produto no siste
 </quiz>
 
 <quiz>
-Em um relacionamento N:M entre ALUNO e DISCIPLINA, com atributos nota e situação na matrícula, qual é a regra de passagem ao modelo lógico?
+Em um relacionamento N:M entre ALUNOS e DISCIPLINAS, com atributos nota e situação na matrícula, qual é a regra de passagem ao modelo lógico?
 - [ ] A FK vai para o lado de participação parcial
-- [ ] Cria-se apenas uma FK na tabela ALUNO
+- [ ] Cria-se apenas uma FK na tabela ALUNOS
 - [x] Cria-se uma tabela intermediária com PK composta pelas duas FKs, mais os atributos do relacionamento
 - [ ] O N:M é implementado diretamente, sem tabela nova
 
 Todo N:M sempre gera uma nova tabela intermediária, cuja chave primária é composta pelas FKs das duas entidades originais — e é essa tabela que recebe os atributos que pertencem ao relacionamento em si, como nota e situação.
+</quiz>
+
+<quiz>
+Por que o CPF é uma má escolha de chave primária, mesmo sendo um identificador único no mundo real?
+- [ ] Porque CPF é um dado numérico, e PKs devem ser sempre texto
+- [x] Porque, sendo PK, o CPF se propagaria como FK sensível por várias tabelas, além de ser mais lento de indexar que um BIGINT
+- [ ] Porque não existem CPFs verdadeiramente únicos
+- [ ] Não há problema algum — CPF é a melhor escolha de PK
+
+Usar CPF como PK espalha um dado sensível (LGPD) como FK em toda tabela relacionada, além de ser mais lento de indexar do que um BIGINT. A solução desta disciplina é sempre usar id_tabela como PK e manter o CPF como atributo único (UNIQUE).
 </quiz>
 
 ---
@@ -917,9 +994,10 @@ transitivas. Percorremos as três primeiras Formas Normais — 1FN (atomicidade)
 (sem dependência parcial da chave composta) e 3FN (sem dependência transitiva entre
 não-chaves) — com um exemplo completo do zero até a 3FN. Também vimos as regras
 formais e determinísticas de passagem do MER ao modelo lógico relacional, para
-relacionamentos 1:1, 1:N, N:M, entidades fracas e atributos multivalorados. Na
-próxima aula, esse modelo lógico já normalizado vira SQL de verdade, com `CREATE
-TABLE`.
+relacionamentos 1:1, 1:N, N:M, entidades fracas e atributos multivalorados — sempre
+usando chaves substitutas (`id_tabela`) em vez de chaves naturais como CPF ou
+matrícula, e entendemos por quê. Na próxima aula, esse modelo lógico já normalizado
+vira SQL de verdade, com `CREATE TABLE`.
 
 ---
 
