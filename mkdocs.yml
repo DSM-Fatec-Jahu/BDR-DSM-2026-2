@@ -1,8 +1,8 @@
 site_name: Banco de Dados e Aplicações — IBD951 (2026/2)
 site_description: Material de aulas, atividades e avaliações de Banco de Dados e Aplicações (IBD951) — Fatec Jahu — 2º Semestre 2026
-site_url: https://dsm-fatec-jahu.github.io/bdr-dsm-2026-2/
-repo_url: https://github.com/dsm-fatec-jahu/bdr-dsm-2026-2
-repo_name: dsm-fatec-jahu/bdr-dsm-2026-2
+site_url: https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/
+repo_url: https://github.com/DSM-Fatec-Jahu/BDR-DSM-2026-2
+repo_name: DSM-Fatec-Jahu/BDR-DSM-2026-2
 edit_uri: edit/main/docs/
 docs_dir: docs
 
