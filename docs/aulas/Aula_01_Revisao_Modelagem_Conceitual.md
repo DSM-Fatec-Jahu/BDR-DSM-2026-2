@@ -909,7 +909,7 @@ erDiagram
         varchar cpf
     }
     NOTAS_FISCAIS {
-        bigint id_nota PK
+        bigint id_nota_fiscal PK
         date data_emissao
         decimal valor_total
         varchar forma_pagamento
@@ -921,7 +921,7 @@ erDiagram
         decimal valor_unitario
     }
     ITENS_NOTA {
-        bigint nota_id FK
+        bigint nota_fiscal_id FK
         bigint produto_id FK
         int quantidade
         decimal valor_total_item
@@ -931,7 +931,7 @@ erDiagram
     PRODUTOS ||--o{ ITENS_NOTA : "aparece em"
 ```
 
-> 🔑 **O mesmo produto pode aparecer em várias notas, com quantidades diferentes a cada venda.** Por isso `quantidade` e `valor_total_item` não pertencem à entidade `PRODUTO` (que é fixa), e sim à entidade associativa `ITEM_NOTA`, que representa o encontro entre uma nota e um produto. Este é exatamente o padrão que resolve todo relacionamento N:M com atributos próprios — você o reverá na Aula 02, ao normalizar o modelo.
+> 🔑 **O mesmo produto pode aparecer em várias notas, com quantidades diferentes a cada venda.** Por isso `quantidade` e `valor_total_item` não pertencem à entidade `PRODUTO` (que é fixa), e sim à entidade associativa `ITEM_NOTA`, que representa o encontro entre uma nota e um produto. Este é exatamente o padrão que resolve todo relacionamento N:M com atributos próprios — você o reverá na Aula 02, ao normalizar o modelo. Repare de passagem que os nomes de chave já seguem a convenção da disciplina: PK no padrão `id_` + tabela no singular (`id_nota_fiscal`) e FK no padrão inverso, tabela referenciada no singular + `_id` (`nota_fiscal_id`, `produto_id`) — as regras formais de nomenclatura virão na Aula 03.
 
 > 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal de serviço, um formulário de matrícula) e refaça os quatro passos, item por item. É o mesmo raciocínio sempre — só muda o domínio.
 
