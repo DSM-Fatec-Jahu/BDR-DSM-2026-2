@@ -193,17 +193,17 @@ Para resolver valores não-atômicos, criamos uma tabela separada para o atribut
 ```mermaid
 erDiagram
     CLIENTES {
-        bigint id_cliente PK
-        varchar nome
-        varchar email
-        varchar cidade
+        BIGINT id_cliente PK
+        VARCHAR nome
+        VARCHAR email
+        VARCHAR cidade
     }
 
     TELEFONES_CLIENTES {
-        bigint id_telefone PK
-        bigint cliente_id FK
-        varchar numero
-        varchar tipo
+        BIGINT id_telefone PK
+        BIGINT cliente_id FK
+        VARCHAR numero
+        VARCHAR tipo
     }
 
     CLIENTES ||--o{ TELEFONES_CLIENTES : "possui"
@@ -216,17 +216,17 @@ Para resolver grupos repetidos em pedidos, criamos uma tabela de itens:
 ```mermaid
 erDiagram
     PEDIDOS {
-        bigint id_pedido PK
-        date data_pedido
-        bigint cliente_id FK
+        BIGINT id_pedido PK
+        DATE data_pedido
+        BIGINT cliente_id FK
     }
 
     ITENS_PEDIDOS {
-        bigint id_item PK
-        bigint pedido_id FK
-        varchar produto_nome
-        int quantidade
-        decimal preco_unitario
+        BIGINT id_item PK
+        BIGINT pedido_id FK
+        VARCHAR produto_nome
+        INT quantidade
+        DECIMAL preco_unitario
     }
 
     PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
@@ -280,22 +280,22 @@ A solução é **separar os atributos com dependência parcial** em uma nova tab
 ```mermaid
 erDiagram
     PEDIDOS {
-        bigint id_pedido PK
-        date data_pedido
-        bigint cliente_id FK
+        BIGINT id_pedido PK
+        DATE data_pedido
+        BIGINT cliente_id FK
     }
 
     PRODUTOS {
-        bigint id_produto PK
-        varchar nome_produto
-        varchar categoria
-        decimal preco_unitario
+        BIGINT id_produto PK
+        VARCHAR nome_produto
+        VARCHAR categoria
+        DECIMAL preco_unitario
     }
 
     ITENS_PEDIDOS {
-        bigint id_pedido PK "FK"
-        bigint id_produto PK "FK"
-        int quantidade
+        BIGINT id_pedido PK "FK"
+        BIGINT id_produto PK "FK"
+        INT quantidade
     }
 
     PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
@@ -354,17 +354,17 @@ Novamente, a solução é extrair os atributos transitivos para sua própria tab
 ```mermaid
 erDiagram
     CIDADES {
-        bigint id_cidade PK
-        varchar nome_cidade
-        varchar nome_estado
-        varchar sigla_estado
+        BIGINT id_cidade PK
+        VARCHAR nome_cidade
+        VARCHAR nome_estado
+        VARCHAR sigla_estado
     }
 
     CLIENTES {
-        bigint id_cliente PK
-        varchar nome
-        varchar email
-        bigint cidade_id FK
+        BIGINT id_cliente PK
+        VARCHAR nome
+        VARCHAR email
+        BIGINT cidade_id FK
     }
 
     CIDADES ||--o{ CLIENTES : "pertence a"
@@ -442,28 +442,28 @@ cod_disciplina              → disciplina_nome ⚠️  Dependência PARCIAL
 ```mermaid
 erDiagram
     ALUNOS {
-        bigint id_aluno PK
-        varchar matricula
-        varchar nome
-        varchar email
-        varchar cod_turma FK
+        BIGINT id_aluno PK
+        VARCHAR matricula
+        VARCHAR nome
+        VARCHAR email
+        VARCHAR cod_turma FK
     }
 
     TURMAS {
-        varchar cod_turma PK
-        varchar nome
-        varchar professor_nome
+        VARCHAR cod_turma PK
+        VARCHAR nome
+        VARCHAR professor_nome
     }
 
     DISCIPLINAS {
-        varchar cod_disciplina PK
-        varchar nome
+        VARCHAR cod_disciplina PK
+        VARCHAR nome
     }
 
     HISTORICOS {
-        bigint aluno_id PK "FK"
-        varchar cod_disciplina PK "FK"
-        decimal nota
+        BIGINT aluno_id PK "FK"
+        VARCHAR cod_disciplina PK "FK"
+        DECIMAL nota
     }
 
     ALUNOS ||--o{ HISTORICOS : "possui"
@@ -492,37 +492,37 @@ professor_nome  → professor_titulo  ⚠️  Transitiva
 ```mermaid
 erDiagram
     PROFESSORES {
-        bigint id_professor PK
-        varchar nome
-        varchar email
-        varchar titulacao
+        BIGINT id_professor PK
+        VARCHAR nome
+        VARCHAR email
+        VARCHAR titulacao
     }
 
     TURMAS {
-        varchar cod_turma PK
-        varchar nome
-        bigint professor_id FK
+        VARCHAR cod_turma PK
+        VARCHAR nome
+        BIGINT professor_id FK
     }
 
     DISCIPLINAS {
-        varchar cod_disciplina PK
-        varchar nome
-        int carga_horaria
+        VARCHAR cod_disciplina PK
+        VARCHAR nome
+        INT carga_horaria
     }
 
     ALUNOS {
-        bigint id_aluno PK
-        varchar matricula
-        varchar nome
-        varchar email
-        varchar cod_turma FK
+        BIGINT id_aluno PK
+        VARCHAR matricula
+        VARCHAR nome
+        VARCHAR email
+        VARCHAR cod_turma FK
     }
 
     HISTORICOS {
-        bigint aluno_id PK "FK"
-        varchar cod_disciplina PK "FK"
-        decimal nota
-        varchar semestre
+        BIGINT aluno_id PK "FK"
+        VARCHAR cod_disciplina PK "FK"
+        DECIMAL nota
+        VARCHAR semestre
     }
 
     PROFESSORES ||--o{ TURMAS : "responsável por"
@@ -755,27 +755,27 @@ Resultado final:
 ```mermaid
 erDiagram
     CLIENTES {
-        varchar cpf PK
-        varchar nome
-        varchar cidade
+        VARCHAR cpf PK
+        VARCHAR nome
+        VARCHAR cidade
     }
 
     PEDIDOS {
-        varchar cod_pedido PK
-        date data
-        varchar cliente_cpf FK
+        VARCHAR cod_pedido PK
+        DATE data
+        VARCHAR cliente_cpf FK
     }
 
     PRODUTOS {
-        varchar cod_produto PK
-        varchar descricao
-        decimal preco_unitario
+        VARCHAR cod_produto PK
+        VARCHAR descricao
+        DECIMAL preco_unitario
     }
 
     ITENS_PEDIDOS {
-        varchar cod_pedido PK "FK"
-        varchar cod_produto PK "FK"
-        int quantidade
+        VARCHAR cod_pedido PK "FK"
+        VARCHAR cod_produto PK "FK"
+        INT quantidade
     }
 
     CLIENTES ||--o{ PEDIDOS : "realiza"
@@ -792,42 +792,42 @@ Dado o diagrama conceitual abaixo (sistema de uma biblioteca), escreva o modelo 
 ```mermaid
 erDiagram
     AUTORES {
-        bigint id_autor PK
-        varchar nome
-        varchar nacionalidade
+        BIGINT id_autor PK
+        VARCHAR nome
+        VARCHAR nacionalidade
     }
 
     LIVROS {
-        bigint id_livro PK
-        varchar titulo
-        varchar isbn
-        int ano
+        BIGINT id_livro PK
+        VARCHAR titulo
+        VARCHAR isbn
+        INT ano
     }
 
     CATEGORIAS {
-        bigint id_categoria PK
-        varchar nome
+        BIGINT id_categoria PK
+        VARCHAR nome
     }
 
     USUARIOS {
-        bigint id_usuario PK
-        varchar nome
-        varchar email
+        BIGINT id_usuario PK
+        VARCHAR nome
+        VARCHAR email
     }
 
     AUTORIAS {
-        bigint autor_id FK
-        bigint livro_id FK
-        varchar tipo
+        BIGINT autor_id FK
+        BIGINT livro_id FK
+        VARCHAR tipo
     }
 
     EMPRESTIMOS {
-        bigint id_emprestimo PK
-        bigint usuario_id FK
-        bigint livro_id FK
-        date data_retirada
-        date data_devolucao
-        varchar status
+        BIGINT id_emprestimo PK
+        BIGINT usuario_id FK
+        BIGINT livro_id FK
+        DATE data_retirada
+        DATE data_devolucao
+        VARCHAR status
     }
 
     AUTORES }o--o{ LIVROS : "escreve"

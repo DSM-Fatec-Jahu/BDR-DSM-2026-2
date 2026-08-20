@@ -201,9 +201,9 @@ Além dos relacionamentos "normais" entre duas entidades diferentes, existem doi
 ```mermaid
 erDiagram
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        varchar nome
-        bigint supervisor_id FK
+        BIGINT id_funcionario PK
+        VARCHAR nome
+        BIGINT supervisor_id FK
     }
     FUNCIONARIOS ||--o{ FUNCIONARIOS : "supervisiona"
 ```
@@ -249,46 +249,46 @@ O diagrama abaixo representa esse modelo usando a notação Crow's Foot com Merm
 ```mermaid
 erDiagram
     CURSOS {
-        bigint id_curso PK
-        varchar nome
-        int duracao_semestres
+        BIGINT id_curso PK
+        VARCHAR nome
+        INT duracao_semestres
     }
 
     DISCIPLINAS {
-        bigint id_disciplina PK
-        varchar nome
-        varchar sigla
-        int carga_horaria
-        bigint curso_id FK
+        BIGINT id_disciplina PK
+        VARCHAR nome
+        VARCHAR sigla
+        INT carga_horaria
+        BIGINT curso_id FK
     }
 
     PROFESSORES {
-        bigint id_professor PK
-        varchar nome
-        varchar email
-        varchar titulacao
+        BIGINT id_professor PK
+        VARCHAR nome
+        VARCHAR email
+        VARCHAR titulacao
     }
 
     ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar cpf
-        date data_nascimento
-        bigint curso_id FK
+        BIGINT id_aluno PK
+        VARCHAR nome
+        VARCHAR cpf
+        DATE data_nascimento
+        BIGINT curso_id FK
     }
 
     MATRICULAS {
-        bigint id_matricula PK
-        bigint aluno_id FK
-        bigint disciplina_id FK
-        decimal nota
-        varchar situacao
+        BIGINT id_matricula PK
+        BIGINT aluno_id FK
+        BIGINT disciplina_id FK
+        DECIMAL nota
+        VARCHAR situacao
     }
 
     LECIONAM {
-        bigint professor_id FK
-        bigint disciplina_id FK
-        varchar semestre
+        BIGINT professor_id FK
+        BIGINT disciplina_id FK
+        VARCHAR semestre
     }
 
     CURSOS ||--o{ DISCIPLINAS : "possui"
@@ -447,29 +447,29 @@ Ao modelar um sistema de locadora, você identificou separadamente as entidades 
 ```mermaid
 erDiagram
     VEICULOS {
-        bigint id_veiculo PK
-        varchar placa
-        int ano_fabricacao
-        varchar cor
-        int quilometragem
+        BIGINT id_veiculo PK
+        VARCHAR placa
+        INT ano_fabricacao
+        VARCHAR cor
+        INT quilometragem
     }
 
     CARROS {
-        bigint id_veiculo PK, FK
-        int numero_portas
-        varchar tipo_cambio
+        BIGINT id_veiculo PK, FK
+        INT numero_portas
+        VARCHAR tipo_cambio
     }
 
     MOTOS {
-        bigint id_veiculo PK, FK
-        varchar cilindrada
-        tinyint tem_sidecar
+        BIGINT id_veiculo PK, FK
+        VARCHAR cilindrada
+        TINYINT tem_sidecar
     }
 
     CAMINHAOS {
-        bigint id_veiculo PK, FK
-        decimal capacidade_carga_ton
-        int numero_eixos
+        BIGINT id_veiculo PK, FK
+        DECIMAL capacidade_carga_ton
+        INT numero_eixos
     }
 
     VEICULOS ||--o| CARROS     : "é um"
@@ -488,23 +488,23 @@ Em um sistema bancário, você identificou **Contas Correntes** e **Contas Poupa
 ```mermaid
 erDiagram
     CONTAS {
-        bigint id_conta PK
-        varchar numero_conta
-        decimal saldo
-        date data_abertura
-        bigint cliente_id FK
+        BIGINT id_conta PK
+        VARCHAR numero_conta
+        DECIMAL saldo
+        DATE data_abertura
+        BIGINT cliente_id FK
     }
 
     CONTAS_CORRENTES {
-        bigint id_conta PK, FK
-        decimal limite_cheque_especial
-        decimal taxa_manutencao
+        BIGINT id_conta PK, FK
+        DECIMAL limite_cheque_especial
+        DECIMAL taxa_manutencao
     }
 
     CONTAS_POUPANCAS {
-        bigint id_conta PK, FK
-        decimal taxa_rendimento
-        date data_aniversario
+        BIGINT id_conta PK, FK
+        DECIMAL taxa_rendimento
+        DATE data_aniversario
     }
 
     CONTAS ||--o| CONTAS_CORRENTES : "é uma"
@@ -522,29 +522,29 @@ Ao modelar um sistema hospitalar, você identificou **Médicos**, **Enfermeiros*
 ```mermaid
 erDiagram
     PESSOAS {
-        bigint id_pessoa PK
-        varchar nome
-        char cpf
-        date data_nascimento
-        char telefone
+        BIGINT id_pessoa PK
+        VARCHAR nome
+        CHAR cpf
+        DATE data_nascimento
+        CHAR telefone
     }
 
     MEDICOS {
-        bigint id_pessoa PK, FK
-        varchar crm
-        varchar especialidade
+        BIGINT id_pessoa PK, FK
+        VARCHAR crm
+        VARCHAR especialidade
     }
 
     ENFERMEIROS {
-        bigint id_pessoa PK, FK
-        varchar coren
-        varchar turno
+        BIGINT id_pessoa PK, FK
+        VARCHAR coren
+        VARCHAR turno
     }
 
     PACIENTES {
-        bigint id_pessoa PK, FK
-        varchar convenio
-        varchar tipo_sanguineo
+        BIGINT id_pessoa PK, FK
+        VARCHAR convenio
+        VARCHAR tipo_sanguineo
     }
 
     PESSOAS ||--o| MEDICOS      : "é uma"
@@ -563,23 +563,23 @@ Ao modelar um sistema de RH, você tem a entidade **Funcionários** com nome, CP
 ```mermaid
 erDiagram
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        varchar nome
-        char cpf
-        decimal salario
-        date data_admissao
+        BIGINT id_funcionario PK
+        VARCHAR nome
+        CHAR cpf
+        DECIMAL salario
+        DATE data_admissao
     }
 
     GERENTES {
-        bigint id_funcionario PK, FK
-        decimal bonus_anual
-        int tamanho_equipe
+        BIGINT id_funcionario PK, FK
+        DECIMAL bonus_anual
+        INT tamanho_equipe
     }
 
     TECNICOS {
-        bigint id_funcionario PK, FK
-        varchar area_tecnica
-        varchar nivel_certificacao
+        BIGINT id_funcionario PK, FK
+        VARCHAR area_tecnica
+        VARCHAR nivel_certificacao
     }
 
     FUNCIONARIOS ||--o| GERENTES  : "é um"
@@ -597,26 +597,26 @@ Em uma loja virtual, a entidade **Produto** tem nome, preço, estoque e descriç
 ```mermaid
 erDiagram
     PRODUTOS {
-        bigint id_produto PK
-        varchar nome
-        decimal preco
-        int estoque
-        text descricao
+        BIGINT id_produto PK
+        VARCHAR nome
+        DECIMAL preco
+        INT estoque
+        TEXT descricao
     }
 
     PRODUTOS_FISICOS {
-        bigint id_produto PK, FK
-        decimal peso_kg
-        decimal altura_cm
-        decimal largura_cm
-        decimal profundidade_cm
+        BIGINT id_produto PK, FK
+        DECIMAL peso_kg
+        DECIMAL altura_cm
+        DECIMAL largura_cm
+        DECIMAL profundidade_cm
     }
 
     PRODUTOS_DIGITAIS {
-        bigint id_produto PK, FK
-        varchar url_download
-        decimal tamanho_mb
-        int validade_dias
+        BIGINT id_produto PK, FK
+        VARCHAR url_download
+        DECIMAL tamanho_mb
+        INT validade_dias
     }
 
     PRODUTOS ||--o| PRODUTOS_FISICOS   : "é um"
@@ -634,28 +634,28 @@ Em uma plataforma de streaming, a entidade **Conteudos** agrupa tudo que pode se
 ```mermaid
 erDiagram
     CONTEUDOS {
-        bigint id_conteudo PK
-        varchar titulo
-        int duracao_segundos
-        date data_lancamento
+        BIGINT id_conteudo PK
+        VARCHAR titulo
+        INT duracao_segundos
+        DATE data_lancamento
     }
 
     MUSICAS {
-        bigint id_conteudo PK, FK
-        text letra
-        bigint album_id FK
+        BIGINT id_conteudo PK, FK
+        TEXT letra
+        BIGINT album_id FK
     }
 
     FILMES {
-        bigint id_conteudo PK, FK
-        text sinopse
-        varchar classificacao_etaria
+        BIGINT id_conteudo PK, FK
+        TEXT sinopse
+        VARCHAR classificacao_etaria
     }
 
     ALBUNS {
-        bigint id_album PK
-        varchar titulo
-        varchar url_capa
+        BIGINT id_album PK
+        VARCHAR titulo
+        VARCHAR url_capa
     }
 
     CONTEUDOS ||--o| MUSICAS  : "é um"
@@ -723,9 +723,9 @@ Conhecer os erros mais frequentes ajuda a evitá-los. Fique atento a:
 ```mermaid
 erDiagram
     CLIENTES {
-        bigint id_cliente PK
-        varchar nome
-        varchar cidade
+        BIGINT id_cliente PK
+        VARCHAR nome
+        VARCHAR cidade
     }
 ```
 
@@ -734,15 +734,15 @@ erDiagram
 ```mermaid
 erDiagram
     CIDADES {
-        bigint id_cidade PK
-        varchar nome
-        char uf
-        varchar cep_base
+        BIGINT id_cidade PK
+        VARCHAR nome
+        CHAR uf
+        VARCHAR cep_base
     }
     CLIENTES {
-        bigint id_cliente PK
-        varchar nome
-        bigint cidade_id FK
+        BIGINT id_cliente PK
+        VARCHAR nome
+        BIGINT cidade_id FK
     }
     CIDADES ||--o{ CLIENTES : "localiza"
 ```
@@ -762,12 +762,12 @@ erDiagram
 ```mermaid
 erDiagram
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        varchar nome
+        BIGINT id_funcionario PK
+        VARCHAR nome
     }
     GERENTES {
-        bigint id_funcionario PK, FK
-        decimal bonus_anual
+        BIGINT id_funcionario PK, FK
+        DECIMAL bonus_anual
     }
     FUNCIONARIOS ||--o| GERENTES : "é um"
 ```
@@ -777,12 +777,12 @@ erDiagram
 ```mermaid
 erDiagram
     DEPARTAMENTOS {
-        bigint id_departamento PK
-        varchar nome
+        BIGINT id_departamento PK
+        VARCHAR nome
     }
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        bigint departamento_id FK
+        BIGINT id_funcionario PK
+        BIGINT departamento_id FK
     }
     DEPARTAMENTOS ||--o{ FUNCIONARIOS : "lotado em"
 ```
@@ -846,21 +846,21 @@ Resumindo o raciocínio: **nome e matrícula** descrevem o aluno e continuariam 
 ```mermaid
 erDiagram
     ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar matricula
+        BIGINT id_aluno PK
+        VARCHAR nome
+        VARCHAR matricula
     }
     LIVROS {
-        bigint id_livro PK
-        varchar titulo
-        varchar isbn
+        BIGINT id_livro PK
+        VARCHAR titulo
+        VARCHAR isbn
     }
     EMPRESTIMOS {
-        bigint aluno_id FK
-        bigint livro_id FK
-        date data_emprestimo
-        date data_devolucao_prevista
-        varchar status
+        BIGINT aluno_id FK
+        BIGINT livro_id FK
+        DATE data_emprestimo
+        DATE data_devolucao_prevista
+        VARCHAR status
     }
     ALUNOS ||--o{ EMPRESTIMOS : "realiza"
     LIVROS ||--o{ EMPRESTIMOS : "é objeto de"
@@ -904,27 +904,27 @@ FORMA DE PAGAMENTO: PIX
 ```mermaid
 erDiagram
     CLIENTES {
-        bigint id_cliente PK
-        varchar nome
-        varchar cpf
+        BIGINT id_cliente PK
+        VARCHAR nome
+        VARCHAR cpf
     }
     NOTAS_FISCAIS {
-        bigint id_nota_fiscal PK
-        date data_emissao
-        decimal valor_total
-        varchar forma_pagamento
-        bigint cliente_id FK
+        BIGINT id_nota_fiscal PK
+        DATE data_emissao
+        DECIMAL valor_total
+        VARCHAR forma_pagamento
+        BIGINT cliente_id FK
     }
     PRODUTOS {
-        bigint id_produto PK
-        varchar descricao
-        decimal valor_unitario
+        BIGINT id_produto PK
+        VARCHAR descricao
+        DECIMAL valor_unitario
     }
     ITENS_NOTA {
-        bigint nota_fiscal_id FK
-        bigint produto_id FK
-        int quantidade
-        decimal valor_total_item
+        BIGINT nota_fiscal_id FK
+        BIGINT produto_id FK
+        INT quantidade
+        DECIMAL valor_total_item
     }
     CLIENTES ||--o{ NOTAS_FISCAIS : "recebe"
     NOTAS_FISCAIS ||--o{ ITENS_NOTA : "contém"
