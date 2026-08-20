@@ -196,16 +196,16 @@ Regra de negócio: cada funcionário possui exatamente um crachá de identifica�
 ```mermaid
 erDiagram
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        varchar nome
-        date data_admissao
+        BIGINT id_funcionario PK
+        VARCHAR nome
+        DATE data_admissao
     }
 
     CRACHAS {
-        bigint id_cracha PK
-        varchar numero_serie
-        date data_emissao
-        bigint funcionario_id FK
+        BIGINT id_cracha PK
+        VARCHAR numero_serie
+        DATE data_emissao
+        BIGINT funcionario_id FK
     }
 
     FUNCIONARIOS ||--|| CRACHAS : "possui"
@@ -224,15 +224,15 @@ Regra de negócio: cada país tem exatamente uma capital, e cada capital pertenc
 ```mermaid
 erDiagram
     PAISES {
-        bigint id_pais PK
-        varchar nome
-        int populacao
+        BIGINT id_pais PK
+        VARCHAR nome
+        INT populacao
     }
 
     CAPITAIS {
-        bigint id_capital PK
-        varchar nome
-        bigint pais_id FK
+        BIGINT id_capital PK
+        VARCHAR nome
+        BIGINT pais_id FK
     }
 
     PAISES ||--|| CAPITAIS : "tem como capital"
@@ -249,17 +249,17 @@ Regra de negócio: uma pessoa pode ou não ter CNHS (é opcional), mas se tiver,
 ```mermaid
 erDiagram
     PESSOAS {
-        bigint id_pessoa PK
-        varchar nome
-        varchar cpf
+        BIGINT id_pessoa PK
+        VARCHAR nome
+        VARCHAR cpf
     }
 
     CNHS {
-        bigint id_cnh PK
-        varchar numero_registro
-        date data_validade
-        varchar categoria
-        bigint pessoa_id FK
+        BIGINT id_cnh PK
+        VARCHAR numero_registro
+        DATE data_validade
+        VARCHAR categoria
+        BIGINT pessoa_id FK
     }
 
     PESSOAS |o--|| CNHS : "possui"
@@ -288,16 +288,16 @@ Regra de negócio: um departamento pode ter muitos funcionários, mas cada funci
 ```mermaid
 erDiagram
     DEPARTAMENTOS {
-        bigint id_departamento PK
-        varchar nome
-        varchar localizacao
+        BIGINT id_departamento PK
+        VARCHAR nome
+        VARCHAR localizacao
     }
 
     FUNCIONARIOS {
-        bigint id_funcionario PK
-        varchar nome
-        decimal salario
-        bigint departamento_id FK
+        BIGINT id_funcionario PK
+        VARCHAR nome
+        DECIMAL salario
+        BIGINT departamento_id FK
     }
 
     DEPARTAMENTOS |o--o{ FUNCIONARIOS : "emprega"
@@ -316,17 +316,17 @@ Regra de negócio: uma categoria (como "Eletrônicos" ou "Vestuário") pode cont
 ```mermaid
 erDiagram
     CATEGORIAS {
-        bigint id_categoria PK
-        varchar nome
-        varchar descricao
+        BIGINT id_categoria PK
+        VARCHAR nome
+        VARCHAR descricao
     }
 
     PRODUTOS {
-        bigint id_produto PK
-        varchar nome
-        decimal preco
-        int estoque
-        bigint categoria_id FK
+        BIGINT id_produto PK
+        VARCHAR nome
+        DECIMAL preco
+        INT estoque
+        BIGINT categoria_id FK
     }
 
     CATEGORIAS |o--o{ PRODUTOS : "classifica"
@@ -345,18 +345,18 @@ Regra de negócio: um pedido pode gerar várias notas fiscais (exemplo: pedido p
 ```mermaid
 erDiagram
     PEDIDOS {
-        bigint id_pedido PK
-        date data_pedido
-        decimal valor_total
-        varchar status
+        BIGINT id_pedido PK
+        DATE data_pedido
+        DECIMAL valor_total
+        VARCHAR status
     }
 
     NOTAS_FISCAIS {
-        bigint id_nota PK
-        varchar numero_nota
-        date data_emissao
-        decimal valor
-        bigint pedido_id FK
+        BIGINT id_nota PK
+        VARCHAR numero_nota
+        DATE data_emissao
+        DECIMAL valor
+        BIGINT pedido_id FK
     }
 
     PEDIDOS ||--o{ NOTAS_FISCAIS : "gera"
@@ -385,23 +385,23 @@ Regra de negócio: um aluno pode se matricular em várias disciplinas no mesmo s
 ```mermaid
 erDiagram
     ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar matricula
+        BIGINT id_aluno PK
+        VARCHAR nome
+        VARCHAR matricula
     }
 
     DISCIPLINAS {
-        bigint id_disciplina PK
-        varchar nome
-        int carga_horaria
+        BIGINT id_disciplina PK
+        VARCHAR nome
+        INT carga_horaria
     }
 
     MATRICULAS {
-        bigint aluno_id FK
-        bigint disciplina_id FK
-        decimal nota
-        varchar situacao
-        varchar semestre
+        BIGINT aluno_id FK
+        BIGINT disciplina_id FK
+        DECIMAL nota
+        VARCHAR situacao
+        VARCHAR semestre
     }
 
     ALUNOS ||--o{ MATRICULAS : "realiza"
@@ -421,22 +421,22 @@ Regra de negócio: um livro pode ter vários autores (obra coletiva). Um autor p
 ```mermaid
 erDiagram
     AUTORES {
-        bigint id_autor PK
-        varchar nome
-        varchar nacionalidade
+        BIGINT id_autor PK
+        VARCHAR nome
+        VARCHAR nacionalidade
     }
 
     LIVROS {
-        bigint id_livro PK
-        varchar titulo
-        varchar isbn
-        int ano_publicacao
+        BIGINT id_livro PK
+        VARCHAR titulo
+        VARCHAR isbn
+        INT ano_publicacao
     }
 
     AUTORIAS {
-        bigint autor_id FK
-        bigint livro_id FK
-        varchar tipo_contribuicao
+        BIGINT autor_id FK
+        BIGINT livro_id FK
+        VARCHAR tipo_contribuicao
     }
 
     AUTORES ||--o{ AUTORIAS : "escreve"
@@ -454,26 +454,26 @@ Regra de negócio: um médico atende muitos pacientes ao longo do tempo. Um paci
 ```mermaid
 erDiagram
     MEDICOS {
-        bigint id_medico PK
-        varchar nome
-        varchar crm
-        varchar especialidade
+        BIGINT id_medico PK
+        VARCHAR nome
+        VARCHAR crm
+        VARCHAR especialidade
     }
 
     PACIENTES {
-        bigint id_paciente PK
-        varchar nome
-        date data_nascimento
-        varchar cpf
+        BIGINT id_paciente PK
+        VARCHAR nome
+        DATE data_nascimento
+        VARCHAR cpf
     }
 
     CONSULTAS {
-        bigint id_consulta PK
-        bigint medico_id FK
-        bigint paciente_id FK
-        datetime data_hora
-        text diagnostico
-        text prescricao
+        BIGINT id_consulta PK
+        BIGINT medico_id FK
+        BIGINT paciente_id FK
+        DATETIME data_hora
+        TEXT diagnostico
+        TEXT prescricao
     }
 
     MEDICOS ||--o{ CONSULTAS : "realiza"
@@ -567,16 +567,16 @@ Analise o diagrama abaixo e responda às perguntas que se seguem.
 ```mermaid
 erDiagram
     EDITORAS {
-        bigint id_editora PK
-        varchar nome
-        varchar cnpj
+        BIGINT id_editora PK
+        VARCHAR nome
+        VARCHAR cnpj
     }
 
     LIVROS {
-        bigint id_livro PK
-        varchar titulo
-        decimal preco
-        bigint editora_id FK
+        BIGINT id_livro PK
+        VARCHAR titulo
+        DECIMAL preco
+        BIGINT editora_id FK
     }
 
     EDITORAS ||--o{ LIVROS : "publica"
@@ -619,16 +619,16 @@ Dadas as regras de negócio abaixo, construa o diagrama ER com a cardinalidade c
 ```mermaid
 erDiagram
     PROFESSORES {
-        bigint id_professor PK
-        varchar nome
-        varchar titulacao
+        BIGINT id_professor PK
+        VARCHAR nome
+        VARCHAR titulacao
     }
 
     ALUNOS {
-        bigint id_aluno PK
-        varchar nome
-        varchar matricula
-        bigint professor_id FK "nullable"
+        BIGINT id_aluno PK
+        VARCHAR nome
+        VARCHAR matricula
+        BIGINT professor_id FK "nullable"
     }
 
     PROFESSORES |o--o{ ALUNOS : "orienta"
