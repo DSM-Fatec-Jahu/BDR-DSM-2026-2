@@ -76,28 +76,41 @@ flowchart LR
 concreta antes de nomear o conceito teórico. Use tabelas, exemplos em SQL e diagramas
 Mermaid (`flowchart`, `erDiagram`) onde ajudar a visualizar.]
 
-> 🔍 **Checkpoint 1 — [tema do bloco 1].** [Enunciado de um exercício **prático** —
-> escrever SQL, montar um MER, classificar atributos, identificar violação de regra
-> etc. — aplicado a um cenário **atual (2026)**, evitando o óbvio de livro (biblioteca,
-> escola, aluno/nota). Prefira domínios como apps de mobilidade urbana/elétrica,
-> fintechs e carteiras digitais, streaming e plataformas de criadores, e-sports,
-> marketplaces de aluguel/gig economy, energia solar residencial, saúde digital,
-> entrega por drone/robô, cloud gaming — troque de domínio a cada checkpoint dentro da
-> mesma aula para não repetir cenário.]
->
-> 🔑 Resolução no [Gabarito desta aula](Aula_NN_Gabarito.md#checkpoint-1) — tente
-> resolver **antes** de conferir.
+!!! example "🔍 Checkpoint 1 — [tema do bloco 1]"
+    [Enunciado de um exercício **prático** — escrever SQL, montar um MER, classificar
+    atributos, identificar violação de regra etc. — aplicado a um cenário **atual
+    (2026)**, evitando o óbvio de livro (biblioteca, escola, aluno/nota). Prefira
+    domínios como apps de mobilidade urbana/elétrica, fintechs e carteiras digitais,
+    streaming e plataformas de criadores, e-sports, marketplaces de aluguel/gig
+    economy, energia solar residencial, saúde digital, entrega por drone/robô, cloud
+    gaming — troque de domínio a cada checkpoint dentro da mesma aula para não repetir
+    cenário.
+
+    🔑 Resolução no [Gabarito desta aula](Aula_NN_Gabarito.md#checkpoint-1) — tente
+    resolver **antes** de conferir.
+
+> 📌 **Por que `!!! example` (admonition), e não uma blockquote `>` solta?** Um
+> checkpoint precisa ser visualmente inconfundível com um parágrafo normal — o aluno
+> deve reconhecer de relance "isto é um desafio, não teoria". A admonition colorida do
+> Material (ícone + barra de título) garante esse contraste; uma blockquote simples
+> (reservada a callouts de atenção — 💡, 📌, ⚠️ — dentro do texto corrido) se confunde
+> visualmente com o restante da prosa. Use sempre `!!! example` para Checkpoints (nunca
+> `!!! question`, reservado às flashcards) e `!!! tip` para os blocos de "Verificação
+> Rápida" teóricos abaixo — dois tipos diferentes, para o aluno distinguir "exercício
+> prático com gabarito" de "confira-se agora com um quiz".
 
 ## 2. [Segundo bloco de conteúdo]
 
 [...]
 
-> ✅ **Verificação Rápida — [tema do bloco 2].** Use este formato só quando o bloco for
-> **puramente conceitual/teórico**, sem material suficiente para um exercício prático
-> (ex.: comparação de dois conceitos, uma definição, uma diferenciação). Neste caso,
-> em vez do checkpoint com gabarito externo, insira **dois `<quiz>` normais** (mesma
-> sintaxe do mkdocs-quiz usada na Seção "Quiz de Fixação" no fim da aula) — a resposta
-> já é revelada na hora, então **não** precisa de entrada no gabarito.
+!!! tip "✅ Verificação Rápida — [tema do bloco 2]"
+    Use este formato só quando o bloco for **puramente conceitual/teórico**, sem
+    material suficiente para um exercício prático (ex.: comparação de dois conceitos,
+    uma definição, uma diferenciação). Neste caso, em vez do checkpoint com gabarito
+    externo, insira **dois `<quiz>` normais** (mesma sintaxe do mkdocs-quiz usada na
+    Seção "Quiz de Fixação" no fim da aula), **fora** da admonition (os componentes de
+    quiz não devem ficar indentados dentro do bloco) — a resposta já é revelada na
+    hora, então **não** precisa de entrada no gabarito.
 
 <quiz>
 [Pergunta objetiva sobre o Bloco 2]?

@@ -129,22 +129,23 @@ deletado_em    DATETIME      NULL
 
 `criado_em` registra a inserção, `atualizado_em` é mantido pelo próprio MariaDB a cada `UPDATE` e `deletado_em` permite **soft delete** — em vez de remover fisicamente o registro, marcamos a data de exclusão e filtramos com `WHERE deletado_em IS NULL` nas consultas. Isso preserva histórico, permite restauração e protege contra deleções acidentais.
 
-> 🔍 **Checkpoint 1 — Nomenclatura: plataforma de criadores de conteúdo.** O trecho abaixo, escrito por um estagiário para uma plataforma de monetização de criadores de conteúdo (tipo assinatura de canal), viola várias das 9 regras desta seção:
->
-> ```sql
-> CREATE TABLE Criador (
->     IdCriador int primary key,
->     NomeCanal varchar(50),
->     Inscritos int,
->     ReceitaMensal float,
->     ID_PLANO int,
->     FOREIGN KEY (ID_PLANO) REFERENCES Plano(id)
-> );
-> ```
->
-> Liste todos os erros encontrados, indicando **qual regra (1 a 9)** cada um viola, e reescreva o `CREATE TABLE` corretamente — incluindo os campos de log da Regra 9.
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 1 — Nomenclatura: plataforma de criadores de conteúdo"
+    O trecho abaixo, escrito por um estagiário para uma plataforma de monetização de criadores de conteúdo (tipo assinatura de canal), viola várias das 9 regras desta seção:
+
+    ```sql
+    CREATE TABLE Criador (
+        IdCriador int primary key,
+        NomeCanal varchar(50),
+        Inscritos int,
+        ReceitaMensal float,
+        ID_PLANO int,
+        FOREIGN KEY (ID_PLANO) REFERENCES Plano(id)
+    );
+    ```
+
+    Liste todos os erros encontrados, indicando **qual regra (1 a 9)** cada um viola, e reescreva o `CREATE TABLE` corretamente — incluindo os campos de log da Regra 9.
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -245,7 +246,8 @@ CREATE TABLE estoque.produtos ( ... );
 
 ![Compração MySQL / PostgreSQL](../imgs/Aula_03_IMG_01.png)
 
-✅ **Verificação Rápida — MariaDB, MySQL e PostgreSQL.** Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
+!!! tip "✅ Verificação Rápida — MariaDB, MySQL e PostgreSQL"
+    Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
 
 <quiz>
 No PostgreSQL, qual é a hierarquia correta, da mais externa para a mais interna?
@@ -367,9 +369,10 @@ CREATE DATABASE loja_virtual
     TEMPLATE    template0;       -- necessário quando LC_ difere do template padrão
 ```
 
-> 🔍 **Checkpoint 2 — CREATE DATABASE: carteira digital.** Uma fintech está lançando uma carteira digital com transferências via Pix. Escreva o comando `CREATE DATABASE` completo e idiomático para o banco `carteira_digital`, seguindo exatamente o padrão da Seção 4.5 desta aula: idempotente (não falha se o banco já existir), com o charset correto para suportar todos os caracteres Unicode (incluindo emojis, usados nas notificações do app) e a collation recomendada para comparações em português. Ao final, escreva também o comando para confirmar as configurações aplicadas.
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 2 — CREATE DATABASE: carteira digital"
+    Uma fintech está lançando uma carteira digital com transferências via Pix. Escreva o comando `CREATE DATABASE` completo e idiomático para o banco `carteira_digital`, seguindo exatamente o padrão da Seção 4.5 desta aula: idempotente (não falha se o banco já existir), com o charset correto para suportar todos os caracteres Unicode (incluindo emojis, usados nas notificações do app) e a collation recomendada para comparações em português. Ao final, escreva também o comando para confirmar as configurações aplicadas.
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -501,9 +504,10 @@ deletado_em      DATETIME        NULL
 
 > 💡 **Sobre `ENUM`:** embora conveniente, `ENUM` tem desvantagens sérias — adicionar um novo valor exige um `ALTER TABLE` (que pode travar a tabela em produção) e o valor não é portável entre SGBDs. Uma alternativa mais flexível é criar uma tabela de domínio (ex: `status_pedidos`) e usar uma FK.
 
-> 🔍 **Checkpoint 3 — Tipos de Dados: geração de energia solar residencial.** Uma plataforma de energia solar residencial (geração distribuída) precisa armazenar, para cada usina instalada na casa de um cliente, os seguintes atributos: `numero_serie_inversor` (sempre 12 caracteres alfanuméricos, tamanho fixo), `potencia_instalada_kwp` (ex.: 5.75), `energia_gerada_hoje_kwh` (ex.: 23.400), `data_instalacao`, `valor_credito_energia_acumulado` (em reais, usado para abater a conta de luz), `esta_ativo` (indica se a usina está gerando energia normalmente) e `observacoes_tecnicas` (texto livre de tamanho imprevisível, preenchido pelo técnico na instalação). Para cada atributo, escreva a declaração de coluna completa (tipo + tamanho, quando aplicável), justificando a escolha com base nesta seção.
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 3 — Tipos de Dados: geração de energia solar residencial"
+    Uma plataforma de energia solar residencial (geração distribuída) precisa armazenar, para cada usina instalada na casa de um cliente, os seguintes atributos: `numero_serie_inversor` (sempre 12 caracteres alfanuméricos, tamanho fixo), `potencia_instalada_kwp` (ex.: 5.75), `energia_gerada_hoje_kwh` (ex.: 23.400), `data_instalacao`, `valor_credito_energia_acumulado` (em reais, usado para abater a conta de luz), `esta_ativo` (indica se a usina está gerando energia normalmente) e `observacoes_tecnicas` (texto livre de tamanho imprevisível, preenchido pelo técnico na instalação). Para cada atributo, escreva a declaração de coluna completa (tipo + tamanho, quando aplicável), justificando a escolha com base nesta seção.
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -803,9 +807,10 @@ CONSTRAINT ck_email_formato    CHECK (email LIKE '%@%.%'),  -- validação bási
 CONSTRAINT ck_data_valida      CHECK (data_fim >= data_inicio)
 ```
 
-> 🔍 **Checkpoint 4 — CREATE TABLE e Constraints: plataforma de cursos online.** Uma plataforma de cursos online (bootcamps de tecnologia) já tem as tabelas `alunos (id_aluno PK, ...)` e `cursos (id_curso PK, ...)`. Escreva o `CREATE TABLE` completo de `matriculas_cursos`, que resolve o relacionamento N:M entre alunos e cursos, com os atributos: `progresso_percentual` (0 a 100), `nota_final` (0 a 10, pode ser NULL enquanto o curso não termina), `data_matricula` e os campos de log da Regra 9. Aplique: PK composta pelas duas FKs; `ON DELETE CASCADE` para aluno (se o aluno for removido, suas matrículas somem) e `ON DELETE RESTRICT` para curso (não pode excluir um curso que tem alunos matriculados); `CHECK` garantindo que `progresso_percentual` esteja entre 0 e 100; `CHECK` garantindo que `nota_final`, quando não for NULL, esteja entre 0 e 10.
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 4 — CREATE TABLE e Constraints: plataforma de cursos online"
+    Uma plataforma de cursos online (bootcamps de tecnologia) já tem as tabelas `alunos (id_aluno PK, ...)` e `cursos (id_curso PK, ...)`. Escreva o `CREATE TABLE` completo de `matriculas_cursos`, que resolve o relacionamento N:M entre alunos e cursos, com os atributos: `progresso_percentual` (0 a 100), `nota_final` (0 a 10, pode ser NULL enquanto o curso não termina), `data_matricula` e os campos de log da Regra 9. Aplique: PK composta pelas duas FKs; `ON DELETE CASCADE` para aluno (se o aluno for removido, suas matrículas somem) e `ON DELETE RESTRICT` para curso (não pode excluir um curso que tem alunos matriculados); `CHECK` garantindo que `progresso_percentual` esteja entre 0 e 100; `CHECK` garantindo que `nota_final`, quando não for NULL, esteja entre 0 e 10.
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
@@ -877,9 +882,10 @@ ALTER TABLE pessoas ALTER COLUMN nome SET DEFAULT 'Não informado';
 ALTER TABLE pessoas RENAME COLUMN telefone TO celular;
 ```
 
-> 🔍 **Checkpoint 5 — ALTER TABLE: marketplace de freelancers.** Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, atualizado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 5 — ALTER TABLE: marketplace de freelancers"
+    Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, atualizado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
@@ -916,13 +922,14 @@ DROP TABLE IF EXISTS pessoas;
 SET FOREIGN_KEY_CHECKS = 1;  -- sempre reabilite
 ```
 
-> 🔍 **Checkpoint 6 — DROP e ordem de exclusão: rede de lockers inteligentes.** Uma rede de lockers inteligentes para retirada de encomendas tem três tabelas: `lockers (id_locker PK, ...)`, `compartimentos (id_compartimento PK, locker_id FK REFERENCES lockers, ...)` e `entregas (id_entrega PK, compartimento_id FK REFERENCES compartimentos, ...)`.
->
-> a) Se você executar `DROP TABLE lockers;` diretamente, o que acontece? Por quê?
-> b) Escreva a sequência correta de comandos `DROP TABLE IF EXISTS` para remover as três tabelas sem erro, sem usar `SET FOREIGN_KEY_CHECKS`.
-> c) Reescreva a solução do item (b) agora usando `SET FOREIGN_KEY_CHECKS` para desabilitar temporariamente a verificação — em que situação real (fora deste exercício) isso seria útil?
->
-> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
+!!! example "🔍 Checkpoint 6 — DROP e ordem de exclusão: rede de lockers inteligentes"
+    Uma rede de lockers inteligentes para retirada de encomendas tem três tabelas: `lockers (id_locker PK, ...)`, `compartimentos (id_compartimento PK, locker_id FK REFERENCES lockers, ...)` e `entregas (id_entrega PK, compartimento_id FK REFERENCES compartimentos, ...)`.
+
+    a) Se você executar `DROP TABLE lockers;` diretamente, o que acontece? Por quê?
+    b) Escreva a sequência correta de comandos `DROP TABLE IF EXISTS` para remover as três tabelas sem erro, sem usar `SET FOREIGN_KEY_CHECKS`.
+    c) Reescreva a solução do item (b) agora usando `SET FOREIGN_KEY_CHECKS` para desabilitar temporariamente a verificação — em que situação real (fora deste exercício) isso seria útil?
+
+    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
 
 ---
 
