@@ -5,6 +5,13 @@ ela foi desenhada para intercalar teoria com prática de memorização em vez de
 empilhar tudo no fim. Nem toda aula terá conteúdo para todas as seções (ex.: aulas
 que são só atividade/prova pulam mapa mental e flashcards) — use bom senso e,
 na dúvida, pergunte ao professor em vez de forçar uma seção vazia.
+
+IMPORTANTE — Verificação parcial de entendimento (Checkpoints): o erro pedagógico que
+motivou este padrão é deixar o aluno consumir teoria e exemplos por uma aula inteira
+sem nenhuma chance de auto-testar o entendimento antes do quiz final. Toda aula com
+conteúdo conceitual deve intercalar um "🔍 Checkpoint N" logo após cada bloco de
+conceito fechado (não só no fim da aula) — ver Seção 4 abaixo para o formato exato e
+a Seção "🔑 Gabarito desta Aula" para onde a resposta vive.
 -->
 
 # Aula NN — [Título da Aula]
@@ -69,9 +76,46 @@ flowchart LR
 concreta antes de nomear o conceito teórico. Use tabelas, exemplos em SQL e diagramas
 Mermaid (`flowchart`, `erDiagram`) onde ajudar a visualizar.]
 
+> 🔍 **Checkpoint 1 — [tema do bloco 1].** [Enunciado de um exercício **prático** —
+> escrever SQL, montar um MER, classificar atributos, identificar violação de regra
+> etc. — aplicado a um cenário **atual (2026)**, evitando o óbvio de livro (biblioteca,
+> escola, aluno/nota). Prefira domínios como apps de mobilidade urbana/elétrica,
+> fintechs e carteiras digitais, streaming e plataformas de criadores, e-sports,
+> marketplaces de aluguel/gig economy, energia solar residencial, saúde digital,
+> entrega por drone/robô, cloud gaming — troque de domínio a cada checkpoint dentro da
+> mesma aula para não repetir cenário.]
+>
+> 🔑 Resolução no [Gabarito desta aula](Aula_NN_Gabarito.md#checkpoint-1) — tente
+> resolver **antes** de conferir.
+
 ## 2. [Segundo bloco de conteúdo]
 
 [...]
+
+> ✅ **Verificação Rápida — [tema do bloco 2].** Use este formato só quando o bloco for
+> **puramente conceitual/teórico**, sem material suficiente para um exercício prático
+> (ex.: comparação de dois conceitos, uma definição, uma diferenciação). Neste caso,
+> em vez do checkpoint com gabarito externo, insira **dois `<quiz>` normais** (mesma
+> sintaxe do mkdocs-quiz usada na Seção "Quiz de Fixação" no fim da aula) — a resposta
+> já é revelada na hora, então **não** precisa de entrada no gabarito.
+
+<quiz>
+[Pergunta objetiva sobre o Bloco 2]?
+- [ ] Alternativa incorreta
+- [x] Alternativa correta
+- [ ] Alternativa incorreta
+
+[Feedback curto explicando por que a resposta certa é certa.]
+</quiz>
+
+<quiz>
+[Segunda pergunta objetiva sobre o Bloco 2]?
+- [ ] Alternativa incorreta
+- [x] Alternativa correta
+- [ ] Alternativa incorreta
+
+[Feedback curto.]
+</quiz>
 
 ---
 
@@ -121,6 +165,22 @@ consigo, não uma repetição do conteúdo.]
 !!! success "Selo desbloqueado: [Nome temático do selo, ex. \"Normalizador Iniciante\"]"
     Você completou a Aula NN. [Uma frase curta conectando esta aula à próxima —
     reforço de progresso, não apenas decoração.]
+
+---
+
+## 🔑 Gabarito desta Aula
+
+As respostas dos checkpoints espalhados pela aula — e dos Exercícios de Fixação, se
+houver — estão em um arquivo separado, para não estragar a tentativa de quem ainda não
+chegou até aqui: [Gabarito — Aula NN](Aula_NN_Gabarito.md).
+
+> 📄 **Sobre o arquivo de gabarito:** vive em `docs/aulas/Aula_NN_Gabarito.md`, **fora
+> do `nav` do `mkdocs.yml`** (mesmo padrão do `Cardinalidade_MER_Completo.md`) — existe
+> como página do site, acessível pelo link acima, mas não aparece no menu lateral. Cada
+> checkpoint da aula deve ter uma entrada correspondente `## Checkpoint N — [tema] {:
+> #checkpoint-N }` no gabarito (o `{: #checkpoint-N }` fixa o id do cabeçalho via
+> `attr_list`, para que o link `Aula_NN_Gabarito.md#checkpoint-N` funcione mesmo que o
+> texto do título mude).
 
 ---
 

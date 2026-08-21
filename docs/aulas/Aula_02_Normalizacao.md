@@ -83,6 +83,20 @@ Antes de falar sobre as formas normais em si, é essencial entender *o que acont
 
 Esses três tipos de anomalias — **inserção, atualização e exclusão** — são o sintoma mais visível de um banco desnormalizado. A normalização é o processo de reorganizar as tabelas para eliminar essas anomalias de forma sistemática e matematicamente fundamentada.
 
+> 🔍 **Checkpoint 1 — Anomalias: rede de eletropostos para carros elétricos.** Uma rede de recarga para veículos elétricos registra cada sessão de recarga na tabela abaixo:
+>
+> | id_sessao | data_sessao | motorista_nome | motorista_email | posto_nome | posto_cidade | energia_kwh | valor |
+> |---|---|---|---|---|---|---|---|
+> | 501 | 2026-01-10 | Fernanda Reis | fernanda@email.com | Eletroposto Ipiranga | São Paulo | 42.5 | 68.00 |
+> | 502 | 2026-01-11 | Bruno Alves | bruno@email.com | Eletroposto Batel | Curitiba | 30.0 | 48.00 |
+> | 503 | 2026-01-12 | Fernanda Reis | fernanda@email.com | Eletroposto Ipiranga | São Paulo | 38.0 | 60.80 |
+>
+> a) A rede quer cadastrar o Eletroposto Faria Lima, recém-inaugurado, que ainda não recebeu nenhuma sessão de recarga. É possível inserir esse posto nesta tabela sem criar uma sessão fictícia? Que anomalia isso evidencia?
+> b) Fernanda Reis mudou de e-mail. Quantas linhas precisam ser atualizadas para manter a consistência, e o que acontece se uma delas for esquecida? Que anomalia é essa?
+> c) Se a sessão 502 — a única de Bruno Alves — for excluída do sistema, o que se perde além do próprio registro de recarga? Que anomalia é essa?
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+
 ---
 
 ## 2. Dependências Funcionais — O Alicerce da Normalização
@@ -140,6 +154,20 @@ Vamos aplicar isso à tabela de pedidos da Seção 1:
 - `cliente_nome → cliente_cidade`? Sim (assumindo nome único). ✅ Mas é um atributo determinando outro atributo — isso é **transitivo** se `cliente_nome` não for a chave primária.
 
 Identificar todas as dependências funcionais de uma tabela é o primeiro passo antes de aplicar qualquer forma normal.
+
+> 🔍 **Checkpoint 2 — Dependências Funcionais: plataforma de cloud gaming.** Uma plataforma de jogos em nuvem por assinatura mantém a tabela abaixo, onde cada assinatura lista os jogos incluídos no plano contratado (chave primária composta `(id_assinatura, jogo_titulo)`):
+>
+> | id_assinatura | jogador_nome | jogador_email | plano_codigo | plano_nome | preco_mensal | jogo_titulo | genero_jogo |
+> |---|---|---|---|---|---|---|---|
+> | 3001 | Yuri Tanaka | yuri@email.com | ULT | Ultra | 79.90 | Corrida Neon 2077 | Corrida |
+> | 3001 | Yuri Tanaka | yuri@email.com | ULT | Ultra | 79.90 | Guerra Orbital | Estratégia |
+> | 3002 | Camila Duarte | camila@email.com | PREM | Premium | 49.90 | Guerra Orbital | Estratégia |
+>
+> a) Aplique a "pergunta de determinação" (Seção 2.4) e diga se cada afirmação é uma dependência funcional válida: `id_assinatura → jogador_nome`? `id_assinatura → jogo_titulo`? `jogo_titulo → genero_jogo`? `plano_codigo → plano_nome`?
+> b) Considerando a chave primária composta `(id_assinatura, jogo_titulo)`, classifique `preco_mensal` quanto ao tipo de dependência funcional em relação a essa chave — total, parcial ou nenhuma. Justifique.
+> c) Existe alguma dependência transitiva nessa tabela? Se sim, escreva a cadeia (X → Y → Z).
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -234,6 +262,18 @@ erDiagram
 
 > 💡 **Dica de reconhecimento:** se você ver colunas com nomes terminando em números (produto_1, produto_2, produto_3...) ou células com vírgulas separando valores, é quase certo que a 1FN está sendo violada.
 
+> 🔍 **Checkpoint 3 — 1FN: pedido por QR code em restaurante.** Um restaurante que recebe pedidos por QR code na mesa registra os pedidos na tabela abaixo:
+>
+> | id_pedido | mesa | item_1 | qtd_1 | item_2 | qtd_2 | item_3 | qtd_3 |
+> |---|---|---|---|---|---|---|---|
+> | 9001 | 12 | Hambúrguer Artesanal | 2 | Batata Frita | 1 | NULL | NULL |
+> | 9002 | 5 | Suco Natural | 3 | NULL | NULL | NULL | NULL |
+>
+> a) Que violação da 1FN essa tabela apresenta? Aponte os dois problemas concretos que ela traz na prática (pense em um pedido com mais de três itens, e em uma mesa que peça só um item).
+> b) Aplique a 1FN: redesenhe a estrutura em tabelas separadas (como foi feito para `PEDIDOS`/`ITENS_PEDIDOS` na Seção 3.3) e desenhe o `erDiagram` correspondente.
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+
 ---
 
 ## 4. Segunda Forma Normal (2FN)
@@ -310,6 +350,20 @@ Agora cada tabela armazena apenas o que lhe compete:
 
 > 📌 **Regra prática:** quando você encontrar informações que se repetem identicamente em múltiplas linhas (como o nome e preço de um produto aparecendo em todos os itens que o contêm), isso é quase sempre sinal de violação da 2FN — os dados repetidos provavelmente pertencem a uma tabela separada.
 
+> 🔍 **Checkpoint 4 — 2FN: marketplace de aluguel por temporada.** Uma plataforma de aluguel de imóveis por temporada permite reservas que reúnem mais de um imóvel sob o mesmo código (ex.: uma viagem com estadias em cidades diferentes). A tabela `ITENS_RESERVA`, com chave primária composta `(id_reserva, id_imovel)`, está assim:
+>
+> | id_reserva | id_imovel | noites | preco_diaria | nome_imovel | anfitriao_nome |
+> |---|---|---|---|---|---|
+> | 701 | 55 | 3 | 320.00 | Loft Vista Mar | Camila Duarte |
+> | 701 | 89 | 2 | 210.00 | Cabana na Serra | Rodrigo Nunes |
+> | 702 | 55 | 5 | 320.00 | Loft Vista Mar | Camila Duarte |
+>
+> a) Mapeie as dependências funcionais desta tabela em relação à chave composta `(id_reserva, id_imovel)`, seguindo o formato usado na Seção 4.2.
+> b) Quais atributos violam a 2FN, e por quê?
+> c) Aplique a 2FN: proponha as tabelas resultantes (nomes, colunas, PKs e FKs).
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+
 ---
 
 ## 5. Terceira Forma Normal (3FN)
@@ -373,6 +427,20 @@ erDiagram
 Agora `nome_cidade` e `nome_estado` residem apenas em CIDADES. Um cliente referencia sua cidade pela FK `cidade_id` (Regra 6), e qualquer alteração no nome da cidade é feita em um único lugar.
 
 > 💡 **Dica de reconhecimento da violação da 3FN:** procure atributos que se repetem em grupos. No exemplo acima, "São Paulo" e "SP" aparecem sempre juntos para clientes de São Paulo — isso sugere que essas duas informações pertencem a outra entidade, e estão chegando aqui "carregadas" por um intermediário.
+
+> 🔍 **Checkpoint 5 — 3FN: plataforma de telemedicina.** Uma plataforma de telemedicina registra as consultas na tabela `CONSULTAS`, com chave primária `id_consulta`:
+>
+> | id_consulta | paciente_nome | medico_id | medico_nome | clinica_id | clinica_nome | clinica_cidade | data_consulta |
+> |---|---|---|---|---|---|---|---|
+> | 4101 | Larissa Prado | 12 | Dr. André Lima | 3 | Clínica Vitalis | Jahu | 2026-02-03 |
+> | 4102 | Otávio Reis | 12 | Dr. André Lima | 3 | Clínica Vitalis | Jahu | 2026-02-04 |
+> | 4103 | Larissa Prado | 27 | Dra. Beatriz Sá | 8 | Clínica Bem Estar | Bauru | 2026-02-10 |
+>
+> a) Mapeie as dependências funcionais em relação a `id_consulta`, seguindo o formato da Seção 5.2. Existe alguma dependência transitiva? Escreva a cadeia.
+> b) O que acontece se a Clínica Vitalis mudar de cidade? Quantas linhas precisariam ser atualizadas, e qual o risco disso?
+> c) Aplique a 3FN: proponha as tabelas resultantes.
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
@@ -687,6 +755,17 @@ performance da chave substituta como identidade interna da linha.
 > cresce e a FK de uma chave de negócio muda de tabela em tabela. Comece certo agora e
 > essa dúvida nunca mais aparece.
 
+> 🔍 **Checkpoint 6 — Passagem ao Modelo Lógico: plataforma de e-sports.** Uma plataforma de e-sports tem o seguinte MER conceitual:
+>
+> - `Times` (1) — `Jogadores` (N): um jogador pertence a um único time no momento; um time tem vários jogadores. Participação de Jogadores é total (todo jogador cadastrado pertence a algum time).
+> - `Times` (N) — `Torneios` (M): um time participa de vários torneios, e um torneio reúne vários times — com um atributo `posicao_final` pertencente ao próprio relacionamento (a colocação daquele time naquele torneio específico).
+> - `Jogadores` (1) — `Contas_Streaming` (1): um jogador pode vincular uma conta de streaming para transmitir suas partidas (participação parcial de Jogadores — nem todo jogador transmite; participação total de Contas_Streaming — toda conta vinculada pertence a exatamente um jogador).
+> - `Partidas` é uma entidade fraca que só existe dentro de um `Torneio` — cada partida é identificada por um `numero_partida` que só é único *dentro* do torneio ao qual pertence.
+>
+> Escreva o modelo lógico completo (tabelas, colunas, PKs e FKs) aplicando as regras de passagem da Seção 8 a cada um dos quatro relacionamentos acima.
+>
+> 🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
+
 ---
 
 ## 9. Resumo das Regras de Passagem
@@ -706,7 +785,9 @@ performance da chave substituta como identidade interna da linha.
 
 ---
 
-## 10. Exercícios de Fixação com Gabarito
+## 10. Exercícios de Fixação
+
+> 🔑 As resoluções destes três exercícios estão no [Gabarito da Aula 02](Aula_02_Gabarito.md) — tente resolver antes de conferir.
 
 ### Exercício 1 — Identificação de Violações
 
@@ -717,14 +798,6 @@ Para cada situação abaixo, identifique qual forma normal está sendo violada e
 **b)** Uma tabela ITENS_VENDAS com chave primária composta `(venda_id, produto_id)` contém a coluna `categoria_produto`, que depende apenas de `produto_id`.
 
 **c)** Uma tabela FUNCIONARIOS com chave primária `id_funcionario` contém `departamento_id`, `nome_departamento` e `localizacao_departamento`.
-
-**Gabarito:**
-
-**a)** Viola a **1FN** — há grupos repetidos (colunas numeradas representando uma lista de itens). A solução é criar a tabela ITENS_FATURAS com FK `fatura_id` para FATURAS.
-
-**b)** Viola a **2FN** — `categoria_produto` tem dependência parcial (depende apenas de `produto_id`, e não da chave composta inteira). A solução é mover `categoria_produto` para a tabela PRODUTOS.
-
-**c)** Viola a **3FN** — `nome_departamento` e `localizacao_departamento` são transitivamente dependentes de `id_funcionario` (a cadeia é `id_funcionario → departamento_id → nome_departamento`). A solução é criar a tabela DEPARTAMENTOS e manter apenas a FK `departamento_id` em FUNCIONARIOS.
 
 ---
 
@@ -737,51 +810,6 @@ Normalize a tabela abaixo até a 3FN, apresentando o diagrama final:
 | P001 | 2026-03-01 | 111.222.333-44 | Ana | São Paulo | PR01 | Notebook | 3500.00 | 1 |
 | P001 | 2026-03-01 | 111.222.333-44 | Ana | São Paulo | PR02 | Mouse    | 120.00  | 2 |
 | P002 | 2026-03-02 | 555.666.777-88 | Carlos | Campinas | PR01 | Notebook | 3500.00 | 1 |
-
-**Gabarito:**
-
-**1FN:** a tabela já está na 1FN (valores atômicos, sem grupos repetidos). A chave primária composta é `(cod_pedido, cod_produto)`.
-
-**2FN:** identificamos dependências parciais:
-- `cliente_cpf`, `cliente_nome`, `cliente_cidade`, `data` dependem apenas de `cod_pedido`;
-- `produto_desc` e `preco_unit` dependem apenas de `cod_produto`.
-
-Separamos em três tabelas: CLIENTES, PEDIDOS e PRODUTOS, mantendo ITENS_PEDIDOS com apenas `(cod_pedido, cod_produto, qtd)`.
-
-**3FN:** verificamos se há dependências transitivas. Em PEDIDOS temos `cod_pedido → cliente_cpf`, e o cliente poderia determinar cidade (`cliente_cpf → cliente_cidade`). Isso é transitivo! Separamos CLIENTES de PEDIDOS.
-
-Resultado final:
-
-```mermaid
-erDiagram
-    CLIENTES {
-        VARCHAR cpf PK
-        VARCHAR nome
-        VARCHAR cidade
-    }
-
-    PEDIDOS {
-        VARCHAR cod_pedido PK
-        DATE data
-        VARCHAR cliente_cpf FK
-    }
-
-    PRODUTOS {
-        VARCHAR cod_produto PK
-        VARCHAR descricao
-        DECIMAL preco_unitario
-    }
-
-    ITENS_PEDIDOS {
-        VARCHAR cod_pedido PK "FK"
-        VARCHAR cod_produto PK "FK"
-        INT quantidade
-    }
-
-    CLIENTES ||--o{ PEDIDOS : "realiza"
-    PEDIDOS ||--o{ ITENS_PEDIDOS : "contém"
-    PRODUTOS ||--o{ ITENS_PEDIDOS : "aparece em"
-```
 
 ---
 
@@ -835,29 +863,6 @@ erDiagram
     USUARIOS ||--o{ EMPRESTIMOS : "realiza"
     LIVROS ||--o{ EMPRESTIMOS : "é emprestado em"
 ```
-
-**Gabarito — Modelo Lógico:**
-
-```
-AUTORES (id_autor PK, nome, nacionalidade)
-
-CATEGORIAS (id_categoria PK, nome)
-
-LIVROS (id_livro PK, titulo, isbn, ano, categoria_id FK)
-
-AUTORIAS (autor_id PK FK, livro_id PK FK, tipo)
-  -- PK composta: resolve o N:M entre AUTORES e LIVROS
-
-USUARIOS (id_usuario PK, nome, email)
-
-EMPRESTIMOS (id_emprestimo PK, usuario_id FK, livro_id FK,
-            data_retirada, data_devolucao, status)
-  -- EMPRESTIMOS tem PK própria pois registra um evento histórico
-  -- Um usuário pode pegar o mesmo livro em momentos diferentes
-```
-
-> 📐 Todas as FKs acima seguem a Regra 6 (`tabela_id`) — repare que são o espelho das
-> PKs correspondentes (Regra 5, `id_tabela`) com a ordem das palavras invertida.
 
 ---
 
@@ -1008,6 +1013,14 @@ vira SQL de verdade, com `CREATE TABLE`.
     inconsistência em um banco de dados, e já sabe traduzir qualquer MER em tabelas
     relacionais corretas. A próxima parada da Trilha do(a) Modelador(a) de Dados:
     transformar esse modelo lógico em SQL de verdade.
+
+---
+
+## 🔑 Gabarito desta Aula
+
+As respostas dos 6 checkpoints espalhados pela aula, e dos 3 Exercícios de Fixação da
+Seção 10, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
+chegou até aqui: [Gabarito — Aula 02](Aula_02_Gabarito.md).
 
 ---
 

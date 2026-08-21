@@ -95,6 +95,28 @@ Ex: padrão de evasão por semestre"]
 
 Essa distinção importa porque é exatamente isso que um banco de dados existe para gerenciar: ele armazena **dados**, estruturados de forma que a aplicação consiga transformá-los em **informação** útil para quem consulta — e, com o tempo e a análise adequada, em **conhecimento** para quem decide. A modelagem — o assunto do restante desta aula — é o processo de decidir *como* estruturar esses dados para que essa transformação seja possível, consistente e eficiente.
 
+✅ **Verificação Rápida — Dado, Informação e Conhecimento.** Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
+
+<quiz>
+Um sensor de qualidade do ar instalado em um cruzamento de uma cidade inteligente registra, a cada minuto, o valor bruto "38 µg/m³" para a concentração de material particulado (PM2.5). Sozinho, sem nenhum outro contexto associado, esse valor é um exemplo de:
+- [ ] Informação, porque já vem com unidade de medida
+- [x] Dado, porque é um fato isolado sem contexto que permita uma decisão
+- [ ] Conhecimento, porque foi gerado por um sensor automatizado
+- [ ] Nenhuma das opções — sensores geram sinais elétricos, não dados
+
+O valor "38 µg/m³" sozinho é um fato bruto: não diz se está acima do limite seguro, em qual cruzamento, nem se é normal para aquele horário. Só vira informação quando ganha esse contexto.
+</quiz>
+
+<quiz>
+A prefeitura cruza os registros de PM2.5 de 200 sensores espalhados pela cidade ao longo de dois anos e percebe que a poluição do ar sobe consistentemente entre 17h e 19h em dias úteis, coincidindo com o horário de pico de tráfego. Esse padrão identificado é um exemplo de:
+- [ ] Dado
+- [ ] Informação
+- [x] Conhecimento
+- [ ] Metadado
+
+Conhecimento surge do acúmulo e cruzamento de informações ao longo do tempo, revelando um padrão — o pico de poluição associado ao tráfego — que nenhuma leitura isolada de sensor revelaria sozinha.
+</quiz>
+
 ---
 
 ## 🧭 Por que começamos pela Modelagem Conceitual?
@@ -138,6 +160,10 @@ A **Entidade Forte** existe por si mesma, sem depender de outra entidade. Por ex
 
 A **Entidade Fraca** não tem existência independente — ela só faz sentido em relação a outra entidade. O exemplo clássico é **Dependente** em relação a **Funcionário**: um dependente só existe no sistema porque está vinculado a um funcionário. Se o funcionário for removido, o dependente perde sentido.
 
+> 🔍 **Checkpoint 1 — Entidades: app de patinetes elétricos.** Uma startup está modelando o banco de dados do seu aplicativo de aluguel de patinetes elétricos compartilhados. No sistema existem `Usuários` (que alugam os patinetes), `Patinetes` (cada um com número de série, nível de bateria e localização), `Estações de Recarga` (pontos físicos onde os patinetes ficam disponíveis para retirada) e `Manutenções` (registros de reparo que só existem porque estão vinculados a um patinete específico — se o patinete for removido do sistema, o registro de manutenção perde sentido). Para cada uma dessas quatro entidades, classifique-a como **forte** ou **fraca**, justificando em uma frase.
+>
+> 🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+
 ---
 
 ## 3. Atributos
@@ -161,6 +187,10 @@ Entender os tipos de atributos é fundamental para fazer uma modelagem precisa. 
 > 🔑 **Nível conceitual vs. chave real de banco de dados:** aqui, no MER, identificar `cpf` ou `matricula` como atributo chave é só reconhecer o que identifica cada instância no mundo real — é assim que a literatura acadêmica costuma nomear. Quando esse modelo virar tabela de verdade (Aula 02 em diante), a chave primária efetivamente usada **não** vai ser o `cpf` nem a `matricula`, e sim um identificador substituto `id_` criado pelo banco — você vai entender exatamente o porquê na Aula 02.
 
 ![Atributos](../imgs/Aula_01_IMG_02.png)
+
+> 🔍 **Checkpoint 2 — Atributos: reserva de sala em coworking.** Uma rede de coworkings está modelando a entidade `Reservas` para permitir que membros reservem salas de reunião pelo aplicativo. Os dados coletados no formulário de reserva são: `codigo_reserva` (identificador único gerado no ato da reserva), `endereco_unidade` (rua, número, bairro, cidade e CEP da unidade escolhida), `data_hora_inicio`, `data_hora_fim`, `duracao_minutos` (calculada a partir do início e do fim) e `recursos_solicitados` (o membro pode marcar quantos quiser, entre projetor, quadro branco, cafeteira e webcam para videoconferência). Classifique cada um desses cinco atributos quanto ao tipo — simples, composto, multivalorado, derivado ou chave — justificando cada classificação.
+>
+> 🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -220,6 +250,14 @@ erDiagram
 ```
 
 > 💡 Relacionamentos ternários são mais raros e mais complexos de mapear para o modelo lógico — use-os apenas quando o negócio realmente exigir que as três entidades sejam analisadas em conjunto. Na dúvida, verifique se o relacionamento não pode ser decomposto em dois relacionamentos binários mais simples.
+
+> 🔍 **Checkpoint 3 — Relacionamentos: plataforma de créditos de carbono.** Uma plataforma de créditos de carbono conecta `Empresas` (que precisam compensar suas emissões) a `Projetos Ambientais` (reflorestamento, energia solar, captura de metano). Toda vez que uma empresa compra créditos de um projeto, é gerado um registro de `Compensação` com a quantidade de toneladas de CO2 e a data da transação — e esse registro também precisa indicar qual `Auditor Certificador` validou aquela transação específica (o mesmo projeto pode ter compensações validadas por auditores diferentes, em datas diferentes). Além disso, uma empresa pode indicar outra empresa parceira para entrar na plataforma, ganhando desconto na taxa — e essa parceira, no futuro, também pode indicar outras.
+>
+> a) Que tipo de relacionamento (binário ou ternário) conecta Empresa, Projeto Ambiental e Auditor Certificador em Compensação? Justifique.
+> b) Qual é a cardinalidade e a participação (total ou parcial) entre Empresas e Compensações? Toda empresa cadastrada precisa ter feito ao menos uma compensação?
+> c) O relacionamento de indicação entre empresas parceiras é um exemplo de qual caso especial visto nesta aula? Explique por que a FK que ele gera não pode se chamar simplesmente `empresa_id`.
+>
+> 🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -700,6 +738,14 @@ produtos_fisicos (subclasse)
 
 > 📌 **Nesta disciplina, adotaremos sempre a Estratégia 2** — uma tabela para a superclasse e uma tabela para cada subclasse. Cada subclasse mantém sua própria PK e referencia a superclasse por FK única, preservando o 1:1 da especialização sem duplicar atributos comuns.
 
+> 🔍 **Checkpoint 4 — Generalização/Especialização: entrega por drone e robô.** Uma empresa de logística de última milha despacha entregas usando três tipos de veículos autônomos: `Drones` (com autonomia de voo em minutos e altitude máxima), `Robôs Terrestres` (com velocidade máxima em calçadas e capacidade de subir meio-fio) e `Vans Elétricas` (com capacidade de carga em kg e autonomia em km). Os três compartilham `identificador`, `status_operacional` (disponível, em rota, em manutenção) e `localização_atual` (latitude/longitude). Toda entrega despachada usa exatamente um desses veículos, e nenhum veículo pode ser, ao mesmo tempo, de dois tipos diferentes.
+>
+> a) Proponha a superclasse e as três subclasses, indicando os atributos comuns (na superclasse) e os exclusivos (em cada subclasse).
+> b) Qual é o tipo de restrição dessa hierarquia — quanto à obrigatoriedade e quanto à exclusividade? Justifique com base no enunciado.
+> c) Seguindo a Estratégia 2 (Seção 8.7), como ficariam as tabelas do modelo lógico — nomes, PKs e FKs — para a superclasse e para a subclasse `Robôs Terrestres`?
+>
+> 🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+
 ---
 
 ## 9. Exemplo Prático — Sistema de Streaming (prévia do T1)
@@ -935,6 +981,27 @@ erDiagram
 
 > 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal de serviço, um formulário de matrícula) e refaça os quatro passos, item por item. É o mesmo raciocínio sempre — só muda o domínio.
 
+> 🔍 **Checkpoint 5 — Método das quatro perguntas: comprovante de corrida elétrica.** Desta vez sem passo a passo guiado — aplique você mesmo o método das quatro perguntas (Seção 10.1) ao comprovante abaixo, gerado por um aplicativo de corrida com carros 100% elétricos:
+>
+> ```text
+> APP GIRACITY — CORRIDA ELÉTRICA
+> Comprovante da Corrida Nº 88342
+>
+> Passageiro: Marina Costa           CPF: 987.654.321-00
+> Motorista: Diego Andrade           Placa do veículo: ELÉTRICO-2E45
+> Modelo do veículo: BYD Dolphin     Autonomia: 340 km
+>
+> Origem: Av. Paulista, 1000         Destino: Rua Augusta, 500
+> Início: 12/08/2026 08:15           Término: 12/08/2026 08:38
+> Distância percorrida: 6,4 km
+> Valor da corrida: R$ 18,90
+> Avaliação dada pelo passageiro: 5 estrelas
+> ```
+>
+> Liste os elementos do comprovante, aplique as quatro perguntas a cada um e monte a tabela de conclusões (como nos dois exemplos guiados desta seção), indicando a qual entidade cada elemento pertence — incluindo se algum elemento pertence a uma entidade associativa. Ao final, desenhe o diagrama `erDiagram` correspondente.
+>
+> 🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+
 ---
 
 ## 📝 Exercícios de Fixação
@@ -1099,6 +1166,14 @@ relacional, através da Normalização.
     Você completou a Aula 01 e já domina a leitura e construção de diagramas MER. A
     próxima parada da Trilha do(a) Modelador(a) de Dados é transformar esse modelo
     conceitual em um modelo lógico consistente, livre de redundâncias.
+
+---
+
+## 🔑 Gabarito desta Aula
+
+As respostas dos 5 checkpoints espalhados pela aula estão em um arquivo separado, para
+não estragar a tentativa de quem ainda não chegou até aqui: [Gabarito — Aula
+01](Aula_01_Gabarito.md).
 
 ---
 

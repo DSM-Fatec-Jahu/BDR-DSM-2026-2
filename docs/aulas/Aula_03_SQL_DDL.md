@@ -129,6 +129,23 @@ deletado_em    DATETIME      NULL
 
 `criado_em` registra a inserção, `atualizado_em` é mantido pelo próprio MariaDB a cada `UPDATE` e `deletado_em` permite **soft delete** — em vez de remover fisicamente o registro, marcamos a data de exclusão e filtramos com `WHERE deletado_em IS NULL` nas consultas. Isso preserva histórico, permite restauração e protege contra deleções acidentais.
 
+> 🔍 **Checkpoint 1 — Nomenclatura: plataforma de criadores de conteúdo.** O trecho abaixo, escrito por um estagiário para uma plataforma de monetização de criadores de conteúdo (tipo assinatura de canal), viola várias das 9 regras desta seção:
+>
+> ```sql
+> CREATE TABLE Criador (
+>     IdCriador int primary key,
+>     NomeCanal varchar(50),
+>     Inscritos int,
+>     ReceitaMensal float,
+>     ID_PLANO int,
+>     FOREIGN KEY (ID_PLANO) REFERENCES Plano(id)
+> );
+> ```
+>
+> Liste todos os erros encontrados, indicando **qual regra (1 a 9)** cada um viola, e reescreva o `CREATE TABLE` corretamente — incluindo os campos de log da Regra 9.
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+
 ---
 
 ## 2. Acessando o MariaDB via Terminal (XAMPP)
@@ -227,6 +244,28 @@ CREATE TABLE estoque.produtos ( ... );
 ```
 
 ![Compração MySQL / PostgreSQL](../imgs/Aula_03_IMG_01.png)
+
+✅ **Verificação Rápida — MariaDB, MySQL e PostgreSQL.** Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
+
+<quiz>
+No PostgreSQL, qual é a hierarquia correta, da mais externa para a mais interna?
+- [ ] Schema → Database → Tabela
+- [x] Database → Schema → Tabela
+- [ ] Tabela → Schema → Database
+- [ ] Não existe hierarquia — schema e database são sinônimos, como no MariaDB
+
+No PostgreSQL, um database pode conter múltiplos schemas (o padrão se chama `public`), e cada schema organiza suas próprias tabelas — diferente do MariaDB/MySQL, onde DATABASE e SCHEMA são apenas nomes diferentes para a mesma coisa.
+</quiz>
+
+<quiz>
+Por que o MariaDB existe como um projeto separado do MySQL?
+- [ ] Porque o MySQL foi descontinuado
+- [x] Porque foi criado como um fork pelos fundadores originais do MySQL após a aquisição deste pela Oracle, para manter um SGBD open source com desenvolvimento comunitário ativo
+- [ ] Porque o MariaDB roda apenas em sistemas Windows
+- [ ] Não há relação entre os dois — são SGBDs desenvolvidos de forma totalmente independente desde o início
+
+O MariaDB nasceu em 2009 como fork do MySQL, criado pelos fundadores originais do MySQL após a aquisição pela Oracle, mantendo compatibilidade quase total em nível de SQL mas evoluindo de forma independente.
+</quiz>
 
 ---
 
@@ -327,6 +366,10 @@ CREATE DATABASE loja_virtual
     LC_CTYPE    'pt_BR.UTF-8'
     TEMPLATE    template0;       -- necessário quando LC_ difere do template padrão
 ```
+
+> 🔍 **Checkpoint 2 — CREATE DATABASE: carteira digital.** Uma fintech está lançando uma carteira digital com transferências via Pix. Escreva o comando `CREATE DATABASE` completo e idiomático para o banco `carteira_digital`, seguindo exatamente o padrão da Seção 4.5 desta aula: idempotente (não falha se o banco já existir), com o charset correto para suportar todos os caracteres Unicode (incluindo emojis, usados nas notificações do app) e a collation recomendada para comparações em português. Ao final, escreva também o comando para confirmar as configurações aplicadas.
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -457,6 +500,10 @@ deletado_em      DATETIME        NULL
 | `BINARY(n)` / `VARBINARY(n)` | `BYTEA` | Dados binários, hashes |
 
 > 💡 **Sobre `ENUM`:** embora conveniente, `ENUM` tem desvantagens sérias — adicionar um novo valor exige um `ALTER TABLE` (que pode travar a tabela em produção) e o valor não é portável entre SGBDs. Uma alternativa mais flexível é criar uma tabela de domínio (ex: `status_pedidos`) e usar uma FK.
+
+> 🔍 **Checkpoint 3 — Tipos de Dados: geração de energia solar residencial.** Uma plataforma de energia solar residencial (geração distribuída) precisa armazenar, para cada usina instalada na casa de um cliente, os seguintes atributos: `numero_serie_inversor` (sempre 12 caracteres alfanuméricos, tamanho fixo), `potencia_instalada_kwp` (ex.: 5.75), `energia_gerada_hoje_kwh` (ex.: 23.400), `data_instalacao`, `valor_credito_energia_acumulado` (em reais, usado para abater a conta de luz), `esta_ativo` (indica se a usina está gerando energia normalmente) e `observacoes_tecnicas` (texto livre de tamanho imprevisível, preenchido pelo técnico na instalação). Para cada atributo, escreva a declaração de coluna completa (tipo + tamanho, quando aplicável), justificando a escolha com base nesta seção.
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -756,6 +803,10 @@ CONSTRAINT ck_email_formato    CHECK (email LIKE '%@%.%'),  -- validação bási
 CONSTRAINT ck_data_valida      CHECK (data_fim >= data_inicio)
 ```
 
+> 🔍 **Checkpoint 4 — CREATE TABLE e Constraints: plataforma de cursos online.** Uma plataforma de cursos online (bootcamps de tecnologia) já tem as tabelas `alunos (id_aluno PK, ...)` e `cursos (id_curso PK, ...)`. Escreva o `CREATE TABLE` completo de `matriculas_cursos`, que resolve o relacionamento N:M entre alunos e cursos, com os atributos: `progresso_percentual` (0 a 100), `nota_final` (0 a 10, pode ser NULL enquanto o curso não termina), `data_matricula` e os campos de log da Regra 9. Aplique: PK composta pelas duas FKs; `ON DELETE CASCADE` para aluno (se o aluno for removido, suas matrículas somem) e `ON DELETE RESTRICT` para curso (não pode excluir um curso que tem alunos matriculados); `CHECK` garantindo que `progresso_percentual` esteja entre 0 e 100; `CHECK` garantindo que `nota_final`, quando não for NULL, esteja entre 0 e 10.
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+
 ---
 
 ## 8. Modificando Tabelas — `ALTER TABLE`
@@ -826,6 +877,10 @@ ALTER TABLE pessoas ALTER COLUMN nome SET DEFAULT 'Não informado';
 ALTER TABLE pessoas RENAME COLUMN telefone TO celular;
 ```
 
+> 🔍 **Checkpoint 5 — ALTER TABLE: marketplace de freelancers.** Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, atualizado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+
 ---
 
 ## 9. Removendo Objetos — `DROP`
@@ -860,6 +915,14 @@ DROP TABLE IF EXISTS pessoas;
 
 SET FOREIGN_KEY_CHECKS = 1;  -- sempre reabilite
 ```
+
+> 🔍 **Checkpoint 6 — DROP e ordem de exclusão: rede de lockers inteligentes.** Uma rede de lockers inteligentes para retirada de encomendas tem três tabelas: `lockers (id_locker PK, ...)`, `compartimentos (id_compartimento PK, locker_id FK REFERENCES lockers, ...)` e `entregas (id_entrega PK, compartimento_id FK REFERENCES compartimentos, ...)`.
+>
+> a) Se você executar `DROP TABLE lockers;` diretamente, o que acontece? Por quê?
+> b) Escreva a sequência correta de comandos `DROP TABLE IF EXISTS` para remover as três tabelas sem erro, sem usar `SET FOREIGN_KEY_CHECKS`.
+> c) Reescreva a solução do item (b) agora usando `SET FOREIGN_KEY_CHECKS` para desabilitar temporariamente a verificação — em que situação real (fora deste exercício) isso seria útil?
+>
+> 🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
 
 ---
 
@@ -1095,7 +1158,9 @@ CREATE TABLE IF NOT EXISTS itens_pedidos (
 
 ---
 
-## 12. Exercícios de Fixação com Gabarito
+## 12. Exercícios de Fixação
+
+> 🔑 As resoluções destes três exercícios estão no [Gabarito da Aula 03](Aula_03_Gabarito.md) — tente resolver antes de conferir.
 
 **Exercício 1 — Identifique os erros:** o trecho abaixo possui violações das convenções desta disciplina. Liste todos os erros encontrados e reescreva o código corretamente.
 
@@ -1106,30 +1171,6 @@ CREATE TABLE Produto (
     Preco FLOAT,
     ID_CATEGORIA int,
     FOREIGN KEY (ID_CATEGORIA) REFERENCES Categoria(id)
-);
-```
-
-**Gabarito:** os erros são: nome da tabela em singular e com inicial maiúscula (deve ser `produtos` — Regras 2 e 4); `idProduto` usa camelCase (deve ser `id_produto` — Regras 1 e 5); o tipo da PK deve ser `BIGINT UNSIGNED AUTO_INCREMENT` e `INT(11)` está depreciado (Regra 5); `NomeProduto` mistura maiúsculas (deve ser `nome`); `Preco` com maiúscula (deve ser `preco`); `FLOAT` inapropriado para preço — use `DECIMAL(10,2)` (Regra 8); `ID_CATEGORIA` mistura maiúsculas e tipo errado (deve ser `categoria_id BIGINT UNSIGNED` — Regra 6); o nome da FK não segue o padrão semântico; faltam `NOT NULL` nas colunas obrigatórias; faltam os campos de log `criado_em`, `atualizado_em` e `deletado_em` (Regra 9). Note que **não** é erro a ausência de `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci` — o MariaDB usa esse padrão automaticamente; declarar é apenas boa prática documental.
-
-Versão corrigida:
-
-```sql
-CREATE TABLE IF NOT EXISTS produtos (
-    id_produto    BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    categoria_id  BIGINT UNSIGNED  NOT NULL,
-    nome          VARCHAR(255)     NOT NULL,
-    preco         DECIMAL(10, 2)   NOT NULL,
-    criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                            ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME             NULL,
-
-    CONSTRAINT pk_produto          PRIMARY KEY (id_produto),
-    CONSTRAINT fk_produto_categoria FOREIGN KEY (categoria_id)
-                                    REFERENCES categorias (id_categoria)
-                                    ON DELETE RESTRICT
-                                    ON UPDATE CASCADE,
-    CONSTRAINT ck_preco            CHECK (preco >= 0)
 );
 ```
 
@@ -1258,6 +1299,14 @@ Na próxima aula, essas tabelas ganham vida com `INSERT`, `UPDATE` e `DELETE`.
     Você já sabe transformar qualquer modelo lógico em um schema SQL real, seguindo
     convenções profissionais de nomenclatura e tipos de dados. A próxima parada da
     Trilha do(a) Modelador(a) de Dados: popular essas tabelas com dados de verdade.
+
+---
+
+## 🔑 Gabarito desta Aula
+
+As respostas dos 6 checkpoints espalhados pela aula, e dos 3 Exercícios de Fixação da
+Seção 12, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
+chegou até aqui: [Gabarito — Aula 03](Aula_03_Gabarito.md).
 
 ---
 

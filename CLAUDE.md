@@ -138,7 +138,23 @@ conteúdo — ex. aulas que são só enunciado de prova não precisam de mapa me
    `mindmap` do Mermaid, e NÃO `flowchart TD` — ver "Armadilhas já conhecidas"
    abaixo), resumindo os conceitos antes do detalhe. Gabarito em
    `templates/AULA_TEMPLATE.md`.
-4. Conteúdo — mantém a didática problema→conceito→exemplo já usada no 1º semestre
+4. Conteúdo — mantém a didática problema→conceito→exemplo já usada no 1º semestre.
+   **Após cada bloco de conceito fechado, intercale uma verificação parcial de
+   entendimento** (não deixe toda a prática empilhada só no fim da aula — esse é
+   exatamente o erro pedagógico que este padrão corrige):
+   - Prefira um **exercício prático** (`🔍 Checkpoint N`) sempre que o bloco permitir —
+     escrever SQL, montar um MER, classificar atributos, apontar violação de regra
+     etc. — sem a resposta no corpo da aula; a resolução vive só no arquivo de
+     gabarito da aula (ver item 8.5 abaixo), linkada a partir do checkpoint.
+   - Só quando o bloco for puramente teórico/conceitual (sem material para exercício
+     prático), use **dois `<quiz>` normais** no lugar do checkpoint — a resposta já é
+     revelada na hora pelo próprio componente, então não entra no gabarito.
+   - Os temas desses exercícios devem usar **cenários atuais de 2026**, evitando o
+     óbvio de livro-texto (biblioteca, escola, aluno/nota) — prefira domínios como
+     mobilidade elétrica, fintech/carteira digital, streaming e plataformas de
+     criadores, e-sports, gig economy, energia solar residencial, saúde digital,
+     entrega por drone. Troque de domínio a cada checkpoint dentro da mesma aula.
+   - Gabarito em `templates/AULA_TEMPLATE.md`.
 5. 🃏 **Flashcards de revisão** (3–6 por aula) — sintaxe:
    ```
    ??? question "Pergunta objetiva?"
@@ -181,6 +197,14 @@ conteúdo — ex. aulas que são só enunciado de prova não precisam de mapa me
    - Ao remodelar uma aula fora dessa lista de exemplos, escolha um nome de selo
      consistente com o tema (progressão de carreira/habilidade em BD) em vez de
      inventar temas novos a cada aula.
+8.5. 🔑 **Gabarito desta Aula** — link para `Aula_NN_Gabarito.md`, um arquivo **separado**
+   por aula, criado em `docs/aulas/`, **fora do `nav` do `mkdocs.yml`** (mesmo padrão do
+   `Cardinalidade_MER_Completo.md`: existe como página do site, acessível pelo link, mas
+   não aparece no menu lateral — assim o aluno não tropeça na resposta antes de tentar).
+   Contém a resolução de cada `🔍 Checkpoint N` da aula (heading `## Checkpoint N —
+   [tema] {: #checkpoint-N }`, usando `attr_list` para fixar o id do link) e, se a aula
+   tiver Exercícios de Fixação com resposta, a resolução deles também — nunca deixe
+   resposta de exercício solto no corpo da aula fora desse arquivo.
 9. 🔗 Navegação (aula anterior / próxima) — **só linke a próxima aula se o arquivo dela
    já existir em `docs/aulas/`.** Como as aulas chegam progressivamente, a mais recente
    deve mostrar `🔒 Aula NN+1 — em breve.` no lugar do link. Ao adicionar essa próxima
