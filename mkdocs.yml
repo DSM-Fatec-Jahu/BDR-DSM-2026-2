@@ -59,6 +59,15 @@ markdown_extensions:
   - toc:
       permalink: true
 
+# Mermaid é carregado com versão fixa (não a tag flutuante "@11" que o Material usa por
+# padrão) para garantir que todo visitante renderize o mesmo build — a tag flutuante já
+# causou divergência de renderização entre GitHub Pages e a pré-visualização do GitHub
+# (pé de galinha sobreposto às tabelas em erDiagram de auto-relacionamento). Ver
+# docs/javascripts/mermaid.mjs. Ao atualizar, teste o diagrama de auto-relacionamento da
+# Aula 01 antes de trocar a versão.
+extra_javascript:
+  - javascripts/mermaid.mjs
+
 plugins:
   - search:
       lang: pt
