@@ -12,5 +12,16 @@ Todas as atividades avaliativas do semestre. Clique no nome para abrir a página
 
 ---
 
+## 🧪 Atividades de Treino (sem nota)
+
+Práticas extras para treinar e tirar dúvidas em aula. Não entram na média — são
+material de apoio, não avaliação.
+
+| Atividade | Descrição | Status |
+|---|---|---|
+| [Prática — Modelagem com dbdiagram.io](Pratica_Modelagem_dbdiagram.md) | Modelagem conceitual, lógica, normalização e gestão de usuários/acessos em 6 exercícios progressivos (Aulas 01 e 02) | ✅ Disponível |
+
+---
+
 !!! info "Esta página é atualizada a cada nova atividade"
     Conforme novas atividades e avaliações forem adicionadas em `docs/atividades/`, uma linha desta tabela ganha link e o status muda para ✅ Disponível — veja o pipeline em [`CLAUDE.md`](https://github.com/DSM-Fatec-Jahu/BDR-DSM-2026-2/blob/main/CLAUDE.md).

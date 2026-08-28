@@ -86,6 +86,7 @@ nav:
       - aulas/Aula_03_SQL_DDL.md
   - Atividades e Avaliações:
       - atividades/index.md
+      - atividades/Pratica_Modelagem_dbdiagram.md
 
 extra:
   social:
