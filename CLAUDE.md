@@ -274,3 +274,16 @@ Antes de considerar a aula pronta:
   quebrada). Se houver Playwright disponível no ambiente, renderize o bloco Mermaid
   isolado (`mermaid.min.js` local + HTML mínimo) dentro de um container com a largura
   aproximada da coluna de conteúdo (~760px) e tire um screenshot antes de aplicar.
+- **No DBML (dbdiagram.io), todo tipo composto por duas palavras precisa de aspas
+  duplas — `UNSIGNED` em especial.** O parser do DBML só aceita um nome de tipo "de
+  uma palavra" (mais tamanho entre parênteses, ex. `VARCHAR(255)`); escrever
+  `id_cliente BIGINT UNSIGNED [pk, increment]` sem aspas quebra o diagrama no
+  dbdiagram.io. A forma correta é envolver o tipo inteiro em aspas duplas, como uma
+  string literal: `id_cliente "BIGINT UNSIGNED" [pk, increment]` — vale para
+  `"BIGINT UNSIGNED"`, `"INT UNSIGNED"`, `"SMALLINT UNSIGNED"` e
+  `"TINYINT UNSIGNED"`. **Isso é exclusivo do DBML** — no SQL real do MariaDB
+  (`CREATE TABLE`, Aula 03), `UNSIGNED` é escrito normalmente, sem aspas; não
+  confunda os dois contextos ao gerar exemplos. Sempre que gerar ou revisar um bloco
+  ` ```dbml ` neste repositório (aulas, atividades, gabaritos), verifique essa regra
+  antes de publicar — descoberto originalmente na
+  `docs/atividades/Pratica_Modelagem_dbdiagram.md` e seu gabarito.

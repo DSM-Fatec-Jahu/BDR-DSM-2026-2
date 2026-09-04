@@ -96,7 +96,7 @@ negócio apresentados, você deve produzir um diagrama em
 
     ```dbml
     Table nome_da_tabela {
-      id_nome_da_tabela BIGINT UNSIGNED [pk, increment]
+      id_nome_da_tabela "BIGINT UNSIGNED" [pk, increment]
       alguma_coluna     VARCHAR(255)    [not null]
 
       Note: 'observações sobre a tabela, se precisar'
@@ -104,6 +104,30 @@ negócio apresentados, você deve produzir um diagrama em
 
     Ref: outra_tabela.nome_da_tabela_id > nome_da_tabela.id_nome_da_tabela
     ```
+
+!!! danger "⚠️ Armadilha — `UNSIGNED` precisa de aspas duplas no DBML"
+    O DBML (a linguagem do dbdiagram.io) não reconhece tipos compostos por duas
+    palavras como `BIGINT UNSIGNED` — a ferramenta só entende um nome de tipo "de uma
+    palavra só" (mais o tamanho entre parênteses, quando houver, como em
+    `VARCHAR(255)`). Se você escrever `id_usuario BIGINT UNSIGNED [pk, increment]`
+    sem aspas, o dbdiagram.io **quebra o parser** e não desenha a tabela.
+
+    A solução é envolver o tipo inteiro — palavra e modificador — entre **aspas
+    duplas**, tratando `"BIGINT UNSIGNED"` como uma única string literal:
+
+    ```dbml
+    -- ❌ ERRADO: quebra o parser do dbdiagram.io
+    id_usuario BIGINT UNSIGNED [pk, increment]
+
+    -- ✅ CORRETO: tipo composto entre aspas duplas
+    id_usuario "BIGINT UNSIGNED" [pk, increment]
+    ```
+
+    Isso vale para **todo** tipo `UNSIGNED` usado nesta atividade —
+    `"BIGINT UNSIGNED"`, `"INT UNSIGNED"`, `"SMALLINT UNSIGNED"` e
+    `"TINYINT UNSIGNED"` (ver a Tabela de Tipos Permitidos abaixo). Isso é uma
+    particularidade **só do DBML** — no SQL real do MariaDB (Aula 03), `UNSIGNED` é
+    escrito normalmente, sem aspas.
 
 3. Para colunas com **lista fechada de valores** (nosso `ENUM`), declare um bloco
    `Enum` separado e use o nome dele como tipo da coluna — não dá para escrever
@@ -129,8 +153,8 @@ negócio apresentados, você deve produzir um diagrama em
 
     ```dbml
     Table avaliacoes {
-      usuario_id BIGINT UNSIGNED [not null]
-      produto_id BIGINT UNSIGNED [not null]
+      usuario_id "BIGINT UNSIGNED" [not null]
+      produto_id "BIGINT UNSIGNED" [not null]
 
       Indexes {
         (usuario_id, produto_id) [unique]
@@ -152,10 +176,10 @@ está aqui, escolhendo o mais adequado ao dado, nunca o que "parece mais simples
 
 | Tipo (dbdiagram.io / MariaDB) | Tamanho / faixa | Quando usar |
 |---|---|---|
-| `BIGINT UNSIGNED` | 8 bytes · 0 a ~18,4 quintilhões | Toda PK (`id_...`) e toda FK que aponta para uma PK |
-| `INT UNSIGNED` | 4 bytes · 0 a ~4,29 bilhões | Contadores que não cabem em `TINYINT` (duração em segundos, limite de downloads) |
-| `SMALLINT UNSIGNED` | 2 bytes · 0 a 65.535 | Contadores pequenos com folga (ordem de item em lista longa) |
-| `TINYINT UNSIGNED` | 1 byte · 0 a 255 | Quantidades bem pequenas e limitadas (séries, repetições, nota de 1 a 5/10, pontos) |
+| `"BIGINT UNSIGNED"` | 8 bytes · 0 a ~18,4 quintilhões | Toda PK (`id_...`) e toda FK que aponta para uma PK |
+| `"INT UNSIGNED"` | 4 bytes · 0 a ~4,29 bilhões | Contadores que não cabem em `TINYINT` (duração em segundos, limite de downloads) |
+| `"SMALLINT UNSIGNED"` | 2 bytes · 0 a 65.535 | Contadores pequenos com folga (ordem de item em lista longa) |
+| `"TINYINT UNSIGNED"` | 1 byte · 0 a 255 | Quantidades bem pequenas e limitadas (séries, repetições, nota de 1 a 5/10, pontos) |
 | `VARCHAR(n)` | até 65.535 bytes | Texto de tamanho variável e imprevisível — padrão defensivo `VARCHAR(255)` |
 | `CHAR(n)` | n bytes fixos | Texto de tamanho **sempre igual** (placa de veículo, CNH) |
 | `TEXT` | até 65.535 bytes | Texto longo e livre (biografia, comentário, descrição extensa) |
@@ -164,6 +188,11 @@ está aqui, escolhendo o mais adequado ao dado, nunca o que "parece mais simples
 | `DATETIME` | AAAA-MM-DD HH:MM:SS | Datas com horário, incluindo os três campos de log obrigatórios (Regra 9) |
 | `BOOLEAN` (`TINYINT(1)`) | 0 ou 1 | Indicadores verdadeiro/falso |
 | `ENUM(...)` | lista fechada | Conjunto **pequeno e estável** de valores — se a lista pode crescer ou precisa de metadados próprios, use tabela de domínio (é exatamente o caso de `papeis` nos exercícios avançados) |
+
+> ⚠️ **Sobre as aspas nos quatro tipos `UNSIGNED` acima:** elas são exigidas pelo
+> **DBML** (a sintaxe do dbdiagram.io), não pelo SQL real — ver a armadilha explicada
+> na Seção "Como modelar no dbdiagram.io". No `CREATE TABLE` de verdade (MariaDB,
+> Aula 03), o mesmo tipo é escrito **sem aspas**: `BIGINT UNSIGNED`.
 
 ---
 
@@ -177,7 +206,7 @@ completo na [Aula 03, Seção 1](../aulas/Aula_03_SQL_DDL.md#1-convencoes-de-nom
 |---|---|---|
 | 1 | `snake_case` em tudo | `data_nascimento`, nunca `DataNascimento` |
 | 2 | Minúsculas para nomes criados por você | `usuarios`, `id_usuario` — só palavras-chave SQL/DBML ficam maiúsculas |
-| 3 | Palavras reservadas em MAIÚSCULAS | `BIGINT UNSIGNED`, `NOT NULL`, `PRIMARY KEY` |
+| 3 | Palavras reservadas em MAIÚSCULAS | `"BIGINT UNSIGNED"`, `NOT NULL`, `PRIMARY KEY` |
 | 4 | Tabelas sempre no plural | `usuarios`, `pedidos`, nunca `usuario`, `pedido` |
 | 5 | PK no padrão `id_tabela_singular` | tabela `avaliacoes` → PK `id_avaliacao` |
 | 6 | FK no padrão `tabela_singular_id` | FK em `itens_pedidos` que aponta para `produtos` → `produto_id` |
@@ -252,7 +281,7 @@ Enum forma_pagamento_enum {
 
 // Regra 4 (plural) + Regra 9 (campos de log em toda tabela)
 Table clientes {
-  id_cliente     BIGINT UNSIGNED [pk, increment, note: 'Regra 5 — PK = id_ + tabela no singular']
+  id_cliente     "BIGINT UNSIGNED" [pk, increment, note: 'Regra 5 — PK = id_ + tabela no singular']
   nome           VARCHAR(255)    [not null]
   cpf            CHAR(11)        [not null, unique, note: 'Regra 8 — tamanho fixo, só dígitos']
   email          VARCHAR(255)    [not null, unique]
@@ -264,7 +293,7 @@ Table clientes {
 }
 
 Table produtos {
-  id_produto      BIGINT UNSIGNED [pk, increment]
+  id_produto      "BIGINT UNSIGNED" [pk, increment]
   descricao       VARCHAR(255)    [not null]
   valor_unitario  DECIMAL(10,2)   [not null, note: 'Regra 8 — DECIMAL para dinheiro, nunca FLOAT/DOUBLE']
   criado_em       DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
@@ -273,8 +302,8 @@ Table produtos {
 }
 
 Table cupons_fiscais {
-  id_cupom_fiscal  BIGINT UNSIGNED   [pk, increment]
-  cliente_id       BIGINT UNSIGNED   [not null, note: 'Regra 6 — FK = tabela_singular + _id']
+  id_cupom_fiscal  "BIGINT UNSIGNED"   [pk, increment]
+  cliente_id       "BIGINT UNSIGNED"   [not null, note: 'Regra 6 — FK = tabela_singular + _id']
   numero_cupom     VARCHAR(20)       [not null, unique]
   data_emissao     DATETIME          [not null, default: `CURRENT_TIMESTAMP`]
   forma_pagamento  forma_pagamento_enum [not null]
@@ -287,9 +316,9 @@ Table cupons_fiscais {
 // Relacionamento N:M entre cupons_fiscais e produtos (Aula 02, 8.3):
 // PK composta pelas duas FKs, sem PK substituta própria.
 Table itens_cupom {
-  cupom_fiscal_id  BIGINT UNSIGNED [pk, not null]
-  produto_id       BIGINT UNSIGNED [pk, not null]
-  quantidade       INT UNSIGNED    [not null]
+  cupom_fiscal_id  "BIGINT UNSIGNED" [pk, not null]
+  produto_id       "BIGINT UNSIGNED" [pk, not null]
+  quantidade       "INT UNSIGNED"    [not null]
   valor_unitario   DECIMAL(10,2)   [not null, note: 'snapshot do preço na venda — evita dependência parcial (Aula 02, 4.2)']
   criado_em        DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em    DATETIME        [not null]

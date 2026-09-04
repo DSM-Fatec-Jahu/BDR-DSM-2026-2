@@ -36,7 +36,7 @@ Enum tipo_usuario_enum {
 }
 
 Table usuarios {
-  id_usuario     BIGINT UNSIGNED [pk, increment]
+  id_usuario     "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(255)    [not null]
   email          VARCHAR(255)    [not null, unique]
   senha_hash     VARCHAR(255)    [not null]
@@ -47,8 +47,8 @@ Table usuarios {
 }
 
 Table grupos {
-  id_grupo       BIGINT UNSIGNED [pk, increment]
-  criador_id     BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "criador", não "usuario_id"']
+  id_grupo       "BIGINT UNSIGNED" [pk, increment]
+  criador_id     "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "criador", não "usuario_id"']
   nome           VARCHAR(255)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -57,8 +57,8 @@ Table grupos {
 
 // N:M usuarios <-> grupos — PK composta (Aula 02, 8.3)
 Table membros_grupo {
-  grupo_id       BIGINT UNSIGNED [pk, not null]
-  usuario_id     BIGINT UNSIGNED [pk, not null]
+  grupo_id       "BIGINT UNSIGNED" [pk, not null]
+  usuario_id     "BIGINT UNSIGNED" [pk, not null]
   entrou_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -66,9 +66,9 @@ Table membros_grupo {
 }
 
 Table despesas {
-  id_despesa     BIGINT UNSIGNED [pk, increment]
-  grupo_id       BIGINT UNSIGNED [not null]
-  pagador_id     BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "pagador"']
+  id_despesa     "BIGINT UNSIGNED" [pk, increment]
+  grupo_id       "BIGINT UNSIGNED" [not null]
+  pagador_id     "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "pagador"']
   descricao      VARCHAR(255)    [not null]
   valor_total    DECIMAL(10,2)   [not null]
   data_despesa   DATE            [not null]
@@ -79,8 +79,8 @@ Table despesas {
 
 // N:M despesas <-> usuarios, com o atributo do próprio relacionamento (valor_devido)
 Table participantes_despesa {
-  despesa_id     BIGINT UNSIGNED [pk, not null]
-  usuario_id     BIGINT UNSIGNED [pk, not null]
+  despesa_id     "BIGINT UNSIGNED" [pk, not null]
+  usuario_id     "BIGINT UNSIGNED" [pk, not null]
   valor_devido   DECIMAL(10,2)   [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -136,7 +136,7 @@ Enum tipo_usuario_enum {
 }
 
 Table usuarios {
-  id_usuario     BIGINT UNSIGNED [pk, increment]
+  id_usuario     "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(255)    [not null]
   email          VARCHAR(255)    [not null, unique]
   senha_hash     VARCHAR(255)    [not null]
@@ -147,7 +147,7 @@ Table usuarios {
 }
 
 Table exercicios {
-  id_exercicio    BIGINT UNSIGNED [pk, increment]
+  id_exercicio    "BIGINT UNSIGNED" [pk, increment]
   nome            VARCHAR(255)    [not null, unique]
   grupo_muscular  VARCHAR(100)    [not null]
   instrucoes      TEXT
@@ -157,8 +157,8 @@ Table exercicios {
 }
 
 Table treinos {
-  id_treino      BIGINT UNSIGNED [pk, increment]
-  usuario_id     BIGINT UNSIGNED [not null]
+  id_treino      "BIGINT UNSIGNED" [pk, increment]
+  usuario_id     "BIGINT UNSIGNED" [not null]
   nome           VARCHAR(255)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -167,11 +167,11 @@ Table treinos {
 
 // N:M treinos <-> exercicios, com atributos próprios do relacionamento
 Table itens_treino {
-  treino_id      BIGINT UNSIGNED [pk, not null]
-  exercicio_id   BIGINT UNSIGNED [pk, not null]
-  ordem          TINYINT UNSIGNED [not null, note: 'ordem de execução dentro do treino']
-  series         TINYINT UNSIGNED [not null]
-  repeticoes     TINYINT UNSIGNED [not null]
+  treino_id      "BIGINT UNSIGNED" [pk, not null]
+  exercicio_id   "BIGINT UNSIGNED" [pk, not null]
+  ordem          "TINYINT UNSIGNED" [not null, note: 'ordem de execução dentro do treino']
+  series         "TINYINT UNSIGNED" [not null]
+  repeticoes     "TINYINT UNSIGNED" [not null]
   carga_kg       DECIMAL(5,2)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -179,11 +179,11 @@ Table itens_treino {
 }
 
 Table execucoes_treino {
-  id_execucao        BIGINT UNSIGNED [pk, increment]
-  treino_id          BIGINT UNSIGNED [not null]
+  id_execucao        "BIGINT UNSIGNED" [pk, increment]
+  treino_id          "BIGINT UNSIGNED" [not null]
   executado_em       DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
-  duracao_minutos    INT UNSIGNED    [not null]
-  esforco_percebido  TINYINT UNSIGNED [not null, note: 'escala de 1 a 10']
+  duracao_minutos    "INT UNSIGNED"    [not null]
+  esforco_percebido  "TINYINT UNSIGNED" [not null, note: 'escala de 1 a 10']
   criado_em          DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em      DATETIME        [not null]
   deletado_em        DATETIME
@@ -245,7 +245,7 @@ Enum tipo_usuario_enum {
 }
 
 Table usuarios {
-  id_usuario     BIGINT UNSIGNED [pk, increment]
+  id_usuario     "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(255)    [not null]
   email          VARCHAR(255)    [not null, unique]
   senha_hash     VARCHAR(255)    [not null]
@@ -256,10 +256,10 @@ Table usuarios {
 }
 
 Table planos {
-  id_plano                    BIGINT UNSIGNED [pk, increment]
+  id_plano                    "BIGINT UNSIGNED" [pk, increment]
   nome                        VARCHAR(100)    [not null, unique]
   preco_mensal                DECIMAL(8,2)    [not null]
-  limite_downloads_offline    INT UNSIGNED    [not null]
+  limite_downloads_offline    "INT UNSIGNED"    [not null]
   criado_em                   DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em               DATETIME        [not null]
   deletado_em                 DATETIME
@@ -267,9 +267,9 @@ Table planos {
 
 // Histórico de assinaturas — 1:N a partir de usuarios e de planos
 Table assinaturas {
-  id_assinatura  BIGINT UNSIGNED [pk, increment]
-  usuario_id     BIGINT UNSIGNED [not null]
-  plano_id       BIGINT UNSIGNED [not null]
+  id_assinatura  "BIGINT UNSIGNED" [pk, increment]
+  usuario_id     "BIGINT UNSIGNED" [not null]
+  plano_id       "BIGINT UNSIGNED" [not null]
   data_inicio    DATE            [not null]
   data_fim       DATE            [note: 'NULL enquanto a assinatura estiver ativa']
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
@@ -278,7 +278,7 @@ Table assinaturas {
 }
 
 Table podcasts {
-  id_podcast     BIGINT UNSIGNED [pk, increment]
+  id_podcast     "BIGINT UNSIGNED" [pk, increment]
   titulo         VARCHAR(255)    [not null]
   categoria      VARCHAR(100)    [not null]
   apresentador   VARCHAR(255)    [not null]
@@ -288,7 +288,7 @@ Table podcasts {
 }
 
 Table audiolivros {
-  id_audiolivro     BIGINT UNSIGNED [pk, increment]
+  id_audiolivro     "BIGINT UNSIGNED" [pk, increment]
   titulo            VARCHAR(255)   [not null]
   autor             VARCHAR(255)   [not null]
   narrador_principal VARCHAR(255)  [not null]
@@ -299,9 +299,9 @@ Table audiolivros {
 
 // Superclasse (Estratégia 2 — Aula 01, 8.7)
 Table conteudos {
-  id_conteudo       BIGINT UNSIGNED [pk, increment]
+  id_conteudo       "BIGINT UNSIGNED" [pk, increment]
   titulo            VARCHAR(255)   [not null]
-  duracao_segundos  INT UNSIGNED   [not null]
+  duracao_segundos  "INT UNSIGNED"   [not null]
   data_publicacao   DATE           [not null]
   criado_em         DATETIME       [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em     DATETIME       [not null]
@@ -310,9 +310,9 @@ Table conteudos {
 
 // Subclasse — PK é, ao mesmo tempo, FK única para a superclasse
 Table episodios_podcast {
-  id_conteudo             BIGINT UNSIGNED [pk]
-  podcast_id              BIGINT UNSIGNED [not null]
-  numero_episodio         INT UNSIGNED    [not null]
+  id_conteudo             "BIGINT UNSIGNED" [pk]
+  podcast_id              "BIGINT UNSIGNED" [not null]
+  numero_episodio         "INT UNSIGNED"    [not null]
   transcricao_disponivel  BOOLEAN         [not null, default: false]
   criado_em               DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em           DATETIME        [not null]
@@ -320,9 +320,9 @@ Table episodios_podcast {
 }
 
 Table capitulos_audiolivro {
-  id_conteudo       BIGINT UNSIGNED [pk]
-  audiolivro_id     BIGINT UNSIGNED [not null]
-  numero_capitulo   INT UNSIGNED    [not null]
+  id_conteudo       "BIGINT UNSIGNED" [pk]
+  audiolivro_id     "BIGINT UNSIGNED" [not null]
+  numero_capitulo   "INT UNSIGNED"    [not null]
   narrador          VARCHAR(255)    [not null]
   criado_em         DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em     DATETIME        [not null]
@@ -330,8 +330,8 @@ Table capitulos_audiolivro {
 }
 
 Table playlists {
-  id_playlist    BIGINT UNSIGNED [pk, increment]
-  usuario_id     BIGINT UNSIGNED [not null]
+  id_playlist    "BIGINT UNSIGNED" [pk, increment]
+  usuario_id     "BIGINT UNSIGNED" [not null]
   nome           VARCHAR(255)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -340,9 +340,9 @@ Table playlists {
 
 // N:M playlists <-> conteudos (mistura episódios e capítulos livremente)
 Table itens_playlist {
-  playlist_id    BIGINT UNSIGNED  [pk, not null]
-  conteudo_id    BIGINT UNSIGNED  [pk, not null]
-  ordem          SMALLINT UNSIGNED [not null]
+  playlist_id    "BIGINT UNSIGNED"  [pk, not null]
+  conteudo_id    "BIGINT UNSIGNED"  [pk, not null]
+  ordem          "SMALLINT UNSIGNED" [not null]
   criado_em      DATETIME         [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME         [not null]
   deletado_em    DATETIME
@@ -414,7 +414,7 @@ Enum status_reserva_enum {
 
 // Superclasse — também é a tabela de login/autenticação da plataforma
 Table pessoas {
-  id_pessoa      BIGINT UNSIGNED [pk, increment]
+  id_pessoa      "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(255)    [not null]
   cpf            CHAR(11)        [not null, unique]
   email          VARCHAR(255)    [not null, unique]
@@ -427,7 +427,7 @@ Table pessoas {
 }
 
 Table motoristas {
-  id_pessoa       BIGINT UNSIGNED [pk]
+  id_pessoa       "BIGINT UNSIGNED" [pk]
   cnh             VARCHAR(20)    [not null, unique]
   placa_veiculo   CHAR(7)        [not null, unique]
   modelo_veiculo  VARCHAR(100)   [not null]
@@ -437,7 +437,7 @@ Table motoristas {
 }
 
 Table passageiros {
-  id_pessoa                  BIGINT UNSIGNED [pk]
+  id_pessoa                  "BIGINT UNSIGNED" [pk]
   endereco_padrao_embarque   VARCHAR(255)
   criado_em                  DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em              DATETIME        [not null]
@@ -445,12 +445,12 @@ Table passageiros {
 }
 
 Table caronas {
-  id_carona          BIGINT UNSIGNED [pk, increment]
-  motorista_id       BIGINT UNSIGNED [not null]
+  id_carona          "BIGINT UNSIGNED" [pk, increment]
+  motorista_id       "BIGINT UNSIGNED" [not null]
   origem             VARCHAR(255)    [not null]
   destino            VARCHAR(255)    [not null]
   data_hora_saida    DATETIME        [not null]
-  vagas_disponiveis  TINYINT UNSIGNED [not null]
+  vagas_disponiveis  "TINYINT UNSIGNED" [not null]
   valor_por_vaga     DECIMAL(8,2)    [not null]
   criado_em          DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em      DATETIME        [not null]
@@ -459,8 +459,8 @@ Table caronas {
 
 // N:M caronas <-> passageiros
 Table reservas_carona {
-  carona_id      BIGINT UNSIGNED [pk, not null]
-  passageiro_id  BIGINT UNSIGNED [pk, not null]
+  carona_id      "BIGINT UNSIGNED" [pk, not null]
+  passageiro_id  "BIGINT UNSIGNED" [pk, not null]
   status         status_reserva_enum [not null, default: 'solicitada']
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -470,11 +470,11 @@ Table reservas_carona {
 // Avaliação mútua — motorista avalia passageiro E passageiro avalia motorista,
 // ambos representados por FKs de PAPEL (Regra 7) apontando para a mesma tabela PESSOAS
 Table avaliacoes {
-  id_avaliacao   BIGINT UNSIGNED [pk, increment]
-  carona_id      BIGINT UNSIGNED [not null]
-  avaliador_id   BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "avaliador"']
-  avaliado_id    BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "avaliado"']
-  nota           TINYINT UNSIGNED [not null]
+  id_avaliacao   "BIGINT UNSIGNED" [pk, increment]
+  carona_id      "BIGINT UNSIGNED" [not null]
+  avaliador_id   "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "avaliador"']
+  avaliado_id    "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "avaliado"']
+  nota           "TINYINT UNSIGNED" [not null]
   comentario     TEXT
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -541,7 +541,7 @@ AVALIACOES (id_avaliacao PK, usuario_id FK -> USUARIOS, produto_id FK -> PRODUTO
 
 ```dbml
 Table usuarios {
-  id_usuario      BIGINT UNSIGNED [pk, increment]
+  id_usuario      "BIGINT UNSIGNED" [pk, increment]
   nome_exibicao   VARCHAR(255)    [not null]
   email           VARCHAR(255)    [not null, unique]
   senha_hash      VARCHAR(255)    [not null]
@@ -553,7 +553,7 @@ Table usuarios {
 }
 
 Table papeis {
-  id_papel       BIGINT UNSIGNED [pk, increment]
+  id_papel       "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(100)    [not null, unique, note: "ex.: 'administrador', 'desenvolvedor', 'suporte', 'jogador'"]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -561,7 +561,7 @@ Table papeis {
 }
 
 Table permissoes {
-  id_permissao   BIGINT UNSIGNED [pk, increment]
+  id_permissao   "BIGINT UNSIGNED" [pk, increment]
   codigo         VARCHAR(100)    [not null, unique, note: "ex.: 'gerenciar_catalogo_proprio', 'processar_reembolso'"]
   descricao      VARCHAR(255)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
@@ -571,8 +571,8 @@ Table permissoes {
 
 // RBAC: um papel agrupa várias permissões (N:M)
 Table papeis_permissoes {
-  papel_id       BIGINT UNSIGNED [pk, not null]
-  permissao_id   BIGINT UNSIGNED [pk, not null]
+  papel_id       "BIGINT UNSIGNED" [pk, not null]
+  permissao_id   "BIGINT UNSIGNED" [pk, not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
   deletado_em    DATETIME
@@ -580,8 +580,8 @@ Table papeis_permissoes {
 
 // RBAC: um usuário pode acumular mais de um papel (N:M)
 Table usuarios_papeis {
-  usuario_id     BIGINT UNSIGNED [pk, not null]
-  papel_id       BIGINT UNSIGNED [pk, not null]
+  usuario_id     "BIGINT UNSIGNED" [pk, not null]
+  papel_id       "BIGINT UNSIGNED" [pk, not null]
   atribuido_em   DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -589,7 +589,7 @@ Table usuarios_papeis {
 }
 
 Table desenvolvedoras {
-  id_desenvolvedora  BIGINT UNSIGNED [pk, increment]
+  id_desenvolvedora  "BIGINT UNSIGNED" [pk, increment]
   nome_estudio       VARCHAR(255)   [not null]
   pais_sede          VARCHAR(100)   [not null]
   criado_em          DATETIME       [not null, default: `CURRENT_TIMESTAMP`]
@@ -599,8 +599,8 @@ Table desenvolvedoras {
 
 // Superclasse (Estratégia 2)
 Table produtos {
-  id_produto        BIGINT UNSIGNED [pk, increment]
-  desenvolvedora_id BIGINT UNSIGNED [not null]
+  id_produto        "BIGINT UNSIGNED" [pk, increment]
+  desenvolvedora_id "BIGINT UNSIGNED" [not null]
   titulo            VARCHAR(255)   [not null]
   preco_base        DECIMAL(10,2)  [not null]
   data_lancamento   DATE           [not null]
@@ -610,7 +610,7 @@ Table produtos {
 }
 
 Table jogos {
-  id_produto            BIGINT UNSIGNED [pk]
+  id_produto            "BIGINT UNSIGNED" [pk]
   classificacao_etaria  VARCHAR(10)    [not null]
   tamanho_download_gb   DECIMAL(6,2)   [not null]
   criado_em             DATETIME       [not null, default: `CURRENT_TIMESTAMP`]
@@ -619,17 +619,17 @@ Table jogos {
 }
 
 Table dlcs {
-  id_produto     BIGINT UNSIGNED [pk]
-  jogo_base_id   BIGINT UNSIGNED [not null, note: 'toda DLC pertence a exatamente um jogo-base']
+  id_produto     "BIGINT UNSIGNED" [pk]
+  jogo_base_id   "BIGINT UNSIGNED" [not null, note: 'toda DLC pertence a exatamente um jogo-base']
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
   deletado_em    DATETIME
 }
 
 Table compras {
-  id_compra      BIGINT UNSIGNED [pk, increment]
-  usuario_id     BIGINT UNSIGNED [not null]
-  produto_id     BIGINT UNSIGNED [not null]
+  id_compra      "BIGINT UNSIGNED" [pk, increment]
+  usuario_id     "BIGINT UNSIGNED" [not null]
+  produto_id     "BIGINT UNSIGNED" [not null]
   valor_pago     DECIMAL(10,2)   [not null, note: 'snapshot do preço na compra — não recalcula pelo preco_base atual']
   data_compra    DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
@@ -638,11 +638,11 @@ Table compras {
 }
 
 Table conquistas {
-  id_conquista   BIGINT UNSIGNED [pk, increment]
-  jogo_id        BIGINT UNSIGNED [not null]
+  id_conquista   "BIGINT UNSIGNED" [pk, increment]
+  jogo_id        "BIGINT UNSIGNED" [not null]
   nome           VARCHAR(255)    [not null]
   descricao      TEXT
-  pontos         TINYINT UNSIGNED [not null]
+  pontos         "TINYINT UNSIGNED" [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
   deletado_em    DATETIME
@@ -650,8 +650,8 @@ Table conquistas {
 
 // N:M usuarios <-> conquistas
 Table conquistas_desbloqueadas {
-  usuario_id       BIGINT UNSIGNED [pk, not null]
-  conquista_id     BIGINT UNSIGNED [pk, not null]
+  usuario_id       "BIGINT UNSIGNED" [pk, not null]
+  conquista_id     "BIGINT UNSIGNED" [pk, not null]
   desbloqueada_em  DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   criado_em        DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em    DATETIME        [not null]
@@ -659,10 +659,10 @@ Table conquistas_desbloqueadas {
 }
 
 Table avaliacoes {
-  id_avaliacao   BIGINT UNSIGNED [pk, increment]
-  usuario_id     BIGINT UNSIGNED [not null]
-  produto_id     BIGINT UNSIGNED [not null]
-  nota           TINYINT UNSIGNED [not null]
+  id_avaliacao   "BIGINT UNSIGNED" [pk, increment]
+  usuario_id     "BIGINT UNSIGNED" [not null]
+  produto_id     "BIGINT UNSIGNED" [not null]
+  nota           "TINYINT UNSIGNED" [not null]
   comentario     TEXT
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -764,7 +764,7 @@ Enum status_pagamento_enum {
 }
 
 Table usuarios {
-  id_usuario     BIGINT UNSIGNED [pk, increment]
+  id_usuario     "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(255)    [not null]
   email          VARCHAR(255)    [not null, unique]
   senha_hash     VARCHAR(255)    [not null]
@@ -776,7 +776,7 @@ Table usuarios {
 }
 
 Table papeis {
-  id_papel       BIGINT UNSIGNED [pk, increment]
+  id_papel       "BIGINT UNSIGNED" [pk, increment]
   nome           VARCHAR(100)    [not null, unique, note: "ex.: 'administrador', 'moderador', 'cliente', 'prestador'"]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
@@ -784,7 +784,7 @@ Table papeis {
 }
 
 Table permissoes {
-  id_permissao   BIGINT UNSIGNED [pk, increment]
+  id_permissao   "BIGINT UNSIGNED" [pk, increment]
   codigo         VARCHAR(100)    [not null, unique]
   descricao      VARCHAR(255)    [not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
@@ -793,23 +793,23 @@ Table permissoes {
 }
 
 Table papeis_permissoes {
-  papel_id       BIGINT UNSIGNED [pk, not null]
-  permissao_id   BIGINT UNSIGNED [pk, not null]
+  papel_id       "BIGINT UNSIGNED" [pk, not null]
+  permissao_id   "BIGINT UNSIGNED" [pk, not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
   deletado_em    DATETIME
 }
 
 Table usuarios_papeis {
-  usuario_id     BIGINT UNSIGNED [pk, not null]
-  papel_id       BIGINT UNSIGNED [pk, not null]
+  usuario_id     "BIGINT UNSIGNED" [pk, not null]
+  papel_id       "BIGINT UNSIGNED" [pk, not null]
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]
   deletado_em    DATETIME
 }
 
 Table categorias_servico {
-  id_categoria_servico  BIGINT UNSIGNED [pk, increment]
+  id_categoria_servico  "BIGINT UNSIGNED" [pk, increment]
   nome                  VARCHAR(100)    [not null, unique]
   criado_em             DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em         DATETIME        [not null]
@@ -818,18 +818,18 @@ Table categorias_servico {
 
 // Especialização parcial de USUARIOS — só quem oferece serviço tem este perfil
 Table perfis_prestador {
-  id_usuario               BIGINT UNSIGNED [pk]
+  id_usuario               "BIGINT UNSIGNED" [pk]
   biografia                TEXT
-  categoria_principal_id   BIGINT UNSIGNED [not null]
+  categoria_principal_id   "BIGINT UNSIGNED" [not null]
   criado_em                DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em            DATETIME        [not null]
   deletado_em               DATETIME
 }
 
 Table servicos_ofertados {
-  id_servico     BIGINT UNSIGNED [pk, increment]
-  prestador_id   BIGINT UNSIGNED [not null]
-  categoria_id   BIGINT UNSIGNED [not null]
+  id_servico     "BIGINT UNSIGNED" [pk, increment]
+  prestador_id   "BIGINT UNSIGNED" [not null]
+  categoria_id   "BIGINT UNSIGNED" [not null]
   titulo         VARCHAR(255)    [not null]
   descricao      TEXT            [not null]
   preco_base     DECIMAL(10,2)   [not null]
@@ -839,9 +839,9 @@ Table servicos_ofertados {
 }
 
 Table propostas {
-  id_proposta      BIGINT UNSIGNED [pk, increment]
-  servico_id       BIGINT UNSIGNED [not null]
-  cliente_id       BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "cliente" sobre usuarios']
+  id_proposta      "BIGINT UNSIGNED" [pk, increment]
+  servico_id       "BIGINT UNSIGNED" [not null]
+  cliente_id       "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "cliente" sobre usuarios']
   mensagem         TEXT
   valor_proposto   DECIMAL(10,2)  [not null]
   status           status_proposta_enum [not null, default: 'pendente']
@@ -853,8 +853,8 @@ Table propostas {
 
 // 1:1 com PROPOSTAS — só uma proposta aceita vira um contrato
 Table contratos {
-  id_contrato               BIGINT UNSIGNED [pk, increment]
-  proposta_id               BIGINT UNSIGNED [not null, unique]
+  id_contrato               "BIGINT UNSIGNED" [pk, increment]
+  proposta_id               "BIGINT UNSIGNED" [not null, unique]
   data_inicio                DATE           [not null]
   data_conclusao_prevista    DATE           [not null]
   data_conclusao_real        DATE
@@ -867,8 +867,8 @@ Table contratos {
 
 // 1:N a partir de CONTRATOS — permite pagamento parcelado
 Table pagamentos {
-  id_pagamento     BIGINT UNSIGNED [pk, increment]
-  contrato_id      BIGINT UNSIGNED [not null]
+  id_pagamento     "BIGINT UNSIGNED" [pk, increment]
+  contrato_id      "BIGINT UNSIGNED" [not null]
   valor            DECIMAL(10,2)   [not null]
   forma_pagamento  forma_pagamento_enum [not null]
   status           status_pagamento_enum [not null, default: 'pendente']
@@ -879,11 +879,11 @@ Table pagamentos {
 }
 
 Table avaliacoes {
-  id_avaliacao   BIGINT UNSIGNED [pk, increment]
-  contrato_id    BIGINT UNSIGNED [not null]
-  avaliador_id   BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "avaliador"']
-  avaliado_id    BIGINT UNSIGNED [not null, note: 'Regra 7 — papel "avaliado"']
-  nota           TINYINT UNSIGNED [not null]
+  id_avaliacao   "BIGINT UNSIGNED" [pk, increment]
+  contrato_id    "BIGINT UNSIGNED" [not null]
+  avaliador_id   "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "avaliador"']
+  avaliado_id    "BIGINT UNSIGNED" [not null, note: 'Regra 7 — papel "avaliado"']
+  nota           "TINYINT UNSIGNED" [not null]
   comentario     TEXT
   criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
   atualizado_em  DATETIME        [not null]

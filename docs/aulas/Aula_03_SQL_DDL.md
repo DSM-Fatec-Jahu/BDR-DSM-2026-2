@@ -384,13 +384,15 @@ A escolha do tipo de dado correto é uma das decisões mais importantes do DDL. 
 
 Os tipos inteiros diferem apenas na faixa de valores que suportam e no espaço que ocupam. Escolha sempre o menor tipo que comporte os valores esperados — isso impacta diretamente o tamanho dos índices.
 
-| Tipo (MariaDB/MySQL) | Equivalente PostgreSQL | Bytes | Faixa (sem sinal) | Caso de uso típico |
-|---|---|---|---|---|
-| `TINYINT` | `SMALLINT` | 1 | 0 a 255 | Flags, status com poucos valores |
-| `SMALLINT` | `SMALLINT` | 2 | 0 a 65.535 | Quantidades pequenas, códigos |
-| `MEDIUMINT` | *(sem equivalente)* | 3 | 0 a 16.777.215 | Contadores médios |
-| `INT` / `INTEGER` | `INTEGER` | 4 | 0 a ~4,29 bilhões | Quantidades, contadores de domínio limitado |
-| `BIGINT` | `BIGINT` | 8 | 0 a ~18,4 quintilhões | **Chaves primárias e estrangeiras (padrão da disciplina)**, timestamps Unix |
+| Tipo (MariaDB/MySQL) | Equivalente PostgreSQL | Bytes | Faixa (com sinal) | Faixa (sem sinal) | Caso de uso típico |
+|---|---|---|---|---|---|
+| `TINYINT` | `SMALLINT` | 1 | -128 a 127 | 0 a 255 | Flags, status com poucos valores |
+| `SMALLINT` | `SMALLINT` | 2 | -32.768 a 32.767 | 0 a 65.535 | Quantidades pequenas, códigos |
+| `MEDIUMINT` | *(sem equivalente)* | 3 | -8.388.608 a 8.388.607 | 0 a 16.777.215 | Contadores médios |
+| `INT` / `INTEGER` | `INTEGER` | 4 | -2.147.483.648 a 2.147.483.647 | 0 a ~4,29 bilhões | Quantidades, contadores de domínio limitado |
+| `BIGINT` | `BIGINT` | 8 | -9,22 quintilhões a 9,22 quintilhões | 0 a ~18,4 quintilhões | **Chaves primárias e estrangeiras (padrão da disciplina)**, timestamps Unix |
+
+Repare que a faixa **com sinal** é sempre deslocada para incluir valores negativos, mas o número total de valores representáveis é o mesmo — um `TINYINT` representa exatamente 256 valores distintos, com ou sem sinal (`-128` a `127`, ou `0` a `255`). O `UNSIGNED` não "ganha espaço extra": ele apenas redistribui a mesma faixa inteiramente para o lado positivo, o que dobra o maior valor possível às custas de eliminar os negativos.
 
 > 🎯 **Padrão da disciplina (Regra 5):** toda chave primária é `BIGINT UNSIGNED AUTO_INCREMENT` e toda chave estrangeira é `BIGINT UNSIGNED`. Mesmo que o domínio caiba em `INT`, padronizamos em `BIGINT UNSIGNED` para evitar erros sutis em `JOIN`s entre tipos diferentes e para acompanhar a prática da indústria em sistemas que crescem.
 
@@ -450,6 +452,22 @@ O `DECIMAL(p, s)` onde `p` é a **precisão** (total de dígitos) e `s` é a **e
 
 **`CHAR` vs `VARCHAR` — a diferença que importa:** `CHAR(n)` sempre ocupa `n` bytes, preenchendo com espaços à direita quando o valor é menor. `VARCHAR(n)` ocupa apenas o espaço necessário mais 1–2 bytes de overhead para armazenar o comprimento. Use `CHAR` quando o dado sempre terá o mesmo tamanho — o acesso é ligeiramente mais rápido porque o banco sabe exatamente onde termina cada valor.
 
+A [documentação oficial do MySQL](https://dev.mysql.com/doc/refman/9.7/en/char.html) ilustra exatamente esse comportamento comparando o armazenamento de um mesmo conjunto de valores em `CHAR(4)` e `VARCHAR(4)`:
+
+| Valor inserido | Em `CHAR(4)` | Armazenamento | Em `VARCHAR(4)` | Armazenamento |
+|---|---|---|---|---|
+| `''` | `'    '` | 4 bytes | `''` | 1 byte |
+| `'ab'` | `'ab  '` | 4 bytes | `'ab'` | 3 bytes |
+| `'abcd'` | `'abcd'` | 4 bytes | `'abcd'` | 5 bytes |
+| `'abcdefgh'` | `'abcd'` (truncado) | 4 bytes | `'abcd'` (truncado) | 5 bytes |
+
+Dois detalhes importantes que a tabela revela:
+
+- **Espaços à direita são removidos na leitura do `CHAR`, mas preservados no `VARCHAR`.** Se você inserir `'ab  '` (com espaços) em uma coluna `CHAR(4)`, ao consultar de volta recebe `'ab'` — os espaços de preenchimento somem. Na coluna `VARCHAR(4)` equivalente, os espaços digitados fazem parte do dado e voltam exatamente como foram inseridos.
+- **`VARCHAR` sempre soma 1 byte de overhead ao tamanho real do valor** (ou 2 bytes, se o `n` declarado for maior que 255) — por isso `'abcd'` em `VARCHAR(4)` ocupa 5 bytes, um a mais que os 4 bytes fixos do `CHAR(4)` para o mesmo conteúdo. Esse overhead é o preço para o banco saber onde a string termina sem precisar preencher com espaços.
+
+Isso reforça a regra prática: para strings **sempre do mesmo tamanho** (CPF sem pontuação, sigla de UF, CEP), `CHAR` evita tanto o overhead do comprimento quanto qualquer surpresa em comparações — a diferença de 1 byte por linha é irrelevante, mas a previsibilidade não é. Para tudo que varia (nome, e-mail, descrição), `VARCHAR` evita desperdiçar espaço preenchendo com espaços que nunca serão úteis.
+
 ```sql
 -- CHAR é ideal para campos de tamanho fixo e previsível:
 cpf          CHAR(14)     NOT NULL,  -- '000.000.000-00' sempre 14 caracteres
@@ -478,7 +496,17 @@ descricao    VARCHAR(500)            -- nullable: sem NOT NULL
 
 **`DATETIME` vs `TIMESTAMP` — a diferença crítica:** o `TIMESTAMP` armazena o valor convertido para UTC e o converte para o fuso do servidor ao retornar. Isso significa que o mesmo registro pode exibir horas diferentes dependendo da configuração de fuso do servidor — o que é ótimo para sistemas distribuídos, mas pode surpreender quem não sabe. O `DATETIME` armazena o valor exatamente como foi inserido, sem conversão de fuso.
 
-**O problema do ano 2038 com `TIMESTAMP`:** o `TIMESTAMP` usa um inteiro de 32 bits contando segundos a partir de 1970-01-01 00:00:00 UTC. Esse contador estoura em 19 de janeiro de 2038. Para datas além disso, use `DATETIME` ou `BIGINT`.
+**O problema do ano 2038 com `TIMESTAMP`:** o `TIMESTAMP` usa um inteiro **de 32 bits com sinal** contando segundos a partir de 1970-01-01 00:00:00 UTC (o mesmo `time_t` usado por Unix, Linux e boa parte dos sistemas C/C++ há décadas). O maior valor representável nesse inteiro é `2.147.483.647`, alcançado em **19 de janeiro de 2038, às 03:14:07 UTC**. No segundo seguinte, o contador estoura (*overflow*) e volta ao menor valor negativo — na prática, o relógio do sistema "salta" de volta para **13 de dezembro de 1901**, exatamente como o bug do ano 2000 (Y2K) fazia datas voltarem para 1900. Isso é conhecido como o **"Y2038" ou "Epochalypse"**.
+
+O impacto não é exclusivo de bancos de dados: qualquer sistema que armazene tempo como inteiro de 32 bits está exposto — sistemas embarcados (controladores industriais, equipamentos médicos, sistemas de navegação de aeronaves), firmwares antigos, sistemas de arquivos, protocolos de rede e código C legado que ainda não migrou para `time_t` de 64 bits. Diferente do Y2K, cuja correção em massa ocorreu antes do problema acontecer, uma parcela relevante da infraestrutura embarcada do mundo tem ciclo de vida de décadas e pode nunca ser atualizada antes de 2038 — por isso o tema já é tratado como risco de infraestrutura crítica, não apenas curiosidade histórica.
+
+**O que os SGBDs estão fazendo a respeito:**
+
+- **MySQL** mantém, até as versões mais recentes (8.4 LTS / 9.x, em 2026), o `TIMESTAMP` limitado ao intervalo 1970–2038 — a Oracle ainda não migrou o tipo para armazenamento de 64 bits. Funções como `UNIX_TIMESTAMP()` e `FROM_UNIXTIME()` já aceitam valores de 64 bits desde a versão 8.0.28, mas isso não resolve a limitação da **coluna** `TIMESTAMP` em si. A recomendação oficial para dados que ultrapassem 2038 continua sendo evitar `TIMESTAMP` e usar `DATETIME` (sem limite prático até o ano 9999) ou um `BIGINT` armazenando o epoch manualmente.
+- **MariaDB já corrigiu o problema.** A partir da versão **11.8 LTS** (2025), a faixa máxima do `TIMESTAMP` foi estendida de 2038-01-19 para **2106-02-07**, mantendo compatibilidade de armazenamento com servidores antigos (funciona em plataformas de 64 bits). É um dos motivos pelos quais, na prática, ambientes que já rodam MariaDB recente sofrem menos com essa armadilha do que ambientes MySQL — mas **atenção**: o XAMPP normalmente empacota uma versão de MariaDB anterior a 11.8 (lembre da Seção 2, onde vimos `10.4.32-MariaDB` como exemplo), então **verifique sua versão com `SELECT VERSION()`** antes de assumir que está protegido.
+- **PostgreSQL nunca teve esse problema.** Diferente do MySQL/MariaDB, o PostgreSQL armazena `TIMESTAMP` internamente como um inteiro de **64 bits** (8 bytes) desde suas versões mais antigas — não há reaproveitamento do `time_t` de 32 bits do sistema operacional. Isso dá ao tipo `TIMESTAMP` do PostgreSQL uma faixa de datas válidas que vai de **4713 a.C. até 294276 d.C.**, tornando o estouro do ano 2038 irrelevante para quem usa esse SGBD. O custo é 8 bytes por valor (contra os 4 bytes do `TIMESTAMP` tradicional do MySQL) — uma troca deliberada de espaço em disco por segurança de longo prazo.
+
+Para esta disciplina, isso reforça por que a Regra 9 padroniza os campos de log (`criado_em`, `atualizado_em`, `deletado_em`) como `DATETIME` em vez de `TIMESTAMP`: além de evitar a conversão silenciosa de fuso horário, também elimina qualquer exposição ao estouro de 2038 — independentemente da versão exata do MariaDB em uso.
 
 ```sql
 -- Datas de eventos passados ou futuros distantes: use DATE
@@ -531,6 +559,23 @@ CREATE TABLE IF NOT EXISTS nome_tabela (
 **Sobre `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`:** especificar essa cláusula é uma **boa prática documental**, mas **não é obrigatória**. Tanto o MariaDB quanto o MySQL modernos já aplicam, no momento da criação, o melhor padrão disponível — InnoDB como engine, `utf8mb4` como charset e a collation associada. Vamos demonstrar a cláusula completa apenas na primeira tabela desta aula (`pessoas`, abaixo). A partir daí, **todos os `CREATE TABLE` desta disciplina serão escritos sem essa cláusula**, confiando no padrão do SGBD — assim o foco fica nas colunas, constraints e relacionamentos, que é o que de fato muda de tabela para tabela.
 
 > **Diferença MariaDB vs MySQL:** ambos usam InnoDB como engine padrão. Você só precisa declarar `ENGINE=...` explicitamente quando quer um engine diferente (`MyISAM`, `Aria`, `Memory` etc.) — algo raro fora de casos muito específicos.
+
+### 6.1.1 O que é uma *storage engine* e por que InnoDB é a padrão
+
+Uma particularidade do MySQL/MariaDB que não existe no PostgreSQL é a **storage engine** (mecanismo de armazenamento) — o componente responsável por como cada tabela efetivamente grava, lê, indexa e trava seus dados em disco. Diferente do PostgreSQL, onde há um único mecanismo de armazenamento para todas as tabelas, no MySQL/MariaDB **cada tabela pode usar uma engine diferente**, escolhida com a cláusula `ENGINE=` no `CREATE TABLE`.
+
+| Engine | Transações (ACID) | Chaves estrangeiras | Nível de trava (*locking*) | *Crash-safe* | Quando usar |
+|---|---|---|---|---|---|
+| **InnoDB** (padrão) | Sim | Sim | Linha (*row-level*) | Sim | Uso geral — praticamente sempre, inclusive todas as tabelas desta disciplina |
+| `MyISAM` | Não | Não | Tabela (*table-level*) | Não | Legado apenas — evite em projetos novos |
+| `Aria` | Não | Não | Tabela (*table-level*) | Sim | Tabelas internas de sistema do MariaDB; sucessor do MyISAM com recuperação a falhas |
+| `Memory` | Não | Não | Tabela (*table-level*) | Não (dados somem ao reiniciar o servidor) | Cache temporário, tabelas de trabalho voláteis em memória RAM |
+
+**Por que `InnoDB` é a engine padrão desde MariaDB 5.5 / MySQL 5.5:** é a única das quatro que oferece as três garantias que praticamente todo sistema real precisa — suporte a **transações ACID** (`COMMIT`/`ROLLBACK` de forma segura, tema da Aula 13), suporte a **chaves estrangeiras** com `ON DELETE`/`ON UPDATE` (o que usamos nesta própria aula) e **recuperação automática após falha** (*crash recovery*, via logs de redo/undo — se o servidor cair no meio de uma escrita, o InnoDB reconstrói o estado consistente ao reiniciar). Além disso, o `InnoDB` trava apenas a **linha** sendo modificada (*row-level locking*), não a tabela inteira — isso permite que múltiplas transações escrevam em linhas diferentes da mesma tabela simultaneamente, o que é essencial em qualquer sistema com mais de um usuário concorrente.
+
+O `MyISAM`, por comparação, é o mecanismo histórico do MySQL (anterior ao InnoDB se tornar padrão): mais simples e, em cargas de **apenas leitura**, ligeiramente mais rápido — mas sem transações, sem FK, sem recuperação a falhas, e com trava de **tabela inteira** a cada escrita (uma única `INSERT`/`UPDATE` bloqueia toda a tabela para outros usuários). O `Aria`, criado pela própria equipe do MariaDB, é essencialmente um MyISAM modernizado com recuperação a falhas — mas ainda sem transações nem FK, por isso é usado majoritariamente para tabelas internas do próprio SGBD, não para dados de aplicação. Já o `Memory` mantém os dados inteiramente em RAM (nunca grava em disco), o que o torna extremamente rápido, mas **todo o conteúdo é perdido** a cada reinício do servidor — apropriado apenas para caches ou tabelas de trabalho temporárias, nunca para dados que precisam sobreviver.
+
+Por isso, nesta disciplina, nunca declaramos `ENGINE=MyISAM`, `ENGINE=Aria` ou `ENGINE=Memory`: como visto no aviso acima, deixamos o `InnoDB` como padrão implícito (ou o declaramos explicitamente, como na tabela `pessoas` a seguir) em toda tabela que armazena dados de negócio.
 
 ### 6.2 Tabela `pessoas` — a base do sistema
 
