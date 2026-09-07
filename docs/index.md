@@ -79,14 +79,14 @@ A nota final é calculada pela seguinte fórmula:
 | 01 | [Revisão de Modelagem de Dados (Conceitual)](aulas/Aula_01_Revisao_Modelagem_Conceitual.md) | Abordagem Entidade-Relacionamento (MER); Entidades, Atributos e Relacionamentos | ✅ Disponível |
 | 02 | [Normalização](aulas/Aula_02_Normalizacao.md) | Dependências funcionais; 1ª, 2ª e 3ª Formas Normais; modelo conceitual ao lógico relacional | ✅ Disponível |
 | 03 | [SQL — DDL: Definição de Estruturas](aulas/Aula_03_SQL_DDL.md) | Comandos DDL (CREATE, ALTER, DROP); Tipos de dados; Restrições básicas (PK) | ✅ Disponível |
-| 04 | SQL — DML: Manipulação de Dados | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | 🔒 Em breve |
+| 04 | [SQL DML: Manipulação de Dados](aulas/Aula_04_SQL_DML.md) | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | ✅ Disponível |
 | 05 | Atividade Prática — Modelagem Streaming | Modelagem completa de um sistema de Streaming (Conceitual, Lógico e DDL) | 🔒 Em breve |
 
 ### 🟢 Bloco 2 — Consultas e Visões
 
 | # | Aula | Conteúdo Principal | Status |
 |---|---|---|---|
-| 06 | SQL: Consultas Básicas | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | 🔒 Em breve |
+| 06 | [SQL: Consultas Básicas](aulas/Aula_06_SQL_Consultas_Basicas.md) | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | ✅ Disponível |
 | 07 | SQL — DQL: Consultas e Agregação | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | 🔒 Em breve |
 | 08 | Junções (JOINs), Subconsultas e Visões | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | 🔒 Em breve |
 | 09 | ✏️ Avaliação P1 | Avaliação individual — Modelagem e SQL fundamental | 🔒 Em breve |

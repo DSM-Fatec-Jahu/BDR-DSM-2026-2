@@ -84,6 +84,9 @@ nav:
       - aulas/Cardinalidade_MER_Completo.md
       - aulas/Aula_02_Normalizacao.md
       - aulas/Aula_03_SQL_DDL.md
+      - aulas/Aula_04_SQL_DML.md
+  - Bloco 2 — Consultas e Visões:
+      - aulas/Aula_06_SQL_Consultas_Basicas.md
   - Atividades e Avaliações:
       - atividades/index.md
       - atividades/Pratica_Modelagem_dbdiagram.md

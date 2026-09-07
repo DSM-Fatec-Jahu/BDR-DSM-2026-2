@@ -107,7 +107,7 @@ CREATE TABLE vendas (
     funcionario_id  BIGINT UNSIGNED  NOT NULL,                  -- referencia pessoas (papel: vendedor)
     data_venda      DATE             NOT NULL,
     criado_em       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    alterado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deletado_em     DATETIME             NULL,
     CONSTRAINT pk_venda              PRIMARY KEY (id_venda),
     CONSTRAINT fk_venda_cliente      FOREIGN KEY (cliente_id)     REFERENCES pessoas (id_pessoa),
@@ -123,11 +123,11 @@ O padrão de nomenclatura de FK neste caso, é, portanto, `papel_id` — onde `p
 
 ```sql
 criado_em      DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-atualizado_em  DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+alterado_em    DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 deletado_em    DATETIME      NULL
 ```
 
-`criado_em` registra a inserção, `atualizado_em` é mantido pelo próprio MariaDB a cada `UPDATE` e `deletado_em` permite **soft delete** — em vez de remover fisicamente o registro, marcamos a data de exclusão e filtramos com `WHERE deletado_em IS NULL` nas consultas. Isso preserva histórico, permite restauração e protege contra deleções acidentais.
+`criado_em` registra a inserção, `alterado_em` é mantido pelo próprio MariaDB a cada `UPDATE` e `deletado_em` permite **soft delete** — em vez de remover fisicamente o registro, marcamos a data de exclusão e filtramos com `WHERE deletado_em IS NULL` nas consultas. Isso preserva histórico, permite restauração e protege contra deleções acidentais.
 
 !!! example "🔍 Checkpoint 1 — Nomenclatura: plataforma de criadores de conteúdo"
     O trecho abaixo, escrito por um estagiário para uma plataforma de monetização de criadores de conteúdo (tipo assinatura de canal), viola várias das 9 regras desta seção:
@@ -506,7 +506,7 @@ O impacto não é exclusivo de bancos de dados: qualquer sistema que armazene te
 - **MariaDB já corrigiu o problema.** A partir da versão **11.8 LTS** (2025), a faixa máxima do `TIMESTAMP` foi estendida de 2038-01-19 para **2106-02-07**, mantendo compatibilidade de armazenamento com servidores antigos (funciona em plataformas de 64 bits). É um dos motivos pelos quais, na prática, ambientes que já rodam MariaDB recente sofrem menos com essa armadilha do que ambientes MySQL — mas **atenção**: o XAMPP normalmente empacota uma versão de MariaDB anterior a 11.8 (lembre da Seção 2, onde vimos `10.4.32-MariaDB` como exemplo), então **verifique sua versão com `SELECT VERSION()`** antes de assumir que está protegido.
 - **PostgreSQL nunca teve esse problema.** Diferente do MySQL/MariaDB, o PostgreSQL armazena `TIMESTAMP` internamente como um inteiro de **64 bits** (8 bytes) desde suas versões mais antigas — não há reaproveitamento do `time_t` de 32 bits do sistema operacional. Isso dá ao tipo `TIMESTAMP` do PostgreSQL uma faixa de datas válidas que vai de **4713 a.C. até 294276 d.C.**, tornando o estouro do ano 2038 irrelevante para quem usa esse SGBD. O custo é 8 bytes por valor (contra os 4 bytes do `TIMESTAMP` tradicional do MySQL) — uma troca deliberada de espaço em disco por segurança de longo prazo.
 
-Para esta disciplina, isso reforça por que a Regra 9 padroniza os campos de log (`criado_em`, `atualizado_em`, `deletado_em`) como `DATETIME` em vez de `TIMESTAMP`: além de evitar a conversão silenciosa de fuso horário, também elimina qualquer exposição ao estouro de 2038 — independentemente da versão exata do MariaDB em uso.
+Para esta disciplina, isso reforça por que a Regra 9 padroniza os campos de log (`criado_em`, `alterado_em`, `deletado_em`) como `DATETIME` em vez de `TIMESTAMP`: além de evitar a conversão silenciosa de fuso horário, também elimina qualquer exposição ao estouro de 2038 — independentemente da versão exata do MariaDB em uso.
 
 ```sql
 -- Datas de eventos passados ou futuros distantes: use DATE
@@ -516,7 +516,7 @@ data_vencimento  DATE        NOT NULL,
 -- Padrão da disciplina (Regra 9) para colunas de log: DATETIME
 -- Evitamos TIMESTAMP por causa do limite de 2038 e da conversão de fuso silenciosa
 criado_em        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-atualizado_em    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP
+alterado_em      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP,
 deletado_em      DATETIME        NULL
 ```
@@ -590,9 +590,9 @@ CREATE TABLE IF NOT EXISTS pessoas (
     cpf              CHAR(11)         NOT NULL,  -- apenas dígitos, sem pontuação
     email            VARCHAR(255)     NOT NULL,
     data_nascimento  DATE             NOT NULL,
-    telefone         CHAR(11)             NULL,  -- nullable: nem todo cadastro tem
+    telefone         VARCHAR(20)      NULL,  -- nullable: nem todo cadastro tem; formato livre (nem todo telefone no Brasil tem 11 dígitos, e pode ser número estrangeiro)
     criado_em        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                                ON UPDATE CURRENT_TIMESTAMP,
     deletado_em      DATETIME             NULL,
 
@@ -607,7 +607,7 @@ CREATE TABLE IF NOT EXISTS pessoas (
   COMMENT='Cadastro base de pessoas físicas (clientes e funcionários)';
 ```
 
-Observe algumas decisões de projeto aqui: o CPF é armazenado como `CHAR(11)` apenas com dígitos (sem pontos e traço), porque a formatação é responsabilidade da camada de apresentação, não do banco. O `COMMENT` na tabela documenta o propósito diretamente no schema — isso aparece em ferramentas como MySQL Workbench e DBeaver. As três últimas colunas (`criado_em`, `atualizado_em`, `deletado_em`) seguem a Regra 9 e estarão presentes em **todas** as tabelas desta disciplina.
+Observe algumas decisões de projeto aqui: o CPF é armazenado como `CHAR(11)` apenas com dígitos (sem pontos e traço), porque a formatação é responsabilidade da camada de apresentação, não do banco. O `COMMENT` na tabela documenta o propósito diretamente no schema — isso aparece em ferramentas como MySQL Workbench e DBeaver. As três últimas colunas (`criado_em`, `alterado_em`, `deletado_em`) seguem a Regra 9 e estarão presentes em **todas** as tabelas desta disciplina.
 
 ### 6.3 Tabela `categorias` — simples e autoexplicativa
 
@@ -618,7 +618,7 @@ CREATE TABLE IF NOT EXISTS categorias (
     descricao      TEXT                 NULL,
     ativa          TINYINT(1)       NOT NULL DEFAULT 1,  -- 1=ativa, 0=inativa
     criado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em  DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
     deletado_em    DATETIME             NULL,
 
@@ -639,7 +639,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     estoque         INT UNSIGNED     NOT NULL DEFAULT 0,
     ativo           TINYINT(1)       NOT NULL DEFAULT 1,
     criado_em       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                               ON UPDATE CURRENT_TIMESTAMP,
     deletado_em     DATETIME             NULL,
 
@@ -679,7 +679,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
     valor_total     DECIMAL(12, 2)   NOT NULL DEFAULT 0.00,
     observacoes     TEXT                 NULL,
     criado_em       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                               ON UPDATE CURRENT_TIMESTAMP,
     deletado_em     DATETIME             NULL,
 
@@ -712,7 +712,7 @@ CREATE TABLE IF NOT EXISTS itens_pedidos (
     preco_unitario  DECIMAL(10, 2)   NOT NULL,  -- snapshot do preço no momento da compra
     desconto        DECIMAL(5, 2)    NOT NULL DEFAULT 0.00,
     criado_em       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                               ON UPDATE CURRENT_TIMESTAMP,
     deletado_em     DATETIME             NULL,
 
@@ -884,7 +884,7 @@ ALTER TABLE pessoas
 -- CHANGE (MariaDB/MySQL) — renomeia E redefine a coluna
 -- Sintaxe: CHANGE nome_antigo novo_nome tipo_novo [constraints]
 ALTER TABLE pessoas
-    CHANGE COLUMN telefone celular CHAR(11) NULL;
+    CHANGE COLUMN telefone celular VARCHAR(20) NULL;
 
 -- Remover uma coluna:
 ALTER TABLE produtos
@@ -928,7 +928,7 @@ ALTER TABLE pessoas RENAME COLUMN telefone TO celular;
 ```
 
 !!! example "🔍 Checkpoint 5 — ALTER TABLE: marketplace de freelancers"
-    Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, atualizado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
+    Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, alterado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
 
     🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
@@ -1054,9 +1054,9 @@ CREATE TABLE IF NOT EXISTS pessoas (
     cpf              CHAR(11)         NOT NULL COMMENT 'Apenas dígitos, sem formatação',
     email            VARCHAR(255)     NOT NULL,
     data_nascimento  DATE             NOT NULL,
-    telefone         CHAR(11)             NULL COMMENT 'Apenas dígitos',
+    telefone         VARCHAR(20)      NULL COMMENT 'Formato livre: nem todo telefone tem 11 dígitos, e pode ser número estrangeiro',
     criado_em        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                                ON UPDATE CURRENT_TIMESTAMP,
     deletado_em      DATETIME             NULL,
 
@@ -1082,7 +1082,7 @@ CREATE TABLE IF NOT EXISTS enderecos (
     cep           CHAR(8)          NOT NULL COMMENT 'Apenas dígitos',
     principal     TINYINT(1)       NOT NULL DEFAULT 0 COMMENT '1 = endereço principal',
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -1103,7 +1103,7 @@ CREATE TABLE IF NOT EXISTS categorias (
     descricao     TEXT                 NULL,
     ativa         TINYINT(1)       NOT NULL DEFAULT 1,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -1123,7 +1123,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     estoque       INT UNSIGNED     NOT NULL DEFAULT 0,
     ativo         TINYINT(1)       NOT NULL DEFAULT 1,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -1157,7 +1157,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
     valor_total    DECIMAL(12, 2)   NOT NULL DEFAULT 0.00,
     observacoes    TEXT                 NULL,
     criado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em  DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
     deletado_em    DATETIME             NULL,
 
@@ -1189,7 +1189,7 @@ CREATE TABLE IF NOT EXISTS itens_pedidos (
     preco_unitario DECIMAL(10, 2)   NOT NULL COMMENT 'Preço no momento da compra',
     desconto       DECIMAL(5, 2)    NOT NULL DEFAULT 0.00 COMMENT 'Percentual de desconto',
     criado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em  DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
     deletado_em    DATETIME             NULL,
 
@@ -1271,7 +1271,7 @@ CREATE TABLE Produto (
     sentido sem o pai (ex.: excluir um pedido remove seus itens).
 
 ??? question "O que são os 'campos de log' da Regra 9, e por que usamos deletado_em em vez de excluir a linha de verdade?"
-    Toda tabela desta disciplina tem `criado_em`, `atualizado_em` e `deletado_em`. Em
+    Toda tabela desta disciplina tem `criado_em`, `alterado_em` e `deletado_em`. Em
     vez de fisicamente remover um registro, marcamos `deletado_em` com a data da
     exclusão (soft delete) e filtramos com `WHERE deletado_em IS NULL` nas consultas —
     isso preserva histórico e protege contra deleções acidentais.
@@ -1364,7 +1364,7 @@ chegou até aqui: [Gabarito — Aula 03](Aula_03_Gabarito.md).
 
 ## 🔗 Navegação
 
-⬅️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md) · ➡️ 🔒 Aula 04 — em breve.
+⬅️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md) · ➡️ [Aula 04 — SQL DML: Manipulação de Dados](./Aula_04_SQL_DML.md)
 
 ---
 
