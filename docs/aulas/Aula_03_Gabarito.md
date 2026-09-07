@@ -32,7 +32,7 @@ mkdocs.yml de propósito. É acessível só pelo link no final de Aula_03_SQL_DD
 | `REFERENCES Plano(id)` — tabela no singular/maiúscula e PK chamada apenas `id` | Regras 2, 4 e 5 (`planos (id_plano)`) |
 | `FOREIGN KEY` sem nome de constraint | Boa prática desta disciplina (facilita depuração — ver Seção 6.5/6.6) |
 | Faltam `NOT NULL` nas colunas obrigatórias | — |
-| Faltam os campos de log `criado_em`, `atualizado_em`, `deletado_em` | Regra 9 |
+| Faltam os campos de log `criado_em`, `alterado_em`, `deletado_em` | Regra 9 |
 
 Versão corrigida:
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS criadores (
     inscritos      INT UNSIGNED     NOT NULL DEFAULT 0,
     receita_mensal DECIMAL(10, 2)   NOT NULL DEFAULT 0.00,
     criado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em  DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em    DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
     deletado_em    DATETIME             NULL,
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS matriculas_cursos (
     nota_final           DECIMAL(4, 2)        NULL,
     data_matricula       DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     criado_em            DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em          DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                                     ON UPDATE CURRENT_TIMESTAMP,
     deletado_em          DATETIME             NULL,
 
@@ -192,7 +192,7 @@ Isso é útil em scripts de **setup ou reset de ambiente de desenvolvimento/test
 
 ### Exercício 1 — Identifique os erros
 
-Os erros são: nome da tabela em singular e com inicial maiúscula (deve ser `produtos` — Regras 2 e 4); `idProduto` usa camelCase (deve ser `id_produto` — Regras 1 e 5); o tipo da PK deve ser `BIGINT UNSIGNED AUTO_INCREMENT` e `INT(11)` está depreciado (Regra 5); `NomeProduto` mistura maiúsculas (deve ser `nome`); `Preco` com maiúscula (deve ser `preco`); `FLOAT` inapropriado para preço — use `DECIMAL(10,2)` (Regra 8); `ID_CATEGORIA` mistura maiúsculas e tipo errado (deve ser `categoria_id BIGINT UNSIGNED` — Regra 6); o nome da FK não segue o padrão semântico; faltam `NOT NULL` nas colunas obrigatórias; faltam os campos de log `criado_em`, `atualizado_em` e `deletado_em` (Regra 9). Note que **não** é erro a ausência de `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci` — o MariaDB usa esse padrão automaticamente; declarar é apenas boa prática documental.
+Os erros são: nome da tabela em singular e com inicial maiúscula (deve ser `produtos` — Regras 2 e 4); `idProduto` usa camelCase (deve ser `id_produto` — Regras 1 e 5); o tipo da PK deve ser `BIGINT UNSIGNED AUTO_INCREMENT` e `INT(11)` está depreciado (Regra 5); `NomeProduto` mistura maiúsculas (deve ser `nome`); `Preco` com maiúscula (deve ser `preco`); `FLOAT` inapropriado para preço — use `DECIMAL(10,2)` (Regra 8); `ID_CATEGORIA` mistura maiúsculas e tipo errado (deve ser `categoria_id BIGINT UNSIGNED` — Regra 6); o nome da FK não segue o padrão semântico; faltam `NOT NULL` nas colunas obrigatórias; faltam os campos de log `criado_em`, `alterado_em` e `deletado_em` (Regra 9). Note que **não** é erro a ausência de `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci` — o MariaDB usa esse padrão automaticamente; declarar é apenas boa prática documental.
 
 Versão corrigida:
 
@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS produtos (
     nome          VARCHAR(255)     NOT NULL,
     preco         DECIMAL(10, 2)   NOT NULL,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS autores (
     nome          VARCHAR(255)     NOT NULL,
     nacionalidade VARCHAR(100)         NULL,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS livros (
     isbn          CHAR(13)         NOT NULL,
     ano           INT UNSIGNED         NULL,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS autorias (
     autor_id      BIGINT UNSIGNED  NOT NULL,
     livro_id      BIGINT UNSIGNED  NOT NULL,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nome          VARCHAR(255)     NOT NULL,
     email         VARCHAR(255)     NOT NULL,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                             ON UPDATE CURRENT_TIMESTAMP,
     deletado_em   DATETIME             NULL,
 
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     data_devolucao_efetiva  DATE                NULL,
     status                  VARCHAR(20)     NOT NULL DEFAULT 'em_andamento',
     criado_em               DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em           DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
+    alterado_em             DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
                                                      ON UPDATE CURRENT_TIMESTAMP,
     deletado_em              DATETIME           NULL,
 

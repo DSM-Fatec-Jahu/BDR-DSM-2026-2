@@ -96,8 +96,8 @@ negócio apresentados, você deve produzir um diagrama em
 
     ```dbml
     Table nome_da_tabela {
-      id_nome_da_tabela "BIGINT UNSIGNED" [pk, increment]
-      alguma_coluna     VARCHAR(255)    [not null]
+      id_nome_da_tabela "BIGINT UNSIGNED" [PK, INCREMENT]
+      alguma_coluna     VARCHAR(255)    [NOT NULL]
 
       Note: 'observações sobre a tabela, se precisar'
     }
@@ -109,7 +109,7 @@ negócio apresentados, você deve produzir um diagrama em
     O DBML (a linguagem do dbdiagram.io) não reconhece tipos compostos por duas
     palavras como `BIGINT UNSIGNED` — a ferramenta só entende um nome de tipo "de uma
     palavra só" (mais o tamanho entre parênteses, quando houver, como em
-    `VARCHAR(255)`). Se você escrever `id_usuario BIGINT UNSIGNED [pk, increment]`
+    `VARCHAR(255)`). Se você escrever `id_usuario BIGINT UNSIGNED [PK, INCREMENT]`
     sem aspas, o dbdiagram.io **quebra o parser** e não desenha a tabela.
 
     A solução é envolver o tipo inteiro — palavra e modificador — entre **aspas
@@ -117,10 +117,10 @@ negócio apresentados, você deve produzir um diagrama em
 
     ```dbml
     -- ❌ ERRADO: quebra o parser do dbdiagram.io
-    id_usuario BIGINT UNSIGNED [pk, increment]
+    id_usuario BIGINT UNSIGNED [PK, INCREMENT]
 
     -- ✅ CORRETO: tipo composto entre aspas duplas
-    id_usuario "BIGINT UNSIGNED" [pk, increment]
+    id_usuario "BIGINT UNSIGNED" [PK, INCREMENT]
     ```
 
     Isso vale para **todo** tipo `UNSIGNED` usado nesta atividade —
@@ -141,23 +141,23 @@ negócio apresentados, você deve produzir um diagrama em
     }
 
     Table pedidos {
-      status status_pedido [not null, default: 'pendente']
+      status status_pedido [NOT NULL, default: 'pendente']
     }
     ```
 
 4. Para **chave primária composta** (o padrão de tabela intermediária N:M da Aula 02,
-   Seção 8.3), marque `[pk]` nas duas colunas envolvidas — o dbdiagram.io entende que a
+   Seção 8.3), marque `[PK]` nas duas colunas envolvidas — o dbdiagram.io entende que a
    chave é a combinação das duas.
 5. Para restrições `UNIQUE` que envolvem mais de uma coluna, use um bloco `Indexes`
    dentro da tabela:
 
     ```dbml
     Table avaliacoes {
-      usuario_id "BIGINT UNSIGNED" [not null]
-      produto_id "BIGINT UNSIGNED" [not null]
+      usuario_id "BIGINT UNSIGNED" [NOT NULL]
+      produto_id "BIGINT UNSIGNED" [NOT NULL]
 
       Indexes {
-        (usuario_id, produto_id) [unique]
+        (usuario_id, produto_id) [UNIQUE]
       }
     }
     ```
@@ -212,7 +212,7 @@ completo na [Aula 03, Seção 1](../aulas/Aula_03_SQL_DDL.md#1-convencoes-de-nom
 | 6 | FK no padrão `tabela_singular_id` | FK em `itens_pedidos` que aponta para `produtos` → `produto_id` |
 | 7 | FK pelo papel semântico quando a entidade referenciada tem múltiplos papéis | numa avaliação mútua entre pessoas, use `avaliador_id` / `avaliado_id` — nunca `pessoa1_id` / `pessoa2_id` |
 | 8 | Tipo e tamanho adequados ao dado | ver a Tabela de Tipos acima |
-| 9 | Toda tabela tem campos de log | `criado_em`, `atualizado_em`, `deletado_em` em **toda** tabela, sem exceção — inclusive tabelas de junção N:M e tabelas de subclasse |
+| 9 | Toda tabela tem campos de log | `criado_em`, `alterado_em`, `deletado_em` em **toda** tabela, sem exceção — inclusive tabelas de junção N:M e tabelas de subclasse |
 
 Além das 9 regras, dois padrões estruturais que você vai usar o tempo todo nesta
 atividade:
@@ -281,47 +281,47 @@ Enum forma_pagamento_enum {
 
 // Regra 4 (plural) + Regra 9 (campos de log em toda tabela)
 Table clientes {
-  id_cliente     "BIGINT UNSIGNED" [pk, increment, note: 'Regra 5 — PK = id_ + tabela no singular']
-  nome           VARCHAR(255)    [not null]
-  cpf            CHAR(11)        [not null, unique, note: 'Regra 8 — tamanho fixo, só dígitos']
-  email          VARCHAR(255)    [not null, unique]
-  senha_hash     VARCHAR(255)    [not null]
-  tipo_usuario   tipo_usuario_enum [not null, default: 'usuario', note: 'gestão de acesso obrigatória — nível básico']
-  criado_em      DATETIME        [not null, default: `CURRENT_TIMESTAMP`, note: 'Regra 9']
-  atualizado_em  DATETIME        [not null, note: 'Regra 9 — ON UPDATE CURRENT_TIMESTAMP no DDL real']
+  id_cliente     "BIGINT UNSIGNED" [PK, INCREMENT, note: 'Regra 5 — PK = id_ + tabela no singular']
+  nome           VARCHAR(255)    [NOT NULL]
+  cpf            CHAR(11)        [NOT NULL, UNIQUE, note: 'Regra 8 — tamanho fixo, só dígitos']
+  email          VARCHAR(255)    [NOT NULL, UNIQUE]
+  senha_hash     VARCHAR(255)    [NOT NULL]
+  tipo_usuario   tipo_usuario_enum [NOT NULL, default: 'usuario', note: 'gestão de acesso obrigatória — nível básico']
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`, note: 'Regra 9']
+  alterado_em    DATETIME        [NOT NULL, note: 'Regra 9 — ON UPDATE CURRENT_TIMESTAMP no DDL real']
   deletado_em    DATETIME        [note: 'Regra 9 — NULL até o soft delete']
 }
 
 Table produtos {
-  id_produto      "BIGINT UNSIGNED" [pk, increment]
-  descricao       VARCHAR(255)    [not null]
-  valor_unitario  DECIMAL(10,2)   [not null, note: 'Regra 8 — DECIMAL para dinheiro, nunca FLOAT/DOUBLE']
-  criado_em       DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
-  atualizado_em   DATETIME        [not null]
+  id_produto      "BIGINT UNSIGNED" [PK, INCREMENT]
+  descricao       VARCHAR(255)    [NOT NULL]
+  valor_unitario  DECIMAL(10,2)   [NOT NULL, note: 'Regra 8 — DECIMAL para dinheiro, nunca FLOAT/DOUBLE']
+  criado_em       DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em     DATETIME        [NOT NULL]
   deletado_em     DATETIME
 }
 
 Table cupons_fiscais {
-  id_cupom_fiscal  "BIGINT UNSIGNED"   [pk, increment]
-  cliente_id       "BIGINT UNSIGNED"   [not null, note: 'Regra 6 — FK = tabela_singular + _id']
-  numero_cupom     VARCHAR(20)       [not null, unique]
-  data_emissao     DATETIME          [not null, default: `CURRENT_TIMESTAMP`]
-  forma_pagamento  forma_pagamento_enum [not null]
-  valor_total      DECIMAL(10,2)     [not null, note: 'derivado da soma dos itens — recalculado, não editado à mão']
-  criado_em        DATETIME          [not null, default: `CURRENT_TIMESTAMP`]
-  atualizado_em    DATETIME          [not null]
+  id_cupom_fiscal  "BIGINT UNSIGNED"   [PK, INCREMENT]
+  cliente_id       "BIGINT UNSIGNED"   [NOT NULL, note: 'Regra 6 — FK = tabela_singular + _id']
+  numero_cupom     VARCHAR(20)       [NOT NULL, UNIQUE]
+  data_emissao     DATETIME          [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  forma_pagamento  forma_pagamento_enum [NOT NULL]
+  valor_total      DECIMAL(10,2)     [NOT NULL, note: 'derivado da soma dos itens — recalculado, não editado à mão']
+  criado_em        DATETIME          [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em      DATETIME          [NOT NULL]
   deletado_em      DATETIME
 }
 
 // Relacionamento N:M entre cupons_fiscais e produtos (Aula 02, 8.3):
 // PK composta pelas duas FKs, sem PK substituta própria.
 Table itens_cupom {
-  cupom_fiscal_id  "BIGINT UNSIGNED" [pk, not null]
-  produto_id       "BIGINT UNSIGNED" [pk, not null]
-  quantidade       "INT UNSIGNED"    [not null]
-  valor_unitario   DECIMAL(10,2)   [not null, note: 'snapshot do preço na venda — evita dependência parcial (Aula 02, 4.2)']
-  criado_em        DATETIME        [not null, default: `CURRENT_TIMESTAMP`]
-  atualizado_em    DATETIME        [not null]
+  cupom_fiscal_id  "BIGINT UNSIGNED" [PK, NOT NULL]
+  produto_id       "BIGINT UNSIGNED" [PK, NOT NULL]
+  quantidade       "INT UNSIGNED"    [NOT NULL]
+  valor_unitario   DECIMAL(10,2)   [NOT NULL, note: 'snapshot do preço na venda — evita dependência parcial (Aula 02, 4.2)']
+  criado_em        DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em      DATETIME        [NOT NULL]
   deletado_em      DATETIME
 }
 
@@ -485,6 +485,19 @@ gráfico, aulas particulares etc.). Requisitos de negócio:
   `prestador` (papéis de uso comum — **um mesmo usuário pode acumular `cliente` e
   `prestador` simultaneamente**). As permissões de cada papel precisam poder ser
   reconfiguradas pela equipe da plataforma **sem alterar código**.
+
+---
+
+## 🔑 Gabarito desta Atividade
+
+!!! danger "⚠️ Só abra depois de terminar — copiar não é aprender"
+    O [Gabarito desta atividade](Pratica_Modelagem_dbdiagram_Gabarito.md) existe para
+    você **conferir** sua própria tentativa depois de resolver os 6 exercícios — não
+    para consultar no meio do caminho. Abrir o gabarito antes de terminar cria a falsa
+    sensação de que você já sabe modelar, quando na verdade só copiou uma resposta
+    pronta; essa diferença aparece exatamente na hora de uma avaliação que vale nota,
+    quando não vai ter gabarito disponível. Esboce sua solução completa para os 6
+    exercícios — mesmo errando — antes de abrir o link.
 
 ---
 

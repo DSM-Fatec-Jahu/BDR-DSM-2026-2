@@ -69,7 +69,7 @@ flowchart LR
     subgraph GE["🧬 Generalização /<br/>Especialização"]
         direction TB
         GE1["Superclasse → Subclasse<br/>(herança)"]
-        GE2["Total/Parcial ×<br/>Exclusiva/Sobreposta"]
+        GE2["Sinais para reconhecer<br/>quando especializar"]
     end
 ```
 
@@ -337,7 +337,8 @@ erDiagram
     CURSOS ||--o{ ALUNOS : "possui"
     ALUNOS ||--o{ MATRICULAS : "realiza"
     DISCIPLINAS ||--o{ MATRICULAS : "recebe"
-    PROFESSORES }o--o{ DISCIPLINAS : "leciona"
+    PROFESSORES ||--o{ LECIONAM : "leciona em"
+    DISCIPLINAS ||--o{ LECIONAM : "é lecionada em"
 ```
 
 > 📌 **Leitura do diagrama:** a notação `||--o{` significa "um e apenas um para zero ou muitos". Lemos a linha entre CURSO e DISCIPLINA como: *"um Curso possui zero ou muitas Disciplinas, e cada Disciplina pertence a exatamente um Curso"*.
@@ -417,56 +418,7 @@ PESSOAS (superclasse)
 
 Uma instância de CLIENTES **é uma** PESSOA — ela tem nome, CPF e e-mail (herdados), mais os atributos específicos de cliente. Esse é o princípio central da herança: a relação entre subclasse e superclasse é sempre do tipo **"é um"** (*is-a*).
 
-### 8.4 Restrições de Generalização/Especialização
-
-Existem duas dimensões de restrição que você deve indicar no diagrama:
-
-#### Quanto à obrigatoriedade (participação):
-
-**Total:** toda instância da superclasse *obrigatoriamente* pertence a pelo menos uma subclasse. Não existe uma "Pessoa genérica" — ela é sempre ou Cliente ou Funcionário (ou ambos). Representa-se com linha dupla ou a palavra `{total}` no diagrama.
-
-**Parcial:** uma instância da superclasse *pode* não pertencer a nenhuma subclasse. Existe a possibilidade de uma "Pessoa genérica" no sistema, sem ser cliente nem funcionário. Representa-se com linha simples ou a palavra `{parcial}`.
-
-#### Quanto à exclusividade:
-
-**Exclusiva (disjunta):** uma instância da superclasse pertence a **no máximo uma** subclasse. Uma pessoa é ou Cliente ou Funcionário — nunca os dois ao mesmo tempo. Representa-se com a letra **d** (*disjoint*) ou o símbolo **⊕** no diagrama.
-
-**Sobreposta (overlapping):** uma instância da superclasse pode pertencer a **mais de uma** subclasse simultaneamente. Uma pessoa pode ser Cliente e Funcionário ao mesmo tempo (ex.: um funcionário que também compra na loja onde trabalha). Representa-se com a letra **o** (*overlapping*) ou o símbolo **○**.
-
-A combinação dessas duas dimensões gera quatro tipos possíveis:
-
-| Tipo | Obrigatoriedade | Exclusividade | Significado |
-|---|---|---|---|
-| Total Exclusiva | Todo indivíduo da superclasse está em uma subclasse | Em no máximo uma | Nenhum "genérico"; subclasses não se sobrepõem |
-| Total Sobreposta | Todo indivíduo está em pelo menos uma subclasse | Pode estar em mais de uma | Nenhum "genérico"; subclasses podem se sobrepor |
-| Parcial Exclusiva | Pode existir "genérico" | Em no máximo uma | Subclasses não se sobrepõem |
-| Parcial Sobreposta | Pode existir "genérico" | Pode estar em mais de uma | Caso mais flexível |
-
-**Visualizando a exclusividade.** A diferença entre *exclusiva* e *sobreposta* é a que mais confunde — e um desenho resolve. Compare os dois casos abaixo: no primeiro, cada instância cai em **no máximo uma** subclasse; no segundo, uma mesma instância pode estar em **mais de uma** ao mesmo tempo.
-
-```mermaid
-flowchart TB
-    V["🚗 VEÍCULO"]
-    C["🚘 CARRO"]
-    M["🏍️ MOTO"]
-    V -->|"d — no máximo uma"| C
-    V -->|"d"| M
-```
-
-*Exclusiva (disjunta, **d**): um veículo é carro **ou** moto — nunca os dois.*
-
-```mermaid
-flowchart TB
-    P["👤 PESSOA"]
-    CLI["🛒 CLIENTE"]
-    FUN["💼 FUNCIONÁRIO"]
-    P -->|"o — pode mais de uma"| CLI
-    P -->|"o"| FUN
-```
-
-*Sobreposta (**o**): uma pessoa pode ser cliente **e** funcionário ao mesmo tempo.*
-
-#### Quando (e quando não) usar generalização/especialização
+### 8.4 Quando Usar Generalização/Especialização
 
 Nem toda diferença entre instâncias justifica uma hierarquia. Use esta tabela como checklist ao ler um enunciado — se um dos sinais da esquerda aparecer, a hierarquia provavelmente se justifica:
 
@@ -474,8 +426,6 @@ Nem toda diferença entre instâncias justifica uma hierarquia. Use esta tabela 
 |---|---|
 | *"Existem dois (ou mais) tipos de X…"* | Provável especialização de `X` |
 | *"Todo Y é também um X, mas com características a mais…"* | Hierarquia de herança (`Y` é subclasse de `X`) |
-| *"X pode ser A, B ou C"* (sempre um só) | Especialização **exclusiva (disjunta)** |
-| *"X pode ser A e B ao mesmo tempo"* | Especialização **sobreposta** |
 | *"Alguns campos só se aplicam a certos tipos de X"* | Atributos exclusivos de subclasse |
 
 > ⚠️ **Não force a hierarquia.** Se as subclasses candidatas não têm nenhum atributo ou relacionamento próprio além dos herdados, a hierarquia é desnecessária — resolva com uma coluna `tipo` na própria entidade e evite complexidade sem ganho. Voltaremos a esse ponto nos Erros Comuns (Seção 10).
@@ -519,8 +469,6 @@ erDiagram
     VEICULOS ||--o| CAMINHAOS  : "é um"
 ```
 
-Restrição: **Total Exclusiva** — todo veículo cadastrado é obrigatoriamente um carro, uma moto ou um caminhão; e não pode ser dois ao mesmo tempo.
-
 ---
 
 **Exemplo 2 — Generalização de Contas Bancárias:**
@@ -553,8 +501,6 @@ erDiagram
     CONTAS ||--o| CONTAS_POUPANCAS : "é uma"
 ```
 
-Restrição: **Total Exclusiva** — toda conta é corrente ou poupança, nunca as duas.
-
 ---
 
 **Exemplo 3 — Generalização de Pessoas em um Hospital:**
@@ -568,7 +514,7 @@ erDiagram
         VARCHAR nome
         CHAR cpf
         DATE data_nascimento
-        CHAR telefone
+        VARCHAR telefone
     }
 
     MEDICOS {
@@ -593,8 +539,6 @@ erDiagram
     PESSOAS ||--o| ENFERMEIROS  : "é uma"
     PESSOAS ||--o| PACIENTES    : "é uma"
 ```
-
-Restrição: **Parcial Sobreposta** — uma pessoa pode ser médico e paciente ao mesmo tempo (um médico que se interna no hospital onde trabalha), e também pode existir uma pessoa cadastrada que ainda não se enquadrou em nenhuma subclasse.
 
 ### 8.6 Exemplos de Especialização
 
@@ -627,8 +571,6 @@ erDiagram
     FUNCIONARIOS ||--o| GERENTES  : "é um"
     FUNCIONARIOS ||--o| TECNICOS  : "é um"
 ```
-
-Restrição: **Parcial Sobreposta** — nem todo funcionário é gerente ou técnico (pode ser outro tipo); e um funcionário pode acumular as duas funções.
 
 ---
 
@@ -664,8 +606,6 @@ erDiagram
     PRODUTOS ||--o| PRODUTOS_FISICOS   : "é um"
     PRODUTOS ||--o| PRODUTOS_DIGITAIS  : "é um"
 ```
-
-Restrição: **Total Exclusiva** — todo produto é obrigatoriamente físico ou digital; nunca os dois.
 
 ---
 
@@ -705,7 +645,7 @@ erDiagram
     ALBUNS    ||--o{ MUSICAS  : "contém"
 ```
 
-Restrição: **Total Exclusiva** — todo conteúdo cadastrado é música ou filme; e um conteúdo não pode ser os dois ao mesmo tempo. Este é exatamente o padrão que resolve o problema do **item de playlist** mencionado na Atividade T1.
+Todo conteúdo cadastrado é música ou filme, nunca os dois ao mesmo tempo — este é exatamente o padrão que resolve o problema do **item de playlist** mencionado na Atividade T1.
 
 ### 8.7 Passagem para o Modelo Lógico
 
@@ -746,8 +686,7 @@ produtos_fisicos (subclasse)
     Uma empresa de logística de última milha despacha entregas usando três tipos de veículos autônomos: `Drones` (com autonomia de voo em minutos e altitude máxima), `Robôs Terrestres` (com velocidade máxima em calçadas e capacidade de subir meio-fio) e `Vans Elétricas` (com capacidade de carga em kg e autonomia em km). Os três compartilham `identificador`, `status_operacional` (disponível, em rota, em manutenção) e `localização_atual` (latitude/longitude). Toda entrega despachada usa exatamente um desses veículos, e nenhum veículo pode ser, ao mesmo tempo, de dois tipos diferentes.
 
     a) Proponha a superclasse e as três subclasses, indicando os atributos comuns (na superclasse) e os exclusivos (em cada subclasse).
-    b) Qual é o tipo de restrição dessa hierarquia — quanto à obrigatoriedade e quanto à exclusividade? Justifique com base no enunciado.
-    c) Seguindo a Estratégia 2 (Seção 8.7), como ficariam as tabelas do modelo lógico — nomes, PKs e FKs — para a superclasse e para a subclasse `Robôs Terrestres`?
+    b) Seguindo a Estratégia 2 (Seção 8.7), como ficariam as tabelas do modelo lógico — nomes, PKs e FKs — para a superclasse e para a subclasse `Robôs Terrestres`?
 
     🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
@@ -759,7 +698,7 @@ Como a **Atividade T1** desta disciplina envolve modelar um sistema de streaming
 
 > *"Uma plataforma de streaming oferece músicas e filmes para seus usuários. As músicas fazem parte de álbuns de artistas; os filmes têm diretores e elenco. Os usuários podem criar playlists que misturem músicas e filmes na ordem que quiserem."*
 
-Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclasse? Qual seria a restrição (total/parcial, exclusiva/sobreposta)? Como o item de playlist referenciaria os dois tipos de conteúdo? Na **Aula 05** você desenvolverá o modelo completo desse sistema.
+Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclasse? Como o item de playlist referenciaria os dois tipos de conteúdo? Na **Aula 05** você desenvolverá o modelo completo desse sistema.
 
 ---
 
@@ -1020,11 +959,11 @@ erDiagram
 
 **Exercício 3 — Modelagem Livre:** escolha um sistema do cotidiano (uma locadora, um pet shop, um restaurante) e crie um MER conceitual com pelo menos 4 entidades, identificando atributos e relacionamentos com suas cardinalidades.
 
-**Exercício 4 — Generalização:** leia as entidades abaixo e identifique quais poderiam ser reunidas em uma superclasse. Proponha o nome da superclasse, liste os atributos que seriam herdados e os que permaneceriam em cada subclasse. Indique também o tipo de restrição (total/parcial, exclusiva/sobreposta) e justifique.
+**Exercício 4 — Generalização:** leia as entidades abaixo e identifique quais poderiam ser reunidas em uma superclasse. Proponha o nome da superclasse, liste os atributos que seriam herdados e os que permaneceriam em cada subclasse.
 
 > Entidades: **Aluno**, **Professor**, **Funcionário Administrativo** — todos de uma faculdade.
 
-**Exercício 5 — Especialização:** dada a entidade **Pagamento** com atributos `id_pagamento`, `valor`, `data` e `status`, especialize-a em pelo menos três subclasses que representem formas de pagamento diferentes. Para cada subclasse, liste os atributos específicos e indique o tipo de restrição da hierarquia.
+**Exercício 5 — Especialização:** dada a entidade **Pagamento** com atributos `id_pagamento`, `valor`, `data` e `status`, especialize-a em pelo menos três subclasses que representem formas de pagamento diferentes. Para cada subclasse, liste os atributos específicos.
 
 ---
 
@@ -1063,11 +1002,6 @@ erDiagram
     opostos: generalização é bottom-up (parte de entidades específicas e abstrai o que
     têm em comum); especialização é top-down (parte de uma entidade genérica e a divide
     em subtipos).
-
-??? question "O que significa uma restrição de especialização 'Total Exclusiva'?"
-    Total = toda instância da superclasse obrigatoriamente pertence a alguma subclasse
-    (não existe instância "genérica"). Exclusiva = cada instância pertence a **no
-    máximo uma** subclasse (as subclasses não se sobrepõem).
 
 ??? question "Pegadinha comum: cardinalidade 1:N sempre significa que vai existir 'muitos' registros na prática?"
     Não. Cardinalidade 1:N significa que **pode** haver muitos — não que sempre haverá.
@@ -1118,16 +1052,6 @@ Atributos derivados nunca são armazenados diretamente — seu valor sempre pode
 </quiz>
 
 <quiz>
-Na generalização de Veículos em Carros, Motos e Caminhões (Total Exclusiva), o que isso implica?
-- [ ] Um veículo pode ser carro e moto ao mesmo tempo
-- [ ] Pode existir um veículo cadastrado sem ser carro, moto ou caminhão
-- [x] Todo veículo é obrigatoriamente um carro, uma moto ou um caminhão, e nunca mais de um tipo
-- [ ] A hierarquia é opcional e pode ser ignorada na modelagem lógica
-
-"Total" garante que não existe veículo "genérico" (toda instância cai em alguma subclasse); "Exclusiva" garante que nenhuma instância pertence a mais de uma subclasse simultaneamente.
-</quiz>
-
-<quiz>
 Um Cliente pode ter feito zero pedidos, mas todo Pedido precisa estar associado a um Cliente. Como se chama, respectivamente, a participação de Cliente e de Pedido nesse relacionamento?
 - [ ] Total e Total
 - [x] Parcial (Cliente) e Total (Pedido)
@@ -1159,8 +1083,8 @@ descrevem as regras de negócio entre eles, incluindo os casos especiais de
 auto-relacionamento e relacionamento ternário. Vimos a notação Crow's Foot, adotada
 nesta disciplina, um método prático de quatro perguntas para nunca mais confundir
 entidade com atributo, e o mecanismo de generalização/especialização para modelar
-hierarquias com herança, incluindo suas quatro combinações de restrição (total/parcial
-× exclusiva/sobreposta). Também já demos uma prévia do sistema de streaming que será a
+hierarquias com herança, incluindo os sinais para reconhecer quando uma hierarquia se
+justifica. Também já demos uma prévia do sistema de streaming que será a
 base da Atividade T1. Na próxima aula, esse modelo conceitual vira modelo lógico
 relacional, através da Normalização.
 

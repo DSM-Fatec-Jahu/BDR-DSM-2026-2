@@ -44,9 +44,13 @@ deve nomear assim.
    `funcionario_id`, `supervisor_id`).
 8. **Tipos e tamanhos adequados ao dado, não ao que parece mais simples** —
    `VARCHAR(255)` como padrão defensivo para texto de tamanho imprevisível; dimensionar
-   exatamente quando o domínio é conhecido (CEP, UF, CPF); nunca `FLOAT`/`DOUBLE` para
-   dinheiro — sempre `DECIMAL(p, s)`.
-9. **Toda tabela tem campos de log** — `criado_em`, `atualizado_em` (com `ON UPDATE
+   exatamente quando o domínio é conhecido e **realmente fixo** (CEP, UF, CPF); nunca
+   `FLOAT`/`DOUBLE` para dinheiro — sempre `DECIMAL(p, s)`. **Atenção com o que parece
+   fixo mas não é:** `telefone`/`celular` é `VARCHAR` (nunca `CHAR` de tamanho fixo) —
+   o Brasil não tem um único formato de telefone (fixo tem 10 dígitos, celular tem 11,
+   alguns cadastros ainda guardam DDI, e um número estrangeiro tem outro tamanho ainda),
+   então travar um tamanho fixo é assumir uma regra que não existe no domínio real.
+9. **Toda tabela tem campos de log** — `criado_em`, `alterado_em` (com `ON UPDATE
    CURRENT_TIMESTAMP`) e `deletado_em` (soft delete, `NULL` até ser excluído).
 
 > 📌 **Nível conceitual vs. nível de convenção:** aulas de modelagem pura (ex.: Aula 01
@@ -277,9 +281,9 @@ Antes de considerar a aula pronta:
 - **No DBML (dbdiagram.io), todo tipo composto por duas palavras precisa de aspas
   duplas — `UNSIGNED` em especial.** O parser do DBML só aceita um nome de tipo "de
   uma palavra" (mais tamanho entre parênteses, ex. `VARCHAR(255)`); escrever
-  `id_cliente BIGINT UNSIGNED [pk, increment]` sem aspas quebra o diagrama no
+  `id_cliente BIGINT UNSIGNED [PK, INCREMENT]` sem aspas quebra o diagrama no
   dbdiagram.io. A forma correta é envolver o tipo inteiro em aspas duplas, como uma
-  string literal: `id_cliente "BIGINT UNSIGNED" [pk, increment]` — vale para
+  string literal: `id_cliente "BIGINT UNSIGNED" [PK, INCREMENT]` — vale para
   `"BIGINT UNSIGNED"`, `"INT UNSIGNED"`, `"SMALLINT UNSIGNED"` e
   `"TINYINT UNSIGNED"`. **Isso é exclusivo do DBML** — no SQL real do MariaDB
   (`CREATE TABLE`, Aula 03), `UNSIGNED` é escrito normalmente, sem aspas; não
@@ -287,3 +291,11 @@ Antes de considerar a aula pronta:
   ` ```dbml ` neste repositório (aulas, atividades, gabaritos), verifique essa regra
   antes de publicar — descoberto originalmente na
   `docs/atividades/Pratica_Modelagem_dbdiagram.md` e seu gabarito.
+- **No DBML, os modificadores de coluna `pk`, `increment`, `not null`, `null` e
+  `unique` (dentro dos colchetes `[...]`) devem ser escritos em MAIÚSCULAS —
+  `[PK, INCREMENT]`, `[NOT NULL]`, `[NULL]`, `[UNIQUE]` — seguindo a Regra 3
+  (palavras reservadas da linguagem em maiúsculas), mesmo o dbdiagram.io aceitando
+  minúsculas silenciosamente. Chaves de atributo como `note:` e `default:` **não**
+  são palavras reservadas nesse sentido e continuam em minúsculas. Ao gerar ou
+  revisar qualquer bloco ` ```dbml ` neste repositório, confira essa formatação
+  antes de publicar.

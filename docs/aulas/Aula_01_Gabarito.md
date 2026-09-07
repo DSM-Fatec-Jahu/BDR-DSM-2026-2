@@ -68,9 +68,7 @@ mkdocs.yml de propósito. É acessível só pelo link no final de Aula_01_Revisa
 - `Robôs Terrestres`: `velocidade_maxima_kmh`, `sobe_meio_fio` (booleano).
 - `Vans Elétricas`: `capacidade_carga_kg`, `autonomia_km`.
 
-**b)** **Total Exclusiva.** Total porque toda entrega despachada usa exatamente um veículo — não existe veículo "genérico" sem tipo definido no sistema. Exclusiva porque nenhum veículo pode ser, ao mesmo tempo, de mais de um tipo (um drone nunca é também uma van).
-
-**c)** Seguindo a Estratégia 2 (uma tabela por subclasse, com FK única para a superclasse):
+**b)** Seguindo a Estratégia 2 (uma tabela por subclasse, com FK única para a superclasse):
 
 ```
 veiculos (superclasse)
