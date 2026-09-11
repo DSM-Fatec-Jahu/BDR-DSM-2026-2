@@ -13,22 +13,19 @@ sobre as decisões de modelagem mais importantes.
 
 ---
 
-## Exercício 1 — RachaFácil {: #exercicio-1 }
+## Exercício 1 — VoltGo {: #exercicio-1 }
 
-**Entidades identificadas:** `USUARIOS`, `GRUPOS`, `MEMBROS_GRUPO` (associativa),
-`DESPESAS`, `PARTICIPANTES_DESPESA` (associativa). Sem generalização — não há
-necessidade, todos os usuários compartilham o mesmo conjunto de atributos.
+**Entidades identificadas:** `USUARIOS`, `PATINETES`, `LOCACOES`. Sem generalização e
+sem nenhuma tabela associativa N:M — as três entidades se conectam por relacionamentos
+1:N simples.
 
 **Modelo Lógico:**
 
 ```
 USUARIOS (id_usuario PK, nome, email UNIQUE, senha_hash, tipo_usuario)
-GRUPOS (id_grupo PK, nome, criador_id FK -> USUARIOS)
-MEMBROS_GRUPO (grupo_id PK FK -> GRUPOS, usuario_id PK FK -> USUARIOS, entrou_em)
-DESPESAS (id_despesa PK, grupo_id FK -> GRUPOS, pagador_id FK -> USUARIOS,
-          descricao, valor_total, data_despesa)
-PARTICIPANTES_DESPESA (despesa_id PK FK -> DESPESAS, usuario_id PK FK -> USUARIOS,
-                        valor_devido)
+PATINETES (id_patinete PK, codigo UNIQUE, nivel_bateria, disponivel)
+LOCACOES (id_locacao PK, patinete_id FK -> PATINETES, usuario_id FK -> USUARIOS,
+          inicio, fim, valor_cobrado)
 ```
 
 ```dbml
@@ -48,69 +45,50 @@ Table usuarios {
   deletado_em    DATETIME
 }
 
-Table grupos {
-  id_grupo       "BIGINT UNSIGNED" [PK, INCREMENT]
-  criador_id     "BIGINT UNSIGNED" [NOT NULL, note: 'Regra 7 — papel "criador", não "usuario_id"']
-  nome           VARCHAR(255)    [NOT NULL]
-  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
-  alterado_em    DATETIME        [NOT NULL]
-  deletado_em    DATETIME
+Table patinetes {
+  id_patinete     "BIGINT UNSIGNED" [PK, INCREMENT]
+  codigo          VARCHAR(20)     [NOT NULL, UNIQUE, note: 'código de identificação físico do patinete']
+  nivel_bateria   "TINYINT UNSIGNED" [NOT NULL, note: 'percentual de 0 a 100']
+  disponivel      BOOLEAN         [NOT NULL, default: true]
+  criado_em       DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em     DATETIME        [NOT NULL]
+  deletado_em     DATETIME
 }
 
-// N:M usuarios <-> grupos — PK composta (Aula 02, 8.3)
-Table membros_grupo {
-  grupo_id       "BIGINT UNSIGNED" [PK, NOT NULL]
-  usuario_id     "BIGINT UNSIGNED" [PK, NOT NULL]
-  entrou_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
-  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
-  alterado_em    DATETIME        [NOT NULL]
-  deletado_em    DATETIME
+// LOCACOES tem PK própria — NÃO é tabela associativa N:M: o mesmo par
+// (patinete, usuário) pode se repetir livremente em locações diferentes ao longo do tempo
+Table locacoes {
+  id_locacao      "BIGINT UNSIGNED" [PK, INCREMENT]
+  patinete_id     "BIGINT UNSIGNED" [NOT NULL]
+  usuario_id      "BIGINT UNSIGNED" [NOT NULL]
+  inicio          DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  fim             DATETIME        [note: 'NULL enquanto a locação estiver em andamento']
+  valor_cobrado   DECIMAL(6,2)    [note: 'só é preenchido quando a locação termina']
+  criado_em       DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em     DATETIME        [NOT NULL]
+  deletado_em     DATETIME
 }
 
-Table despesas {
-  id_despesa     "BIGINT UNSIGNED" [PK, INCREMENT]
-  grupo_id       "BIGINT UNSIGNED" [NOT NULL]
-  pagador_id     "BIGINT UNSIGNED" [NOT NULL, note: 'Regra 7 — papel "pagador"']
-  descricao      VARCHAR(255)    [NOT NULL]
-  valor_total    DECIMAL(10,2)   [NOT NULL]
-  data_despesa   DATE            [NOT NULL]
-  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
-  alterado_em    DATETIME        [NOT NULL]
-  deletado_em    DATETIME
-}
-
-// N:M despesas <-> usuarios, com o atributo do próprio relacionamento (valor_devido)
-Table participantes_despesa {
-  despesa_id     "BIGINT UNSIGNED" [PK, NOT NULL]
-  usuario_id     "BIGINT UNSIGNED" [PK, NOT NULL]
-  valor_devido   DECIMAL(10,2)   [NOT NULL]
-  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
-  alterado_em    DATETIME        [NOT NULL]
-  deletado_em    DATETIME
-}
-
-Ref fk_grupo_criador:        grupos.criador_id               > usuarios.id_usuario
-Ref fk_membro_grupo:         membros_grupo.grupo_id          > grupos.id_grupo
-Ref fk_membro_usuario:       membros_grupo.usuario_id        > usuarios.id_usuario
-Ref fk_despesa_grupo:        despesas.grupo_id               > grupos.id_grupo
-Ref fk_despesa_pagador:      despesas.pagador_id             > usuarios.id_usuario
-Ref fk_participante_despesa: participantes_despesa.despesa_id > despesas.id_despesa
-Ref fk_participante_usuario: participantes_despesa.usuario_id > usuarios.id_usuario
+Ref fk_locacao_patinete: locacoes.patinete_id > patinetes.id_patinete
+Ref fk_locacao_usuario:  locacoes.usuario_id  > usuarios.id_usuario
 ```
 
 **Comentários:**
 
-- O **saldo** de cada membro (quem deve para quem) nunca é armazenado — é um atributo
-  **derivado**, calculado a partir da soma de `PARTICIPANTES_DESPESA.valor_devido`
-  contra o que cada um pagou em `DESPESAS.pagador_id`. Armazená-lo diretamente
-  duplicaria informação e criaria risco de inconsistência a cada nova despesa — o
-  mesmo raciocínio de `idade` vs. `data_nascimento` da Aula 01.
-- `criador_id` e `pagador_id` são dois exemplos de **Regra 7**: ambos referenciam
-  `usuarios`, mas em papéis diferentes, então usam o nome do papel — nunca
-  `usuario_id` genérico, que seria ambíguo.
-- Nenhuma dependência parcial ou transitiva: em `PARTICIPANTES_DESPESA`,
-  `valor_devido` depende da chave composta inteira `(despesa_id, usuario_id)`, não de
-  apenas uma das duas partes — está em 3FN.
+- `LOCACOES` **não** é uma tabela associativa N:M, mesmo conectando `USUARIOS` e
+  `PATINETES` — ela tem PK própria (`id_locacao`), porque o mesmo usuário pode alugar o
+  mesmo patinete várias vezes em dias diferentes, cada aluguel virando uma **nova
+  linha**. Uma tabela associativa de PK composta (como as N:M dos outros exercícios)
+  só faz sentido quando o par de FKs deve ser **único** — aqui não deve.
+- `fim` e `valor_cobrado` ficam `NULL` enquanto a locação está em andamento. Isso
+  dispensa uma coluna extra `status`: o próprio `NULL` em `fim` já responde "essa
+  locação ainda está rolando?".
+- `disponivel`, em `PATINETES`, é uma informação que, em teoria, dá para descobrir
+  consultando `LOCACOES` (um patinete está indisponível se existe uma locação dele com
+  `fim IS NULL`). Guardá-la à parte é uma decisão de **performance** — evita varrer
+  `LOCACOES` toda vez que o app precisa listar patinetes livres no mapa — não uma
+  violação de normalização; voltaremos a esse tipo de troca quando o curso chegar em
+  índices e otimização de consultas.
 
 ---
 
@@ -214,7 +192,108 @@ Ref fk_execucao_treino:   execucoes_treino.treino_id   > treinos.id_treino
 
 ---
 
-## Exercício 3 — OndaCast {: #exercicio-3 }
+## Exercício 3 — RachaConta {: #exercicio-3 }
+
+**Entidades identificadas:** `USUARIOS`, `GRUPOS`, `MEMBROS_GRUPO` (associativa),
+`DESPESAS`, `PARTICIPANTES_DESPESA` (associativa). Sem generalização — não há
+necessidade, todos os usuários compartilham o mesmo conjunto de atributos.
+
+**Modelo Lógico:**
+
+```
+USUARIOS (id_usuario PK, nome, email UNIQUE, senha_hash, tipo_usuario)
+GRUPOS (id_grupo PK, nome, criador_id FK -> USUARIOS)
+MEMBROS_GRUPO (grupo_id PK FK -> GRUPOS, usuario_id PK FK -> USUARIOS, entrou_em)
+DESPESAS (id_despesa PK, grupo_id FK -> GRUPOS, pagador_id FK -> USUARIOS,
+          descricao, valor_total, data_despesa)
+PARTICIPANTES_DESPESA (despesa_id PK FK -> DESPESAS, usuario_id PK FK -> USUARIOS,
+                        valor_devido)
+```
+
+```dbml
+Enum tipo_usuario_enum {
+  administrador
+  usuario
+}
+
+Table usuarios {
+  id_usuario     "BIGINT UNSIGNED" [PK, INCREMENT]
+  nome           VARCHAR(255)    [NOT NULL]
+  email          VARCHAR(255)    [NOT NULL, UNIQUE]
+  senha_hash     VARCHAR(255)    [NOT NULL]
+  tipo_usuario   tipo_usuario_enum [NOT NULL, default: 'usuario']
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em    DATETIME        [NOT NULL]
+  deletado_em    DATETIME
+}
+
+Table grupos {
+  id_grupo       "BIGINT UNSIGNED" [PK, INCREMENT]
+  criador_id     "BIGINT UNSIGNED" [NOT NULL, note: 'Regra 7 — papel "criador", não "usuario_id"']
+  nome           VARCHAR(255)    [NOT NULL]
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em    DATETIME        [NOT NULL]
+  deletado_em    DATETIME
+}
+
+// N:M usuarios <-> grupos — PK composta (Aula 02, 8.3)
+Table membros_grupo {
+  grupo_id       "BIGINT UNSIGNED" [PK, NOT NULL]
+  usuario_id     "BIGINT UNSIGNED" [PK, NOT NULL]
+  entrou_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em    DATETIME        [NOT NULL]
+  deletado_em    DATETIME
+}
+
+Table despesas {
+  id_despesa     "BIGINT UNSIGNED" [PK, INCREMENT]
+  grupo_id       "BIGINT UNSIGNED" [NOT NULL]
+  pagador_id     "BIGINT UNSIGNED" [NOT NULL, note: 'Regra 7 — papel "pagador"']
+  descricao      VARCHAR(255)    [NOT NULL]
+  valor_total    DECIMAL(10,2)   [NOT NULL]
+  data_despesa   DATE            [NOT NULL]
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em    DATETIME        [NOT NULL]
+  deletado_em    DATETIME
+}
+
+// N:M despesas <-> usuarios, com o atributo do próprio relacionamento (valor_devido)
+Table participantes_despesa {
+  despesa_id     "BIGINT UNSIGNED" [PK, NOT NULL]
+  usuario_id     "BIGINT UNSIGNED" [PK, NOT NULL]
+  valor_devido   DECIMAL(10,2)   [NOT NULL]
+  criado_em      DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
+  alterado_em    DATETIME        [NOT NULL]
+  deletado_em    DATETIME
+}
+
+Ref fk_grupo_criador:        grupos.criador_id               > usuarios.id_usuario
+Ref fk_membro_grupo:         membros_grupo.grupo_id          > grupos.id_grupo
+Ref fk_membro_usuario:       membros_grupo.usuario_id        > usuarios.id_usuario
+Ref fk_despesa_grupo:        despesas.grupo_id               > grupos.id_grupo
+Ref fk_despesa_pagador:      despesas.pagador_id             > usuarios.id_usuario
+Ref fk_participante_despesa: participantes_despesa.despesa_id > despesas.id_despesa
+Ref fk_participante_usuario: participantes_despesa.usuario_id > usuarios.id_usuario
+```
+
+**Comentários:**
+
+- O **saldo** de cada membro (quem deve para quem) nunca é armazenado — é um atributo
+  **derivado**, calculado a partir da soma de `PARTICIPANTES_DESPESA.valor_devido`
+  contra o que cada um pagou em `DESPESAS.pagador_id`. Armazená-lo diretamente
+  duplicaria informação e criaria risco de inconsistência a cada nova despesa — o
+  mesmo raciocínio de `idade` vs. `data_nascimento` da Aula 01.
+- `criador_id` e `pagador_id` são dois exemplos de **Regra 7**: ambos referenciam
+  `usuarios`, mas em papéis diferentes, então usam o nome do papel — nunca
+  `usuario_id` genérico, que seria ambíguo.
+- Nenhuma dependência parcial ou transitiva: em `PARTICIPANTES_DESPESA`,
+  `valor_devido` depende da chave composta inteira `(despesa_id, usuario_id)`, não de
+  apenas uma das duas partes — está em 3FN.
+
+---
+
+## Exercício 4 — OndaCast {: #exercicio-4 }
 
 **Entidades identificadas:** `USUARIOS`, `PLANOS`, `ASSINATURAS` (histórico),
 `PODCASTS`, `AUDIOLIVROS`, `CONTEUDOS` (superclasse), `EPISODIOS_PODCAST` e
@@ -380,7 +459,7 @@ Ref fk_item_conteudo:       itens_playlist.conteudo_id         > conteudos.id_co
 
 ---
 
-## Exercício 4 — CaronaViva {: #exercicio-4 }
+## Exercício 5 — CaronaViva {: #exercicio-5 }
 
 **Entidades identificadas:** `PESSOAS` (superclasse — e também a tabela de
 autenticação), `MOTORISTAS` e `PASSAGEIROS` (subclasses — Estratégia 2), `CARONAS`,
@@ -511,7 +590,7 @@ Ref fk_avaliacao_avaliado:   avaliacoes.avaliado_id         > pessoas.id_pessoa
 
 ---
 
-## Exercício 5 — PlayHub {: #exercicio-5 }
+## Exercício 6 — PlayHub {: #exercicio-6 }
 
 **Entidades identificadas:** `USUARIOS`, `PAPEIS`, `PERMISSOES`, `PAPEIS_PERMISSOES` e
 `USUARIOS_PAPEIS` (associativas — RBAC completo), `DESENVOLVEDORAS`, `PRODUTOS`
@@ -710,7 +789,7 @@ Ref fk_avaliacao_produto:  avaliacoes.produto_id                > produtos.id_pr
 
 ---
 
-## Exercício 6 — TrampoJá {: #exercicio-6 }
+## Exercício 7 — TrampoJá {: #exercicio-7 }
 
 **Entidades identificadas:** `USUARIOS`, `PAPEIS`, `PERMISSOES`, `PAPEIS_PERMISSOES` e
 `USUARIOS_PAPEIS` (RBAC completo), `CATEGORIAS_SERVICO`, `PERFIS_PRESTADOR`

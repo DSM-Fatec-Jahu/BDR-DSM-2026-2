@@ -62,7 +62,6 @@ flowchart LR
 
 Na Aula 03 você criou as estruturas do schema `loja_virtual` — tabelas, colunas, constraints — mas elas estão vazias. Agora vamos **popular** essas estruturas com dados reais, e depois modificá-las com segurança. A DML — **Data Manipulation Language** — é o subconjunto do SQL responsável por inserir, modificar e remover registros. Os três comandos centrais são `INSERT`, `UPDATE` e `DELETE`. Todos os exemplos desta aula continuam operando sobre o schema `loja_virtual` criado na Aula 03 (tabelas `pessoas`, `enderecos`, `categorias`, `produtos`, `pedidos` e `itens_pedidos`) — nada de tabela nova aparece do nada.
 
-[prompt para nanobanana: "Educational illustration showing three database operations as colored icons: INSERT as a green plus symbol adding a row to a table, UPDATE as a blue pencil editing a row, DELETE as a red trash can removing a row. Clean flat design, white background, labeled in Portuguese below each icon."]
 ![Operações DML](../imgs/Aula_04_img_01.png)
 
 ---

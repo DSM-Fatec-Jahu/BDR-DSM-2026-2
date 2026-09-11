@@ -14,7 +14,7 @@
 
 ## 🧊 Pré-Problema — Modelando "de olho" na Pokédex
 
-Antes dos 6 exercícios, um aquecimento para sentir na pele por que modelagem de dados
+Antes dos 7 exercícios, um aquecimento para sentir na pele por que modelagem de dados
 não é opcional.
 
 !!! danger "🔍 Desafio de sensibilização"
@@ -57,7 +57,7 @@ Repare no que a tela **não deixa claro**, mesmo depois de toda essa riqueza vis
     Reverse-engineer uma interface pronta parece "mais rápido" que ler um documento de
     requisitos, mas troca decisões **verificáveis** por **suposições**, e cada
     suposição errada vira retrabalho quando o sistema já está no ar. É exatamente por
-    isso que, a partir daqui, cada um dos 6 exercícios abaixo começa com uma
+    isso que, a partir daqui, cada um dos 7 exercícios abaixo começa com uma
     **descrição textual de requisitos de negócio** — não uma tela pronta — e é a partir
     dela, e só dela, que você modela.
 
@@ -65,7 +65,7 @@ Repare no que a tela **não deixa claro**, mesmo depois de toda essa riqueza vis
 
 ## 🎯 O que se espera em cada exercício
 
-Para cada um dos 6 exercícios abaixo, a partir do cenário e da lista de requisitos de
+Para cada um dos 7 exercícios abaixo, a partir do cenário e da lista de requisitos de
 negócio apresentados, você deve produzir um diagrama em
 **[dbdiagram.io](https://dbdiagram.io)** que:
 
@@ -80,12 +80,13 @@ negócio apresentados, você deve produzir um diagrama em
 4. **Aplique normalização até a 3ª Forma Normal** — nenhuma tabela do seu diagrama deve
    ter dependência parcial ou transitiva (Aula 02).
 5. **Modele a gestão de usuários e acessos** — item **obrigatório em todo exercício**.
-   Nos dois exercícios fáceis, isso significa autenticação simples com um tipo básico
-   (`administrador` / `usuario`). Nos dois avançados, significa um sistema de **papéis
-   com permissões configuráveis** (o padrão RBAC — *Role-Based Access Control* —
-   detalhado na Seção de Convenções). Os intermediários usam o tipo básico, mas já
-   convivem com generalização de entidades de domínio — leia o requisito de cada um com
-   atenção.
+   Nos dois exercícios fáceis (1 e 2), isso significa autenticação simples com um tipo
+   básico (`administrador` / `usuario`). Nos dois avançados (6 e 7), significa um
+   sistema de **papéis com permissões configuráveis** (o padrão RBAC — *Role-Based
+   Access Control* — detalhado na Seção de Convenções). Os três intermediários (3, 4 e
+   5) usam o tipo básico — dois deles (4 e 5) já convivem com generalização de
+   entidades de domínio; o terceiro (3) foca em relacionamentos N:M encadeados e num
+   atributo derivado, sem generalização — leia o requisito de cada um com atenção.
 
 ### Como modelar no dbdiagram.io
 
@@ -346,30 +347,28 @@ Repare em três decisões que valem para **todos** os exercícios a seguir:
 
 ---
 
-## 📋 Os 6 Exercícios
+## 📋 Os 7 Exercícios
 
-Dificuldade progressiva: dois fáceis, dois intermediários, dois avançados. Todos usam
+Dificuldade progressiva: dois fáceis, três intermediários, dois avançados. Todos usam
 cenários de 2026 — nenhum é biblioteca, escola ou aluno/nota.
 
-### 🟢 Exercício 1 (Fácil) — RachaFácil: divisão de contas entre amigos
+### 🟢 Exercício 1 (Fácil) — VoltGo: aluguel de patinetes elétricos compartilhados
 
-O **RachaFácil** é um app que ajuda grupos de amigos a dividir despesas em viagens,
-repúblicas ou saídas, sem precisar de planilha. Requisitos de negócio:
+A **VoltGo** é um aplicativo de aluguel de patinetes elétricos compartilhados,
+espalhados por pontos fixos da cidade. Requisitos de negócio:
 
-- O sistema permite cadastro de usuários com autenticação por e-mail e senha.
-- Usuários podem criar **grupos** (ex.: "Viagem para Bonito", "Apê 402") e convidar
-  outros usuários cadastrados para participar. Um usuário pode participar de vários
-  grupos, e um grupo tem vários membros.
-- Dentro de um grupo, qualquer membro pode registrar uma **despesa** (ex.: jantar,
-  corrida de aplicativo, mercado), informando quem pagou, o valor total e a data.
-- Cada despesa deve ser dividida entre um **subconjunto** dos membros do grupo — nem
-  sempre todos os membros participam de todas as despesas — e o sistema guarda quanto
-  cada participante deve daquela despesa específica.
-- O saldo de cada membro dentro de um grupo (quanto deve ou tem a receber) é sempre
-  **calculado** a partir das despesas registradas — pense bem em que tipo de atributo
-  isso é, e se ele deveria ser armazenado (releia a Aula 01, Seção 3.1).
-- Gestão de acesso no nível básico: `administrador` (gerencia a plataforma, pode
-  desativar contas) e `usuario` (uso normal do app).
+- Usuários se cadastram e fazem login (e-mail e senha) para poder alugar um patinete.
+- A empresa mantém uma frota de **patinetes**, cada um com um código de identificação
+  único, o nível atual de bateria (em %) e se está disponível para aluguel no momento.
+- Quando um usuário aluga um patinete, o sistema registra uma **locação**: qual
+  patinete, qual usuário, o horário de início, o horário de término (que fica **em
+  aberto**, sem valor, enquanto a locação ainda está em andamento) e o valor cobrado ao
+  final.
+- Um mesmo patinete pode ser alugado várias vezes ao longo do tempo, por usuários
+  diferentes, sempre em locações separadas — mas nunca em duas locações em andamento ao
+  mesmo tempo.
+- Gestão de acesso no nível básico: `administrador` (gerencia a frota de patinetes) e
+  `usuario` (aluga patinetes).
 
 ### 🟢 Exercício 2 (Fácil) — TreinoZen: gestão de treinos e rotina fitness
 
@@ -391,7 +390,36 @@ Requisitos de negócio:
 - Gestão de acesso no nível básico: `administrador` (mantém o catálogo de exercícios)
   e `usuario` (monta e executa treinos).
 
-### 🟡 Exercício 3 (Intermediário) — OndaCast: streaming de podcasts e audiolivros
+### 🟡 Exercício 3 (Intermediário) — RachaConta: divisão de contas entre amigos
+
+O **RachaConta** é um app que ajuda grupos de amigos a dividir despesas em viagens,
+repúblicas ou saídas, sem precisar de planilha. Requisitos de negócio:
+
+- O sistema permite cadastro de usuários com autenticação por e-mail e senha.
+- Um usuário pode criar um **grupo** (ex.: "Viagem para Bonito", "Apê 402") e convidar
+  outros usuários cadastrados para participar dele. Um mesmo usuário pode participar de
+  vários grupos diferentes, e um grupo reúne vários membros — é uma associação **N:M**
+  entre usuários e grupos.
+- Dentro de um grupo, qualquer membro pode registrar uma **despesa** (ex.: um jantar),
+  informando **quem pagou** (um único membro do grupo), o valor total e a data.
+- **Exemplo concreto para fixar a regra a seguir:** o grupo "Viagem para Bonito" tem 4
+  membros — Ana, Bruno, Carla e Diego. Ana paga um jantar de R$ 200 que só ela, Bruno e
+  Carla comeram (Diego ficou no hotel). O sistema precisa guardar duas coisas
+  **separadas** sobre essa despesa: (1) que **Ana foi quem pagou** os R$ 200 inteiros,
+  e (2) que a despesa foi **dividida entre Ana, Bruno e Carla** — não entre os 4
+  membros do grupo — cada um dos três com sua própria parcela em reais.
+- Ou seja: toda despesa tem **um único pagador**, mas pode ser **dividida entre um
+  subconjunto qualquer dos membros do grupo** (às vezes todos, às vezes só alguns) — e
+  o sistema guarda quanto cada participante daquela divisão deve.
+- O **saldo** de cada membro dentro de um grupo (quanto deve ou tem a receber, no
+  total) nunca é digitado por ninguém — ele é sempre **calculado**, somando o que a
+  pessoa pagou e subtraindo o que ela deve nas divisões registradas. Pense bem em que
+  tipo de atributo isso é, e se ele deveria ocupar uma coluna própria no seu modelo
+  (releia a Aula 01, Seção 3.1, sobre atributos derivados).
+- Gestão de acesso no nível básico: `administrador` (gerencia a plataforma, pode
+  desativar contas) e `usuario` (uso normal do app).
+
+### 🟡 Exercício 4 (Intermediário) — OndaCast: streaming de podcasts e audiolivros
 
 A **OndaCast** é uma plataforma de streaming de áudio por assinatura, especializada em
 podcasts e audiolivros. Requisitos de negócio:
@@ -412,7 +440,7 @@ podcasts e audiolivros. Requisitos de negócio:
 - Gestão de acesso no nível básico: `administrador` (cadastra podcasts, audiolivros e
   planos) e `usuario` (assina planos e ouve conteúdo).
 
-### 🟡 Exercício 4 (Intermediário) — CaronaViva: caronas urbanas compartilhadas
+### 🟡 Exercício 5 (Intermediário) — CaronaViva: caronas urbanas compartilhadas
 
 A **CaronaViva** conecta pessoas que fazem o mesmo trajeto todo dia, dividindo o custo
 da viagem. Requisitos de negócio:
@@ -433,7 +461,7 @@ da viagem. Requisitos de negócio:
 - Gestão de acesso no nível básico: `administrador` (modera denúncias, pode suspender
   contas) e `usuario` (usa a plataforma como motorista e/ou passageiro).
 
-### 🔴 Exercício 5 (Avançado) — PlayHub: marketplace de jogos digitais
+### 🔴 Exercício 6 (Avançado) — PlayHub: marketplace de jogos digitais
 
 A **PlayHub** é um marketplace de jogos digitais (pense em Steam ou Epic Games Store),
 com biblioteca de jogos, conquistas e avaliações. Requisitos de negócio:
@@ -460,7 +488,7 @@ com biblioteca de jogos, conquistas e avaliações. Requisitos de negócio:
   papel tem um conjunto específico de permissões que precisa poder ser
   criado/ajustado **sem alterar código-fonte**.
 
-### 🔴 Exercício 6 (Avançado) — TrampoJá: marketplace de prestadores de serviço
+### 🔴 Exercício 7 (Avançado) — TrampoJá: marketplace de prestadores de serviço
 
 A **TrampoJá** conecta clientes que precisam de um serviço a prestadores autônomos que
 o oferecem — típico app de *gig economy* de serviços (elétrica residencial, design
@@ -492,11 +520,11 @@ gráfico, aulas particulares etc.). Requisitos de negócio:
 
 !!! danger "⚠️ Só abra depois de terminar — copiar não é aprender"
     O [Gabarito desta atividade](Pratica_Modelagem_dbdiagram_Gabarito.md) existe para
-    você **conferir** sua própria tentativa depois de resolver os 6 exercícios — não
+    você **conferir** sua própria tentativa depois de resolver os 7 exercícios — não
     para consultar no meio do caminho. Abrir o gabarito antes de terminar cria a falsa
     sensação de que você já sabe modelar, quando na verdade só copiou uma resposta
     pronta; essa diferença aparece exatamente na hora de uma avaliação que vale nota,
-    quando não vai ter gabarito disponível. Esboce sua solução completa para os 6
+    quando não vai ter gabarito disponível. Esboce sua solução completa para os 7
     exercícios — mesmo errando — antes de abrir o link.
 
 ---

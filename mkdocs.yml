@@ -90,6 +90,7 @@ nav:
   - Atividades e Avaliações:
       - atividades/index.md
       - atividades/Pratica_Modelagem_dbdiagram.md
+      - atividades/Pratica_DDL_Estruturas.md
 
 extra:
   social:
