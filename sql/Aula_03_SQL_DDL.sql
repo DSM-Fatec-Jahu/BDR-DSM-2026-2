@@ -296,69 +296,104 @@ RENAME TABLE itens_pedido TO itens_pedidos;
 
 
 -- =============================================================================
--- Seções 7 e 8 — ALTER TABLE: adicionando e excluindo CONSTRAINTS
+-- Seções 7 e 8 — RENOMEANDO uma CONSTRAINT que já existe
 --
--- A CREATE TABLE já demonstra PK/FK/UNIQUE/CHECK definidos na criação; este
--- bloco demonstra o outro cenário comum na Seção 8: uma tabela que já existe
--- (com dados) e precisa RECEBER ou PERDER uma constraint depois, via
--- ALTER TABLE — sem precisar recriar a tabela do zero.
+-- Cenário real: a tabela já foi criada (Seção 6/11) com PK, FK, UNIQUE e
+-- CHECK definidos desde o início — e agora você só quer dar um nome NOVO
+-- para uma dessas constraints, sem recriar a tabela.
 --
--- Para não arriscar as tabelas reais do schema (que a Aula 04 usa), a
--- demonstração roda em uma tabela isolada, criada e destruída só para este
--- bloco: demo_constraints. Ela nasce sem PK e sem as demais constraints —
--- fugindo de propósito da Regra 5 nesta única tabela de exemplo — só para
--- que dê para demonstrar o ADD de cada constraint em seguida.
+-- O MariaDB/MySQL NÃO tem um comando "ALTER TABLE ... RENAME CONSTRAINT"
+-- (diferente do PostgreSQL). Os testes abaixo foram executados de fato
+-- contra o MariaDB 10.4.32 do XAMPP para confirmar, caso a caso, o que
+-- trava e por quê — em vez de assumir:
+--
+--   • PRIMARY KEY  → trava de verdade, em DOIS pontos:
+--       1) ADD de uma 2ª PK enquanto a 1ª existe: ERRO 1068
+--          "Multiple primary key defined" (uma tabela só pode ter UMA PK).
+--       2) DROP PRIMARY KEY direto, se a coluna é AUTO_INCREMENT (padrão
+--          da Regra 5 desta disciplina): ERRO 1075 "there can be only one
+--          auto column and it must be defined as a key" — o MariaDB não
+--          deixa a coluna auto-incrementada ficar "solta" sem nenhuma key.
+--   • FOREIGN KEY / UNIQUE / CHECK → não travam tão feio (dá pra ADICIONAR
+--     uma constraint nova com nome diferente enquanto a antiga ainda
+--     existe — o MariaDB deixa as duas coexistirem), mas isso é errado:
+--     ficaria uma constraint duplicada. Como também não existe um
+--     "RENAME" direto para elas (e o RENAME INDEX/RENAME KEY do MariaDB,
+--     que serviria para o índice do UNIQUE, só existe a partir da versão
+--     10.5.2 — o XAMPP aqui está na 10.4.32 e recusa essa sintaxe com
+--     ERRO 1064), o processo correto é sempre o mesmo par de passos:
+--     DROP da constraint antiga + ADD da constraint nova com o nome
+--     desejado, na MESMA instrução ALTER TABLE (garante que a tabela
+--     nunca fica um instante sem a proteção).
+--
+-- A demonstração roda em uma tabela isolada (demo_renomeacao_constraint),
+-- criada já com as 4 constraints nomeadas (como qualquer tabela real desta
+-- disciplina) e destruída ao final — sem tocar nas tabelas do e-commerce
+-- que a Aula 04 vai usar.
 -- =============================================================================
 
-CREATE TABLE IF NOT EXISTS demo_constraints (
-    id_demo       BIGINT UNSIGNED  NOT NULL,           -- vai virar PK via ALTER, não inline
-    categoria_id  BIGINT UNSIGNED      NULL,           -- vai virar FK via ALTER
-    codigo        VARCHAR(20)      NOT NULL,           -- vai virar UNIQUE via ALTER
-    quantidade    INT              NOT NULL DEFAULT 0, -- vai virar CHECK via ALTER
+CREATE TABLE IF NOT EXISTS demo_renomeacao_constraint (
+    id_demo       BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    categoria_id  BIGINT UNSIGNED      NULL,
+    codigo        VARCHAR(20)      NOT NULL,
+    quantidade    INT              NOT NULL DEFAULT 0,
     criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
-    deletado_em   DATETIME             NULL
+    deletado_em   DATETIME             NULL,
+
+    CONSTRAINT pk_demo_renomeacao            PRIMARY KEY (id_demo),
+    CONSTRAINT fk_demo_renomeacao_categoria  FOREIGN KEY (categoria_id)
+                                              REFERENCES categorias (id_categoria)
+                                              ON DELETE RESTRICT
+                                              ON UPDATE CASCADE,
+    CONSTRAINT uq_demo_renomeacao_codigo     UNIQUE (codigo),
+    CONSTRAINT ck_demo_renomeacao_quantidade CHECK (quantidade >= 0)
 );
 
--- --- PRIMARY KEY -------------------------------------------------------------
--- Adicionar:
-ALTER TABLE demo_constraints
-    ADD CONSTRAINT pk_demo PRIMARY KEY (id_demo);
--- Excluir (MariaDB/MySQL: não se nomeia a PK no DROP — só existe uma por tabela):
-ALTER TABLE demo_constraints
-    DROP PRIMARY KEY;
+-- --- Renomeando a PRIMARY KEY -------------------------------------------
+-- ❌ Não faça isto — dá ERRO 1068 (duas PKs não podem coexistir):
+-- ALTER TABLE demo_renomeacao_constraint ADD CONSTRAINT pk_novo PRIMARY KEY (id_demo);
+--
+-- ✅ Processo correto: como id_demo é AUTO_INCREMENT, é preciso tirar o
+-- AUTO_INCREMENT na MESMA instrução em que a PK é removida (senão cai no
+-- ERRO 1075), e devolver o AUTO_INCREMENT na MESMA instrução em que a PK
+-- nova é criada:
+ALTER TABLE demo_renomeacao_constraint
+    DROP PRIMARY KEY,
+    MODIFY COLUMN id_demo BIGINT UNSIGNED NOT NULL;
 
--- --- FOREIGN KEY -------------------------------------------------------------
--- Adicionar (referenciando categorias, que já existe neste schema):
-ALTER TABLE demo_constraints
-    ADD CONSTRAINT fk_demo_categoria FOREIGN KEY (categoria_id)
+ALTER TABLE demo_renomeacao_constraint
+    ADD CONSTRAINT pk_demo_renomeacao_v2 PRIMARY KEY (id_demo),
+    MODIFY COLUMN id_demo BIGINT UNSIGNED NOT NULL AUTO_INCREMENT;
+
+-- --- Renomeando a FOREIGN KEY --------------------------------------------
+-- DROP da FK antiga + ADD da FK nova (mesma coluna/referência) numa só instrução:
+ALTER TABLE demo_renomeacao_constraint
+    DROP FOREIGN KEY fk_demo_renomeacao_categoria,
+    ADD CONSTRAINT fk_demo_renomeacao_categoria_v2 FOREIGN KEY (categoria_id)
         REFERENCES categorias (id_categoria)
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         ON UPDATE CASCADE;
--- Excluir (pelo nome da constraint):
-ALTER TABLE demo_constraints
-    DROP FOREIGN KEY fk_demo_categoria;
 
--- --- UNIQUE --------------------------------------------------------------
--- Adicionar:
-ALTER TABLE demo_constraints
-    ADD CONSTRAINT uq_demo_codigo UNIQUE (codigo);
--- Excluir (UNIQUE é armazenado como índice — mesma sintaxe do DROP INDEX visto acima):
-ALTER TABLE demo_constraints
-    DROP INDEX uq_demo_codigo;
+-- --- Renomeando o UNIQUE --------------------------------------------------
+-- DROP INDEX (é assim que se remove um UNIQUE) + ADD CONSTRAINT com o nome novo:
+ALTER TABLE demo_renomeacao_constraint
+    DROP INDEX uq_demo_renomeacao_codigo,
+    ADD CONSTRAINT uq_demo_renomeacao_codigo_v2 UNIQUE (codigo);
 
--- --- CHECK ---------------------------------------------------------------
--- Adicionar:
-ALTER TABLE demo_constraints
-    ADD CONSTRAINT ck_demo_quantidade CHECK (quantidade >= 0);
--- Excluir (MariaDB aceita DROP CONSTRAINT para CHECK; MySQL 8+ usa DROP CHECK):
-ALTER TABLE demo_constraints
-    DROP CONSTRAINT ck_demo_quantidade;
+-- --- Renomeando o CHECK ----------------------------------------------------
+-- DROP CONSTRAINT (sintaxe do MariaDB para CHECK) + ADD CONSTRAINT com o nome novo:
+ALTER TABLE demo_renomeacao_constraint
+    DROP CONSTRAINT ck_demo_renomeacao_quantidade,
+    ADD CONSTRAINT ck_demo_renomeacao_quantidade_v2 CHECK (quantidade >= 0);
+
+-- Confirma o resultado final — todas as 4 constraints com os nomes novos:
+SHOW CREATE TABLE demo_renomeacao_constraint;
 
 -- Encerrada a demonstração, remove a tabela de exemplo — ela não faz parte
 -- do schema de e-commerce ensinado na aula, só existiu para este bloco.
-DROP TABLE IF EXISTS demo_constraints;
+DROP TABLE IF EXISTS demo_renomeacao_constraint;
 
 
 -- =============================================================================
