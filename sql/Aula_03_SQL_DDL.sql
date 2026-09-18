@@ -296,6 +296,72 @@ RENAME TABLE itens_pedido TO itens_pedidos;
 
 
 -- =============================================================================
+-- Seções 7 e 8 — ALTER TABLE: adicionando e excluindo CONSTRAINTS
+--
+-- A CREATE TABLE já demonstra PK/FK/UNIQUE/CHECK definidos na criação; este
+-- bloco demonstra o outro cenário comum na Seção 8: uma tabela que já existe
+-- (com dados) e precisa RECEBER ou PERDER uma constraint depois, via
+-- ALTER TABLE — sem precisar recriar a tabela do zero.
+--
+-- Para não arriscar as tabelas reais do schema (que a Aula 04 usa), a
+-- demonstração roda em uma tabela isolada, criada e destruída só para este
+-- bloco: demo_constraints. Ela nasce sem PK e sem as demais constraints —
+-- fugindo de propósito da Regra 5 nesta única tabela de exemplo — só para
+-- que dê para demonstrar o ADD de cada constraint em seguida.
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS demo_constraints (
+    id_demo       BIGINT UNSIGNED  NOT NULL,           -- vai virar PK via ALTER, não inline
+    categoria_id  BIGINT UNSIGNED      NULL,           -- vai virar FK via ALTER
+    codigo        VARCHAR(20)      NOT NULL,           -- vai virar UNIQUE via ALTER
+    quantidade    INT              NOT NULL DEFAULT 0, -- vai virar CHECK via ALTER
+    criado_em     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    alterado_em   DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                             ON UPDATE CURRENT_TIMESTAMP,
+    deletado_em   DATETIME             NULL
+);
+
+-- --- PRIMARY KEY -------------------------------------------------------------
+-- Adicionar:
+ALTER TABLE demo_constraints
+    ADD CONSTRAINT pk_demo PRIMARY KEY (id_demo);
+-- Excluir (MariaDB/MySQL: não se nomeia a PK no DROP — só existe uma por tabela):
+ALTER TABLE demo_constraints
+    DROP PRIMARY KEY;
+
+-- --- FOREIGN KEY -------------------------------------------------------------
+-- Adicionar (referenciando categorias, que já existe neste schema):
+ALTER TABLE demo_constraints
+    ADD CONSTRAINT fk_demo_categoria FOREIGN KEY (categoria_id)
+        REFERENCES categorias (id_categoria)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE;
+-- Excluir (pelo nome da constraint):
+ALTER TABLE demo_constraints
+    DROP FOREIGN KEY fk_demo_categoria;
+
+-- --- UNIQUE --------------------------------------------------------------
+-- Adicionar:
+ALTER TABLE demo_constraints
+    ADD CONSTRAINT uq_demo_codigo UNIQUE (codigo);
+-- Excluir (UNIQUE é armazenado como índice — mesma sintaxe do DROP INDEX visto acima):
+ALTER TABLE demo_constraints
+    DROP INDEX uq_demo_codigo;
+
+-- --- CHECK ---------------------------------------------------------------
+-- Adicionar:
+ALTER TABLE demo_constraints
+    ADD CONSTRAINT ck_demo_quantidade CHECK (quantidade >= 0);
+-- Excluir (MariaDB aceita DROP CONSTRAINT para CHECK; MySQL 8+ usa DROP CHECK):
+ALTER TABLE demo_constraints
+    DROP CONSTRAINT ck_demo_quantidade;
+
+-- Encerrada a demonstração, remove a tabela de exemplo — ela não faz parte
+-- do schema de e-commerce ensinado na aula, só existiu para este bloco.
+DROP TABLE IF EXISTS demo_constraints;
+
+
+-- =============================================================================
 -- Seção 10 — Comandos utilitários essenciais
 -- =============================================================================
 
