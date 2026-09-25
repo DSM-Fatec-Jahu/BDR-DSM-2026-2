@@ -150,6 +150,62 @@ Sem refazê-la do zero, altere a estrutura da tabela para atender ao que segue:
 
 ---
 
+## 🔑 Gabarito do Simulado
+
+!!! danger "⚠️ Pare aqui: leia este aviso antes de abrir o gabarito"
+    O gabarito reúne **a resolução dos quatro exercícios** — a resposta esperada para
+    cardinalidade, o script completo da JogaJunto, a análise de normalização e os
+    `ALTER TABLE`. Justamente por isso, ele é perigoso para quem o consulta cedo demais.
+
+    **Ver a resposta antes de tentar cria uma falsa impressão de que você sabe fazer.**
+    Ler um SQL pronto e achar que entendeu é muito diferente de conseguir escrevê-lo do
+    zero. Este simulado é uma **réplica da avaliação**: no dia da prova, ninguém vai lhe
+    entregar o gabarito, e o professor pode pedir que você **altere uma regra ao vivo**
+    ou **explique um trecho** — quem só copiou não consegue.
+
+    O caminho honesto é este:
+
+    1. **Resolva sozinho(a) primeiro**, nas condições da prova: sem consulta, com o
+       arquivo `.sql` do modelo. Errar e depurar é o treino que a avaliação cobra.
+    2. Travou? Releia a aula correspondente (Aulas 01, 02 e 03) e tente de novo.
+    3. Só **depois de ter uma versão sua funcionando** — e executada duas vezes seguidas
+       sem erro —, abra o gabarito para **comparar**: o que ele fez diferente de você e
+       por quê?
+    4. Nunca copie e cole. Se for reaproveitar uma ideia, reescreva com as suas palavras
+       e confirme que sabe explicar cada linha.
+
+??? warning "Já resolvi por conta própria e quero ver o gabarito"
+    📖 [Abrir o Gabarito — Simulado: Aulas 01 a 03](Simulado_Aulas_01_03_Gabarito.md)
+
+    #### O que o gabarito contém
+
+    | Exercício | Tema | O que você encontra |
+    |-----------|------|---------------------|
+    | 1 | Cardinalidade e chave estrangeira | A resposta esperada para 1:1, 1:N e N:M e os critérios de correção. |
+    | 2 | JogaJunto (SQL) | O script completo do banco `partidas_esportivas`, com o mapeamento de cada requisito para o modelo. |
+    | 3 | Normalização | O problema encontrado, a forma normal violada e o SQL da correção. |
+    | 4 | `ALTER TABLE` | Os comandos para transformar a tabela `pessoas` e os pontos de atenção de cada um. |
+
+    #### O que observar ao comparar com a sua resolução
+
+    - No Exercício 1, se você **distinguiu os três casos** em vez de dar uma resposta única, e se o N:M virou uma **tabela associativa**.
+    - No Exercício 2, se a **Regra 7** foi aplicada nas FKs para `usuarios` (`organizador_id`, `avaliador_id`, `avaliado_id`) e se os **três campos de log** (Regra 9) estão em todas as tabelas, inclusive na associativa.
+    - Se cada requisito não funcional (RNF02 a RNF08) virou uma **constraint** com nome próprio, e se o RF08 foi tratado como **valor calculado**, e não como coluna.
+    - Se o seu script **roda duas vezes seguidas sem erro**, com remoção e criação protegidas.
+    - No Exercício 3, se você identificou a **dependência transitiva** e disse com clareza se ela foi resolvida ou não no seu script.
+    - No Exercício 4, por que `CHANGE COLUMN` renomeia e redefine o tipo ao mesmo tempo, por que o `doc_federal` **não** pode ser `CHAR` de tamanho fixo e para que serve o `AFTER nome`.
+
+    #### Diferenças em relação à sua entrega
+
+    O gabarito mostra **uma** solução completa, mas não a única válida. Há mais de uma
+    resposta aceitável — por exemplo, `ENUM` ou tabela de domínio para as situações, e
+    `DROP DATABASE IF EXISTS` ou `DROP TABLE IF EXISTS` para a reexecução. **A sua
+    entrega segue o enunciado e as convenções da disciplina**: se a sua solução atende
+    aos requisitos e às 9 regras de nomenclatura, ela não precisa ser igual à do
+    gabarito.
+
+---
+
 ⬅️ [Voltar para Atividades e Avaliações](index.md)
 
 ---
