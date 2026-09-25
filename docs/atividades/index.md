@@ -21,6 +21,7 @@ material de apoio, não avaliação.
 |---|---|---|
 | [Prática — Modelagem com dbdiagram.io](Pratica_Modelagem_dbdiagram.md) | Modelagem conceitual, lógica, normalização e gestão de usuários/acessos em 7 exercícios progressivos (Aulas 01 e 02) | ✅ Disponível |
 | [Prática — SQL DDL: Criando as Estruturas](Pratica_DDL_Estruturas.md) | Escrita de `CREATE TABLE` (tipos, PK, FK com ON DELETE/UPDATE, UNIQUE, CHECK) a partir do modelo lógico já produzido na prática de modelagem, nos mesmos 7 cenários (Aula 03) | ✅ Disponível |
+| [Simulado — Aulas 01 a 03](Simulado_Aulas_01_03.md) | Réplica do que pode ser solicitado em avaliação: cardinalidade, modelagem de um sistema de partidas esportivas em SQL, normalização e `ALTER TABLE`, entregues em um único arquivo `.sql` (Aulas 01 a 03) | ✅ Disponível |
 
 ---
 
