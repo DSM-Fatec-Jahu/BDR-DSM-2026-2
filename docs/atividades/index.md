@@ -5,10 +5,9 @@ Todas as atividades avaliativas do semestre. Clique no nome para abrir a página
 | # | Atividade | Descrição | Peso | Status |
 |---|---|---|---|---|
 | T1 | Modelagem Streaming | Modelagem Conceitual, Lógica e DDL de um sistema de Streaming | 2 pts | 🔒 Em breve |
-| P1 | Avaliação P1 | Prova individual sobre modelagem e SQL fundamental | 3 pts | 🔒 Em breve |
-| T2 | Projeto Interdisciplinar | Sistema BD integrado ao projeto de Desenvolvimento Web II e Engenharia de Software II | 2 pts | 🔒 Em breve |
-| P2 | Avaliação P2 | Prova individual sobre consultas avançadas e programação em BD | 3 pts | 🔒 Em breve |
-| R | Avaliação Substitutiva | Substitui a menor nota entre P1 e P2 | 3 pts** | 🔒 Em breve |
+| P1 | [Avaliação P1 — Biblioteca ou Clínica Veterinária](Avaliacao_P1_Biblioteca_Veterinaria.md) | Prova em dupla (Aulas 01 a 03): criação de banco em SQL (4 tabelas, 1:N e N:M) e 4 perguntas teóricas (cardinalidade, tipos, especialização e normalização); cenário definido pelo número do computador (ímpar = Biblioteca, par = Veterinária) | 4 pts | ✅ Disponível |
+| P2 | Avaliação P2 | Prova individual sobre consultas avançadas e programação em BD | 4 pts | 🔒 Em breve |
+| R | Avaliação Substitutiva | Substitui a menor nota entre P1 e P2 | 4 pts** | 🔒 Em breve |
 
 ---
 

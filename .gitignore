@@ -2,3 +2,6 @@
 site/
 __pycache__/
 *.pyc
+
+# Gabaritos de avaliações (ficam só com o professor)
+sql/Avaliacao_*Gabarito*

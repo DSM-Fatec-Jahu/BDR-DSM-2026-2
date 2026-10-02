@@ -60,17 +60,14 @@ As aulas são conduzidas no formato **expositivo e prático**, combinando explic
 
 A nota final é calculada pela seguinte fórmula:
 
-> **Nota Final = (T1 + P1 + T2 + P2) × 1 + R**
+> **Nota Final = (T1 + P1 + P2) × 1**
 
 | Componente | Descrição | Peso |
 |---|---|---|
 | **T1** | Modelagem de um sistema de Streaming (Conceitual, Lógico e DDL) | 2 pts |
-| **P1** | Avaliação individual teórica e prática sobre modelagem e SQL fundamental | 3 pts |
-| **T2** | Desenvolvimento de relatórios complexos e *views* para tomada de decisão | 2 pts |
-| **P2** | Avaliação individual sobre consultas avançadas e programação em banco de dados | 3 pts |
-| **R** | Avaliação Substitutiva — substitui a menor nota entre P1 e P2 | 3 pts** |
-
-> 💡 **Dica:** o Trabalho 2 (T2 — Aula 17) é interdisciplinar e integrado com as disciplinas de **Desenvolvimento Web II** e **Engenharia de Software II**. Planeje-se com antecedência!
+| **P1** | Avaliação em dupla teórica e prática sobre modelagem e SQL fundamental | 4 pts |
+| **P2** | Avaliação individual sobre consultas avançadas e programação em banco de dados | 4 pts |
+| **R** | Avaliação Substitutiva — substitui a menor nota entre P1 e P2 | 4 pts** |
 
 ---
 
