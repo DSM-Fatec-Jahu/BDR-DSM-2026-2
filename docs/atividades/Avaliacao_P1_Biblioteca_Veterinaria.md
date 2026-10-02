@@ -122,9 +122,7 @@ e na memória da bibliotecária — e já aconteceu de dois leitores saírem com
 livro e de ninguém lembrar quem está com o quê.
 
 A partir da especificação abaixo, faça a modelagem e escreva o SQL que cria o banco de
-dados **`leiabairro`**, com uma configuração adequada a um sistema em português. O banco
-deve ter **exatamente 4 tabelas**: as 3 do cenário e a tabela intermediária que resolve o
-relacionamento N:M.
+dados **`leiabairro`**, com uma configuração adequada a um sistema em português.
 
 **Requisitos Funcionais**
 
@@ -170,8 +168,6 @@ no banho do mês passado, a recepcionista precisa revirar o fichário.
 
 A partir da especificação abaixo, faça a modelagem e escreva o SQL que cria o banco de
 dados **`clinica_amigo_fiel`**, com uma configuração adequada a um sistema em português.
-O banco deve ter **exatamente 4 tabelas**: as 3 do cenário e a tabela intermediária que
-resolve o relacionamento N:M.
 
 **Requisitos Funcionais**
 
