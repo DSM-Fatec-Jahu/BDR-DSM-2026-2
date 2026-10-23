@@ -1,17 +1,17 @@
 <!--
-GABARITO — não faz parte do fluxo principal da aula e fica fora do `nav` do
+GABARITO — não faz parte do fluxo principal do tópico e fica fora do `nav` do
 mkdocs.yml de propósito. É acessível só pelo link no final de
-Aula_06_SQL_Consultas_Basicas.md.
+Topico_05_SQL_Consultas_Basicas.md.
 -->
 
-# Gabarito — Aula 06 — SQL: Consultas Básicas
+# Gabarito — Tópico 05 — SQL: Consultas Básicas
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
 > ⚠️ Este gabarito é para conferência **depois** de você tentar resolver os checkpoints
-> e os Exercícios de Fixação por conta própria na [Aula 06](Aula_06_SQL_Consultas_Basicas.md).
+> e os Exercícios de Fixação por conta própria no [Tópico 05](Topico_05_SQL_Consultas_Basicas.md).
 > Resolver antes de tentar reduz o benefício de treinar a recuperação ativa do
 > conteúdo.
 
@@ -155,7 +155,7 @@ WHERE  descricao IS NULL;
 
 ---
 
-⬅️ [Voltar à Aula 06 — SQL: Consultas Básicas](./Aula_06_SQL_Consultas_Basicas.md)
+⬅️ [Voltar ao Tópico 05 — SQL: Consultas Básicas](./Topico_05_SQL_Consultas_Basicas.md)
 
 ---
 

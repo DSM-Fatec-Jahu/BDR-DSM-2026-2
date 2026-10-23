@@ -485,7 +485,7 @@ CREATE TABLE IF NOT EXISTS audiolivros (
     PRIMARY KEY (id_audiolivro)
 );
 
--- Superclasse (Estratégia 2 — Aula 01, 8.7)
+-- Superclasse (Estratégia 2 — Tópico 01, 8.7)
 CREATE TABLE IF NOT EXISTS conteudos (
     id_conteudo       BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
     titulo            VARCHAR(255)     NOT NULL,
@@ -586,7 +586,7 @@ CREATE TABLE IF NOT EXISTS itens_playlist (
 - 💭 Resposta à pergunta-guia: `ON DELETE CASCADE` — uma linha em `EPISODIOS_PODCAST`
   (ou `CAPITULOS_AUDIOLIVRO`) não tem sentido sem a linha correspondente em
   `CONTEUDOS`; é exatamente essa dependência de existência que caracteriza a
-  Estratégia 2 de generalização/especialização (Aula 01, 8.7) — se a superclasse
+  Estratégia 2 de generalização/especialização (Tópico 01, 8.7) — se a superclasse
   some, a subclasse tem que sumir junto.
 - Já `fk_episodio_podcast`/`fk_capitulo_audiolivro` (para `PODCASTS`/`AUDIOLIVROS`)
   são `RESTRICT`: um podcast com episódios cadastrados não pode ser removido do
@@ -1263,7 +1263,7 @@ CREATE TABLE IF NOT EXISTS contratos (
         data_conclusao_real IS NULL OR data_conclusao_real >= data_inicio
     ),
     -- RNF02: UNIQUE na própria coluna de FK transforma o 1:N natural em 1:1 de fato
-    -- (Aula 02, 8.1, Critério 1) — impede duas linhas de CONTRATOS para a mesma proposta
+    -- (Tópico 02, 8.1, Critério 1) — impede duas linhas de CONTRATOS para a mesma proposta
     CONSTRAINT uq_contrato_proposta UNIQUE (proposta_id),
     CONSTRAINT fk_contrato_proposta FOREIGN KEY (proposta_id)
                                      REFERENCES propostas (id_proposta)

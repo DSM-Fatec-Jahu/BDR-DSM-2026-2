@@ -9,7 +9,7 @@
 </div>
 
 !!! info "Conteúdo em construção progressiva"
-    As aulas deste semestre são publicadas semanalmente. A tabela abaixo mostra o planejamento completo — os itens marcados com 🔒 ainda não foram liberados.
+    Os tópicos deste semestre são publicados progressivamente, conforme a turma avança. A tabela abaixo mostra o planejamento completo — os itens marcados com 🔒 ainda não foram liberados.
 
 <div align="center" markdown>
 [:material-clipboard-text-clock: Ver Atividades e Avaliações](atividades/index.md){ .md-button .md-button--primary }
@@ -52,7 +52,7 @@ Ao final da disciplina, o aluno será capaz de:
 
 ## 📐 Metodologia
 
-As aulas são conduzidas no formato **expositivo e prático**, combinando explicações conceituais com exercícios aplicados diretamente no SGBD. A ênfase é sempre na resolução de problemas reais, preparando o aluno para o mercado de trabalho.
+Os tópicos são conduzidos no formato **expositivo e prático**, combinando explicações conceituais com exercícios aplicados diretamente no SGBD. A ênfase é sempre na resolução de problemas reais, preparando o aluno para o mercado de trabalho.
 
 ---
 
@@ -60,58 +60,37 @@ As aulas são conduzidas no formato **expositivo e prático**, combinando explic
 
 A nota final é calculada pela seguinte fórmula:
 
-> **Nota Final = (T1 + P1 + P2) × 1**
+> **Nota Final = (T1 + P1 + P2) × 1 + E** (limitada a 10,0)
 
 | Componente | Descrição | Peso |
 |---|---|---|
-| **T1** | Modelagem de um sistema de Streaming (Conceitual, Lógico e DDL) | 2 pts |
+| **T1** | Entrega da modelagem (conceitual e lógica) e do script de criação (DDL) do Projeto Integrador (PI) | 2 pts |
 | **P1** | Avaliação em dupla teórica e prática sobre modelagem e SQL fundamental | 4 pts |
 | **P2** | Avaliação individual sobre consultas avançadas e programação em banco de dados | 4 pts |
 | **R** | Avaliação Substitutiva — substitui a menor nota entre P1 e P2 | 4 pts** |
+| **E** | Ponto extra — para quem realizou a Maratona de CiberEducação da Cisco | +1,0 pt |
 
 ---
 
-## 📑 Sumário de Aulas
+## 📑 Sumário de Tópicos
 
-### 🔵 Bloco 1 — Fundamentos e Modelagem
-
-| # | Aula | Conteúdo Principal | Status |
+| # | Tópico | Conteúdo Principal | Status |
 |---|---|---|---|
-| 01 | [Revisão de Modelagem de Dados (Conceitual)](aulas/Aula_01_Revisao_Modelagem_Conceitual.md) | Abordagem Entidade-Relacionamento (MER); Entidades, Atributos e Relacionamentos | ✅ Disponível |
-| 02 | [Normalização](aulas/Aula_02_Normalizacao.md) | Dependências funcionais; 1ª, 2ª e 3ª Formas Normais; modelo conceitual ao lógico relacional | ✅ Disponível |
-| 03 | [SQL — DDL: Definição de Estruturas](aulas/Aula_03_SQL_DDL.md) | Comandos DDL (CREATE, ALTER, DROP); Tipos de dados; Restrições básicas (PK) | ✅ Disponível |
-| 04 | [SQL DML: Manipulação de Dados](aulas/Aula_04_SQL_DML.md) | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | ✅ Disponível |
-| 05 | Atividade Prática — Modelagem Streaming | Modelagem completa de um sistema de Streaming (Conceitual, Lógico e DDL) | 🔒 Em breve |
-
-### 🟢 Bloco 2 — Consultas e Visões
-
-| # | Aula | Conteúdo Principal | Status |
-|---|---|---|---|
-| 06 | [SQL: Consultas Básicas](aulas/Aula_06_SQL_Consultas_Basicas.md) | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | ✅ Disponível |
-| 07 | SQL — DQL: Consultas e Agregação | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | 🔒 Em breve |
-| 08 | Junções (JOINs), Subconsultas e Visões | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | 🔒 Em breve |
-| 09 | ✏️ Avaliação P1 | Avaliação individual — Modelagem e SQL fundamental | 🔒 Em breve |
-
-### 🟠 Bloco 3 — Programação e Administração de BD
-
-| # | Aula | Conteúdo Principal | Status |
-|---|---|---|---|
-| 10 | Integridade Referencial e Restrições | FOREIGN KEY com ON DELETE/UPDATE CASCADE e RESTRICT; CHECK; Índices básicos | 🔒 Em breve |
-| 11 | Stored Procedures | Lógica procedural; PROCEDURE com parâmetros IN/OUT; Tratamento de erros | 🔒 Em breve |
-| 12 | Triggers (Gatilhos) | Gatilhos BEFORE/AFTER (ROW e STATEMENT); Auditoria de dados; Boas práticas | 🔒 Em breve |
-| 13 | Functions (UDF) e Transações | UDFs escalares e de tabela; diferença entre FUNCTION e PROCEDURE; ACID; BEGIN, COMMIT, ROLLBACK; Controle de concorrência | 🔒 Em breve |
-| 14 | Backup, Restauração e Segurança | Backup completo, incremental e diferencial; DUMP e restauração; CREATE USER, GRANT, REVOKE | 🔒 Em breve |
-| 15 | Otimização de Consultas e Índices | Estruturas B-Tree e Hash; EXPLAIN / EXPLAIN ANALYZE; Otimização de JOINs e subconsultas | 🔒 Em breve |
-
-### 🔴 Bloco 4 — Encerramento e Avaliações Finais
-
-| # | Aula | Conteúdo Principal | Status |
-|---|---|---|---|
-| 16 | Revisão Geral | Consolidação de todos os tópicos; Exercícios integradores | 🔒 Em breve |
-| 17 | 📦 T2 — Trabalho Interdisciplinar | Entrega do Projeto Integrado com Desenvolvimento Web II e Engenharia de Software II | 🔒 Em breve |
-| 18 | ✏️ Avaliação P2 | Avaliação individual — Consultas avançadas, Procedures, Triggers, Transações, Backup e Otimização | 🔒 Em breve |
-| 19 | ✏️ Avaliação Substitutiva | Substitui a menor nota entre P1 e P2 | 🔒 Em breve |
-| 20 | Novas Tecnologias em BD e Encerramento | NewSQL, DBaaS, Big Data, introdução a BD Não Relacional; Fechamento e portfólio | 🔒 Em breve |
+| 01 | [Revisão de Modelagem de Dados (Conceitual)](topicos/Topico_01_Revisao_Modelagem_Conceitual.md) | Abordagem Entidade-Relacionamento (MER); Entidades, Atributos e Relacionamentos | ✅ Disponível |
+| 02 | [Normalização](topicos/Topico_02_Normalizacao.md) | Dependências funcionais; 1ª, 2ª e 3ª Formas Normais; modelo conceitual ao lógico relacional | ✅ Disponível |
+| 03 | [SQL — DDL: Definição de Estruturas](topicos/Topico_03_SQL_DDL.md) | Comandos DDL (CREATE, ALTER, DROP); Tipos de dados; Restrições básicas (PK) | ✅ Disponível |
+| 04 | [SQL DML: Manipulação de Dados](topicos/Topico_04_SQL_DML.md) | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | ✅ Disponível |
+| 05 | [SQL: Consultas Básicas](topicos/Topico_05_SQL_Consultas_Basicas.md) | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | ✅ Disponível |
+| 06 | SQL — DQL: Consultas e Agregação | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | 🔒 Em breve |
+| 07 | Junções (JOINs), Subconsultas e Visões | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | 🔒 Em breve |
+| 08 | Integridade Referencial e Restrições | FOREIGN KEY com ON DELETE/UPDATE CASCADE e RESTRICT; CHECK; Índices básicos | 🔒 Em breve |
+| 09 | Stored Procedures | Lógica procedural; PROCEDURE com parâmetros IN/OUT; Tratamento de erros | 🔒 Em breve |
+| 10 | Triggers (Gatilhos) | Gatilhos BEFORE/AFTER (ROW e STATEMENT); Auditoria de dados; Boas práticas | 🔒 Em breve |
+| 11 | Functions (UDF) e Transações | UDFs escalares e de tabela; diferença entre FUNCTION e PROCEDURE; ACID; BEGIN, COMMIT, ROLLBACK; Controle de concorrência | 🔒 Em breve |
+| 12 | Backup, Restauração e Segurança | Backup completo, incremental e diferencial; DUMP e restauração; CREATE USER, GRANT, REVOKE | 🔒 Em breve |
+| 13 | Otimização de Consultas e Índices | Estruturas B-Tree e Hash; EXPLAIN / EXPLAIN ANALYZE; Otimização de JOINs e subconsultas | 🔒 Em breve |
+| 14 | Revisão Geral | Consolidação de todos os tópicos; Exercícios integradores | 🔒 Em breve |
+| 15 | Novas Tecnologias em BD e Encerramento | NewSQL, DBaaS, Big Data, introdução a BD Não Relacional; Fechamento e portfólio | 🔒 Em breve |
 
 ---
 

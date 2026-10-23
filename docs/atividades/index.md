@@ -4,23 +4,24 @@ Todas as atividades avaliativas do semestre. Clique no nome para abrir a página
 
 | # | Atividade | Descrição | Peso | Status |
 |---|---|---|---|---|
-| T1 | Modelagem Streaming | Modelagem Conceitual, Lógica e DDL de um sistema de Streaming | 2 pts | 🔒 Em breve |
-| P1 | [Avaliação P1 — Biblioteca ou Clínica Veterinária](Avaliacao_P1_Biblioteca_Veterinaria.md) | Prova em dupla (Aulas 01 a 03): criação de banco em SQL (4 tabelas, 1:N e N:M) e 4 perguntas teóricas (cardinalidade, tipos, especialização e normalização); cenário definido pelo número do computador (ímpar = Biblioteca, par = Veterinária) | 4 pts | ✅ Disponível |
+| T1 | Projeto Integrador (PI) — Modelagem e Script de Criação | Entrega da modelagem (conceitual e lógica) e do script de criação (DDL) do banco de dados do Projeto Integrador (PI) | 2 pts | 🔒 Em breve |
+| P1 | [Avaliação P1 — Biblioteca ou Clínica Veterinária](Avaliacao_P1_Biblioteca_Veterinaria.md) | Prova em dupla (Tópicos 01 a 03): criação de banco em SQL (4 tabelas, 1:N e N:M) e 4 perguntas teóricas (cardinalidade, tipos, especialização e normalização); cenário definido pelo número do computador (ímpar = Biblioteca, par = Veterinária) | 4 pts | ✅ Disponível |
 | P2 | Avaliação P2 | Prova individual sobre consultas avançadas e programação em BD | 4 pts | 🔒 Em breve |
 | R | Avaliação Substitutiva | Substitui a menor nota entre P1 e P2 | 4 pts** | 🔒 Em breve |
+| E | Ponto Extra — Maratona de CiberEducação da Cisco | Ponto extra de +1,0 na Nota Final para quem realizou a Maratona de CiberEducação da Cisco | +1,0 pt | — |
 
 ---
 
 ## 🧪 Atividades de Treino (sem nota)
 
-Práticas extras para treinar e tirar dúvidas em aula. Não entram na média — são
+Práticas extras para treinar e tirar dúvidas em sala. Não entram na média — são
 material de apoio, não avaliação.
 
 | Atividade | Descrição | Status |
 |---|---|---|
-| [Prática — Modelagem com dbdiagram.io](Pratica_Modelagem_dbdiagram.md) | Modelagem conceitual, lógica, normalização e gestão de usuários/acessos em 7 exercícios progressivos (Aulas 01 e 02) | ✅ Disponível |
-| [Prática — SQL DDL: Criando as Estruturas](Pratica_DDL_Estruturas.md) | Escrita de `CREATE TABLE` (tipos, PK, FK com ON DELETE/UPDATE, UNIQUE, CHECK) a partir do modelo lógico já produzido na prática de modelagem, nos mesmos 7 cenários (Aula 03) | ✅ Disponível |
-| [Simulado — Aulas 01 a 03](Simulado_Aulas_01_03.md) | Réplica do que pode ser solicitado em avaliação: cardinalidade, modelagem de um sistema de partidas esportivas em SQL, normalização e `ALTER TABLE`, entregues em um único arquivo `.sql` (Aulas 01 a 03) | ✅ Disponível |
+| [Prática — Modelagem com dbdiagram.io](Pratica_Modelagem_dbdiagram.md) | Modelagem conceitual, lógica, normalização e gestão de usuários/acessos em 7 exercícios progressivos (Tópicos 01 e 02) | ✅ Disponível |
+| [Prática — SQL DDL: Criando as Estruturas](Pratica_DDL_Estruturas.md) | Escrita de `CREATE TABLE` (tipos, PK, FK com ON DELETE/UPDATE, UNIQUE, CHECK) a partir do modelo lógico já produzido na prática de modelagem, nos mesmos 7 cenários (Tópico 03) | ✅ Disponível |
+| [Simulado — Tópicos 01 a 03](Simulado_Topicos_01_03.md) | Réplica do que pode ser solicitado em avaliação: cardinalidade, modelagem de um sistema de partidas esportivas em SQL, normalização e `ALTER TABLE`, entregues em um único arquivo `.sql` (Tópicos 01 a 03) | ✅ Disponível |
 
 ---
 

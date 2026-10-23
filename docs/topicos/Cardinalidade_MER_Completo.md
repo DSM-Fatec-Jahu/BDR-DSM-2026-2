@@ -4,7 +4,7 @@
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
-> 📎 Material de apoio complementar à [Aula 01](./Aula_01_Revisao_Modelagem_Conceitual.md), com foco total no conceito que mais confunde os alunos da disciplina.
+> 📎 Material de apoio complementar ao [Tópico 01](./Topico_01_Revisao_Modelagem_Conceitual.md), com foco total no conceito que mais confunde os alunos da disciplina.
 
 ---
 
@@ -127,7 +127,7 @@ Leitura: do lado do PEDIDOS está anotado **(1,1)** — isso descreve o PEDIDOS 
 
 Esta é a notação padrão de mercado, usada em MySQL Workbench, dbdiagram.io, Lucidchart, entre outras ferramentas. Os símbolos ficam nas **extremidades das linhas**, próximos à entidade oposta — e é aqui que mora a confusão clássica.
 
-![Notações](../imgs/Aula_01_IMG_03.png)
+![Notações](../imgs/Topico_01_IMG_03.png)
 
 A tabela a seguir resume cada símbolo e seu significado:
 
@@ -160,7 +160,7 @@ CLIENTES  ───────────────────────�
          (a entidade do outro lado)           (a entidade do outro lado)
 ```
 
-![Notações erradas](../imgs/Aula_01_IMG_04.png)
+![Notações erradas](../imgs/Topico_01_IMG_04.png)
 
 **Como ler corretamente, passo a passo:**
 
@@ -494,7 +494,7 @@ A participação — também chamada de modalidade — é determinada exclusivam
 
 **Participação Parcial (mínimo = 0):** a entidade *pode* existir sem participar do relacionamento. Na notação Crow's Foot, representa-se com um **círculo** (O). Na notação Min-Max, o mínimo é 0.
 
-![Notações erradas](../imgs/Aula_01_IMG_05.png)
+![Notações erradas](../imgs/Topico_01_IMG_05.png)
 
 Para fixar: volte ao exemplo Cliente-Pedido e pense nas consequências práticas. Se tentarmos inserir um pedido sem informar o cliente, o banco de dados deve rejeitar essa operação — isso é o que a participação total de PEDIDOS (mínimo 1) representa em termos de restrições de integridade referencial.
 
@@ -783,7 +783,7 @@ sempre que tiver dúvida ao ler ou construir um diagrama MER.
 
 ## 🔗 Navegação
 
-⬅️ [Voltar à Aula 01 — Revisão de Modelagem Conceitual](./Aula_01_Revisao_Modelagem_Conceitual.md)
+⬅️ [Voltar ao Tópico 01 — Revisão de Modelagem Conceitual](./Topico_01_Revisao_Modelagem_Conceitual.md)
 
 ---
 

@@ -1,4 +1,4 @@
-# Aula 04 — SQL DML: Manipulação de Dados
+# Tópico 04 — SQL DML: Manipulação de Dados
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,9 +6,9 @@
 
 ---
 
-## 🎯 Objetivos da Aula
+## 🎯 Objetivos do Tópico
 
-Ao final desta aula você deverá ser capaz de:
+Ao final deste tópico você deverá ser capaz de:
 
 - Inserir novos registros em tabelas relacionais com `INSERT`, incluindo inserção múltipla e inserção a partir de uma consulta (`INSERT ... SELECT`);
 - Atualizar registros existentes com `UPDATE`, entendendo por que um `UPDATE` sem `WHERE` é uma das operações mais perigosas do SQL;
@@ -17,7 +17,7 @@ Ao final desta aula você deverá ser capaz de:
 
 ---
 
-## 🗺️ Mapa Mental da Aula
+## 🗺️ Mapa Mental do Tópico
 
 ```mermaid
 flowchart LR
@@ -60,9 +60,9 @@ flowchart LR
 
 ## 🧭 Contexto
 
-Na Aula 03 você criou as estruturas do schema `loja_virtual` — tabelas, colunas, constraints — mas elas estão vazias. Agora vamos **popular** essas estruturas com dados reais, e depois modificá-las com segurança. A DML — **Data Manipulation Language** — é o subconjunto do SQL responsável por inserir, modificar e remover registros. Os três comandos centrais são `INSERT`, `UPDATE` e `DELETE`. Todos os exemplos desta aula continuam operando sobre o schema `loja_virtual` criado na Aula 03 (tabelas `pessoas`, `enderecos`, `categorias`, `produtos`, `pedidos` e `itens_pedidos`) — nada de tabela nova aparece do nada.
+No Tópico 03 você criou as estruturas do schema `loja_virtual` — tabelas, colunas, constraints — mas elas estão vazias. Agora vamos **popular** essas estruturas com dados reais, e depois modificá-las com segurança. A DML — **Data Manipulation Language** — é o subconjunto do SQL responsável por inserir, modificar e remover registros. Os três comandos centrais são `INSERT`, `UPDATE` e `DELETE`. Todos os exemplos deste tópico continuam operando sobre o schema `loja_virtual` criado no Tópico 03 (tabelas `pessoas`, `enderecos`, `categorias`, `produtos`, `pedidos` e `itens_pedidos`) — nada de tabela nova aparece do nada.
 
-![Operações DML](../imgs/Aula_04_img_01.png)
+![Operações DML](../imgs/Topico_04_img_01.png)
 
 ---
 
@@ -108,7 +108,7 @@ FROM   itens_pedidos
 WHERE  pedido_id = 12;
 ```
 
-> 💡 Repare que o novo pedido nasce com `status = 'pendente'` (precisa ser confirmado de novo) e reaproveita o `preco_unitario` salvo no pedido original — não o preço atual em `produtos`, que pode ter mudado (o mesmo raciocínio de snapshot histórico visto na Aula 03).
+> 💡 Repare que o novo pedido nasce com `status = 'pendente'` (precisa ser confirmado de novo) e reaproveita o `preco_unitario` salvo no pedido original — não o preço atual em `produtos`, que pode ter mudado (o mesmo raciocínio de snapshot histórico visto no Tópico 03).
 
 ### 1.4 INSERT IGNORE / ON DUPLICATE KEY UPDATE
 
@@ -129,7 +129,7 @@ ON DUPLICATE KEY UPDATE
 !!! example "🔍 Checkpoint 1 — INSERT: bike-sharing elétrico"
     Uma startup de bike-sharing elétrico está cadastrando sua primeira leva de bicicletas na tabela `bicicletas (id_bicicleta PK, modelo, nivel_bateria, estacao_id FK, disponivel)`. Escreva um único comando `INSERT` que cadastre 3 bicicletas de uma vez: uma "Aro 29 E-bike" com 100% de bateria na estação 1, uma "Urbana Compacta" com 87% na estação 1, e uma "Urbana Compacta" com 45% na estação 2 — todas disponíveis (`disponivel = 1`).
 
-    🔑 Resolução no [Gabarito da Aula 04](Aula_04_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 04](Topico_04_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -182,7 +182,7 @@ UPDATE produtos SET estoque = 0 WHERE ativo = 0;
 !!! example "🔍 Checkpoint 2 — UPDATE: app de doação de sangue"
     Um app de doação de sangue tem a tabela `agendamentos (id_agendamento PK, doador_id FK, hemocentro_id FK, data_agendada, status)`, com `status` podendo ser `'agendado'`, `'compareceu'` ou `'faltou'`. Escreva o `UPDATE` que marca como `'compareceu'` todos os agendamentos do hemocentro de id 3 cuja `data_agendada` foi hoje (`CURDATE()`). Depois, explique em uma frase por que esquecer o `WHERE` nesse comando seria particularmente grave neste domínio.
 
-    🔑 Resolução no [Gabarito da Aula 04](Aula_04_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 04](Topico_04_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -247,7 +247,7 @@ Diferente de um DELETE FROM tabela; (que remove todas as linhas mas mantém o co
 !!! example "🔍 Checkpoint 3 — DELETE: app de reciclagem com recompensas"
     Um app de reciclagem dá pontos por descarte correto e tem a tabela `resgates (id_resgate PK, usuario_id FK, recompensa, pontos_utilizados, validade, status)`. Escreva o `DELETE` que remove todos os resgates cuja `validade` já passou (compare com `CURDATE()`) e cujo `status` ainda seja `'pendente'`. Em seguida, explique por que `TRUNCATE TABLE resgates` seria uma péssima escolha para essa limpeza, mesmo sendo mais rápido que `DELETE`.
 
-    🔑 Resolução no [Gabarito da Aula 04](Aula_04_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 04](Topico_04_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -256,7 +256,7 @@ Diferente de um DELETE FROM tabela; (que remove todas as linhas mas mantém o co
 Uma **transação** é uma unidade de trabalho que deve ser executada por completo ou não executada de forma alguma. Isso é o princípio **A** do ACID (Atomicidade).
 
 [prompt para nanobanana: "Educational diagram of a database transaction showing two scenarios side by side. Left side labeled 'COMMIT - Sucesso': shows steps INSERT, UPDATE, DELETE all with green checkmarks, then a COMMIT arrow saving to database cylinder. Right side labeled 'ROLLBACK - Falha': shows INSERT with green check, UPDATE with red X (error), then ROLLBACK arrow returning database to original state. Clean flat design, blue and green for success, red for failure, white background, labels in Portuguese."]
-![Transações: COMMIT e ROLLBACK](../imgs/Aula_04_img_02.png)
+![Transações: COMMIT e ROLLBACK](../imgs/Topico_04_img_02.png)
 
 ### 4.1 Modo AUTOCOMMIT
 
@@ -340,7 +340,7 @@ COMMIT;
 !!! example "🔍 Checkpoint 4 — Transações: marketplace de ingressos para shows"
     Um marketplace de ingressos tem `eventos (id_evento PK, nome, ingressos_disponiveis)` e `vendas (id_venda PK, evento_id FK, comprador_id FK, quantidade, data_venda)`. Toda venda precisa, atomicamente, inserir o registro em `vendas` **e** decrementar `ingressos_disponiveis` em `eventos` — nunca uma operação sem a outra. Escreva a transação completa (`BEGIN` ... `COMMIT`) que vende 2 ingressos do evento de id 7 para o comprador de id 15, e explique em que situação você usaria `ROLLBACK` em vez de `COMMIT` nesse fluxo.
 
-    🔑 Resolução no [Gabarito da Aula 04](Aula_04_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 04](Topico_04_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
@@ -390,7 +390,7 @@ COMMIT;
 
 ## 6. Exercícios de Fixação
 
-> 🔑 As resoluções destes quatro exercícios estão no [Gabarito da Aula 04](Aula_04_Gabarito.md) — tente resolver antes de conferir.
+> 🔑 As resoluções destes quatro exercícios estão no [Gabarito do Tópico 04](Topico_04_Gabarito.md) — tente resolver antes de conferir.
 
 **Exercício 1:** insira 3 novos produtos na tabela `produtos`, sendo um deles com `estoque = 0`.
 
@@ -402,7 +402,7 @@ COMMIT;
 
 ---
 
-## 📚 Referências desta Aula
+## 📚 Referências deste Tópico
 
 - ELMASRI, R.; NAVATHE, S. B. *Sistemas de Banco de Dados*. 7 ed. Cap. 6.3 — Comandos SQL de Atualização. São Paulo: Pearson, 2018.
 - Documentação oficial do MariaDB — [INSERT](https://mariadb.com/kb/en/insert/), [UPDATE](https://mariadb.com/kb/en/update/), [DELETE](https://mariadb.com/kb/en/delete/), [TRANSACTION](https://mariadb.com/kb/en/transactions/)
@@ -502,38 +502,38 @@ LAST_INSERT_ID() devolve o id gerado automaticamente pela última inserção da 
 
 ## 📝 Resumo
 
-Nesta aula demos vida ao schema `loja_virtual` construído na Aula 03: inserimos dados
+Neste tópico demos vida ao schema `loja_virtual` construído no Tópico 03: inserimos dados
 com `INSERT` (em suas várias formas — lista de colunas, múltiplas linhas, a partir de
 `SELECT`, e com `ON DUPLICATE KEY UPDATE`), modificamos registros com `UPDATE`
 entendendo o risco de esquecer o `WHERE`, e removemos dados com `DELETE`, comparando-o
 com o `TRUNCATE`. Vimos também o princípio de Atomicidade do ACID e como `BEGIN`,
 `COMMIT`, `ROLLBACK` e `SAVEPOINT` garantem que operações relacionadas aconteçam por
-completo ou não aconteçam de forma alguma. Isso encerra o Bloco 1 de Fundamentos e
-Modelagem — a próxima etapa é a Atividade T1, onde você aplica tudo isso modelando e
-populando um sistema do zero.
+completo ou não aconteçam de forma alguma. Isso encerra a parte de fundamentos e
+modelagem — a próxima etapa é a Atividade T1, onde você aplica tudo isso modelando e
+criando o banco do seu Projeto Integrador do zero.
 
 ---
 
-## 🏆 Conquista da Aula
+## 🏆 Conquista do Tópico
 
 !!! success "Selo desbloqueado: ✍️ Manipulador(a) de Dados"
     Você já sabe popular, atualizar e limpar um banco de dados com segurança, e sabe
     proteger operações relacionadas dentro de transações atômicas. A próxima parada da
-    Trilha do(a) Modelador(a) de Dados é aplicar tudo isso, do zero, na Atividade T1.
+    Trilha do(a) Arquiteto(a) de Dados é aplicar tudo isso, do zero, na Atividade T1.
 
 ---
 
-## 🔑 Gabarito desta Aula
+## 🔑 Gabarito deste Tópico
 
-As respostas dos 4 checkpoints espalhados pela aula, e dos 4 Exercícios de Fixação da
+As respostas dos 4 checkpoints espalhados pelo tópico, e dos 4 Exercícios de Fixação da
 Seção 6, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
-chegou até aqui: [Gabarito — Aula 04](Aula_04_Gabarito.md).
+chegou até aqui: [Gabarito — Tópico 04](Topico_04_Gabarito.md).
 
 ---
 
 ## 🔗 Navegação
 
-⬅️ [Aula 03 — SQL e DDL](./Aula_03_SQL_DDL.md) · ➡️ 🔒 Aula 05 — em breve.
+⬅️ [Tópico 03 — SQL e DDL](./Topico_03_SQL_DDL.md) · ➡️ [Tópico 05 — SQL: Consultas Básicas](./Topico_05_SQL_Consultas_Basicas.md)
 
 ---
 

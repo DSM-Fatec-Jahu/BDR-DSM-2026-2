@@ -1,4 +1,4 @@
-# Prática — SQL DDL: Criando as Estruturas (Aula 03)
+# Prática — SQL DDL: Criando as Estruturas (Tópico 03)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,8 +6,8 @@
 
 !!! info "🧪 Atividade de treino — não vale nota"
     Esta atividade **não tem peso na média**. Ela existe para você praticar, errar à
-    vontade e tirar dúvidas em aula antes das avaliações que valem nota (T1, P1...).
-    Traga sua tentativa — mesmo incompleta — para a aula: é matéria-prima para
+    vontade e tirar dúvidas em sala antes das avaliações que valem nota (T1, P1...).
+    Traga sua tentativa — mesmo incompleta — para o encontro presencial: é matéria-prima para
     discussão, não algo para entregar "pronto".
 
 ---
@@ -18,8 +18,8 @@ Na [Prática — Modelagem com dbdiagram.io](Pratica_Modelagem_dbdiagram.md) voc
 transformou cenários de negócio em modelos lógicos e diagramas DBML. Um diagrama,
 porém, não roda em lugar nenhum — é só uma representação visual. Esta atividade fecha o
 ciclo: parte dos **mesmos 7 cenários de negócio**, mas agora o alvo final é o
-`CREATE TABLE` de verdade, em SQL, seguindo exatamente as convenções ensinadas na
-[Aula 03 — SQL DDL](../aulas/Aula_03_SQL_DDL.md).
+`CREATE TABLE` de verdade, em SQL, seguindo exatamente as convenções ensinadas no
+[Tópico 03 — SQL DDL](../topicos/Topico_03_SQL_DDL.md).
 
 !!! tip "Boa prática: produza o modelo lógico antes de escrever o SQL"
     O caminho recomendado — e o que se espera que você já tenha feito na prática de
@@ -39,11 +39,11 @@ ciclo: parte dos **mesmos 7 cenários de negócio**, mas agora o alvo final é o
 | No DBML (atividade anterior) | Em SQL real (esta atividade) |
 |---|---|
 | `id_x "BIGINT UNSIGNED" [PK, INCREMENT]` — tipo composto **entre aspas duplas**, é uma particularidade só do parser do dbdiagram.io | `id_x BIGINT UNSIGNED NOT NULL AUTO_INCREMENT` — sem aspas, `INCREMENT` vira `AUTO_INCREMENT` |
-| `[PK]` dentro dos colchetes da coluna | `PRIMARY KEY (id_x)` como cláusula própria, no fim do `CREATE TABLE` (Aula 03, Seção 6.2) |
-| Sem sintaxe para `ON DELETE`/`ON UPDATE` | `CONSTRAINT fk_... FOREIGN KEY (...) REFERENCES ... ON DELETE ... ON UPDATE ...` — **obrigatório decidir e justificar** em cada FK (Aula 03, Seção 7.2) |
-| `[UNIQUE]` dentro dos colchetes | `CONSTRAINT uq_... UNIQUE (coluna)` como cláusula própria (Aula 03, Seção 7.4) |
+| `[PK]` dentro dos colchetes da coluna | `PRIMARY KEY (id_x)` como cláusula própria, no fim do `CREATE TABLE` (Tópico 03, Seção 6.2) |
+| Sem sintaxe para `ON DELETE`/`ON UPDATE` | `CONSTRAINT fk_... FOREIGN KEY (...) REFERENCES ... ON DELETE ... ON UPDATE ...` — **obrigatório decidir e justificar** em cada FK (Tópico 03, Seção 7.2) |
+| `[UNIQUE]` dentro dos colchetes | `CONSTRAINT uq_... UNIQUE (coluna)` como cláusula própria (Tópico 03, Seção 7.4) |
 | Nenhum plugin valida domínio de valor | `CONSTRAINT ck_... CHECK (expressão)` para validar domínio (preço ≥ 0, nota entre limites etc.) |
-| Nenhum comando cria o banco em si | `CREATE DATABASE` com charset e collation corretos vem **antes** de qualquer `CREATE TABLE` (Aula 03, Seção 4) |
+| Nenhum comando cria o banco em si | `CREATE DATABASE` com charset e collation corretos vem **antes** de qualquer `CREATE TABLE` (Tópico 03, Seção 4) |
 
 !!! note "E o `ENGINE=InnoDB`?"
     O MariaDB **já assume `InnoDB`** como engine padrão de qualquer tabela nova — você
@@ -57,7 +57,7 @@ ciclo: parte dos **mesmos 7 cenários de negócio**, mas agora o alvo final é o
     ```
 
     mas, no dia a dia das empresas, isso **raramente é escrito** — confiar no padrão do
-    SGBD é o normal (Aula 03, Seção 6.1). Não é necessário declarar `ENGINE=InnoDB` em
+    SGBD é o normal (Tópico 03, Seção 6.1). Não é necessário declarar `ENGINE=InnoDB` em
     nenhuma tabela desta atividade.
 
 ---
@@ -69,23 +69,22 @@ negócio apresentados — do seu próprio modelo lógico, e não de um já pront
 escrever o SQL completo que:
 
 1. **Crie o banco de dados** com `CREATE DATABASE`, aplicando o charset e a collation
-   corretos para um sistema em português — nunca os padrões do servidor. Consulte a
-   Aula 03, Seção 4, para o comando idiomático completo e os valores certos (o
-   Checkpoint 2 daquela aula resolve exatamente esse comando).
-2. **Declare todas as colunas com o tipo e o tamanho corretos** (Regra 8, Aula 03,
+   corretos para um sistema em português — nunca os padrões do servidor. Consulte o Tópico 03, Seção 4, para o comando idiomático completo e os valores certos (o
+   Checkpoint 2 daquele tópico resolve exatamente esse comando).
+2. **Declare todas as colunas com o tipo e o tamanho corretos** (Regra 8, Tópico 03,
    Seção 5) — use a Tabela de Tipos abaixo.
 3. **Declare a `PRIMARY KEY`** de cada tabela e, quando houver `FOREIGN KEY`, a
    cláusula `CONSTRAINT ... FOREIGN KEY (...) REFERENCES ...` apontando para a PK
-   referenciada (Aula 03, Seção 6.3/7.1).
+   referenciada (Tópico 03, Seção 6.3/7.1).
 4. **Decida e justifique, em comentário SQL, o `ON DELETE` e o `ON UPDATE` de cada
    FK** — `RESTRICT`, `CASCADE` ou `SET NULL` — a partir do que a regra de negócio diz
    sobre o que deveria acontecer quando o registro pai for removido ou tiver a PK
-   alterada (Aula 03, Seção 7.2). Cada exercício traz uma 💭 **Pergunta-guia** para
+   alterada (Tópico 03, Seção 7.2). Cada exercício traz uma 💭 **Pergunta-guia** para
    ajudar nessa decisão — não existe resposta genérica igual para todo FK.
 5. **Aplique `UNIQUE`** onde a regra de negócio exigir unicidade — inclusive `UNIQUE`
-   composto, quando necessário (Aula 03, Seção 7.4).
+   composto, quando necessário (Tópico 03, Seção 7.4).
 6. **Aplique `CHECK`** onde fizer sentido validar um domínio de valores — preço ≥ 0,
-   nota dentro de uma faixa, datas coerentes entre si etc. (Aula 03, Seção 7.4).
+   nota dentro de uma faixa, datas coerentes entre si etc. (Tópico 03, Seção 7.4).
 7. **Siga as 9 regras de nomenclatura** e inclua os **três campos de log obrigatórios**
    em toda tabela — `criado_em` (`DEFAULT CURRENT_TIMESTAMP`), `alterado_em`
    (`DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`) e `deletado_em`
@@ -140,11 +139,11 @@ ITENS_CUPOM (cupom_fiscal_id PK FK -> CUPONS_FISCAIS, produto_id PK FK -> PRODUT
              quantidade, valor_unitario)
 ```
 
-**Passo 2 — SQL real**, traduzindo o modelo lógico acima com as convenções da Aula 03:
+**Passo 2 — SQL real**, traduzindo o modelo lógico acima com as convenções do Tópico 03:
 
 ```sql
 -- Regra 4 (plural) + Regra 9 (campos de log em toda tabela)
--- Banco criado com charset/collation corretos ANTES de qualquer tabela (Aula 03, Seção 4)
+-- Banco criado com charset/collation corretos ANTES de qualquer tabela (Tópico 03, Seção 4)
 CREATE DATABASE IF NOT EXISTS cupom_fiscal
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
@@ -208,7 +207,7 @@ CREATE TABLE IF NOT EXISTS itens_cupom (
     cupom_fiscal_id  BIGINT UNSIGNED  NOT NULL,
     produto_id       BIGINT UNSIGNED  NOT NULL,
     quantidade       INT UNSIGNED     NOT NULL,
-    valor_unitario   DECIMAL(10,2)    NOT NULL,  -- snapshot do preço na venda (Aula 02, 4.2)
+    valor_unitario   DECIMAL(10,2)    NOT NULL,  -- snapshot do preço na venda (Tópico 02, 4.2)
     criado_em        DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     alterado_em      DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                                                  ON UPDATE CURRENT_TIMESTAMP,
@@ -333,7 +332,7 @@ repúblicas ou saídas, sem precisar de planilha. Requisitos de negócio:
   total) nunca é digitado por ninguém — ele é sempre **calculado**, somando o que a
   pessoa pagou e subtraindo o que ela deve nas divisões registradas. Pense bem em que
   tipo de atributo isso é, e se ele deveria ocupar uma coluna própria no seu modelo
-  (releia a Aula 01, Seção 3.1, sobre atributos derivados).
+  (releia o Tópico 01, Seção 3.1, sobre atributos derivados).
 - Gestão de acesso no nível básico: `administrador` (gerencia a plataforma, pode
   desativar contas) e `usuario` (uso normal do app).
 
@@ -366,7 +365,7 @@ podcasts e audiolivros. Requisitos de negócio:
 
 💭 **Pergunta-guia:** `EPISODIOS_PODCAST.id_conteudo` e `CAPITULOS_AUDIOLIVRO.id_conteudo`
 são, ao mesmo tempo, PK e FK para `CONTEUDOS` (padrão de generalização/especialização,
-Aula 01, 8.7) — qual `ON DELETE` faz sentido aqui, sabendo que uma linha em
+Tópico 01, 8.7) — qual `ON DELETE` faz sentido aqui, sabendo que uma linha em
 `EPISODIOS_PODCAST` **não existe sem** a linha correspondente em `CONTEUDOS`?
 
 ---

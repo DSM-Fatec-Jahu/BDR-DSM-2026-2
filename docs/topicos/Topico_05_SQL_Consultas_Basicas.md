@@ -1,4 +1,4 @@
-# Aula 06 — SQL: Consultas Básicas
+# Tópico 05 — SQL: Consultas Básicas
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,9 +6,9 @@
 
 ---
 
-## 🎯 Objetivos da Aula
+## 🎯 Objetivos do Tópico
 
-Ao final desta aula você deverá ser capaz de:
+Ao final deste tópico você deverá ser capaz de:
 
 - Escrever consultas SQL com `SELECT`, selecionando colunas específicas e eliminando duplicatas com `DISTINCT`;
 - Filtrar resultados com `WHERE`, usando operadores relacionais, `BETWEEN`, `IN`, `LIKE` e `IS NULL`;
@@ -17,7 +17,7 @@ Ao final desta aula você deverá ser capaz de:
 
 ---
 
-## 🗺️ Mapa Mental da Aula
+## 🗺️ Mapa Mental do Tópico
 
 ```mermaid
 flowchart LR
@@ -64,9 +64,9 @@ flowchart LR
 
 ## 🧭 Contexto
 
-Depois de modelar, criar e popular seu próprio banco na Atividade T1, chegou a hora de consultar dados de verdade. A **DQL** — *Data Query Language* — é o subconjunto do SQL responsável pela consulta de dados. O `SELECT` é o comando mais usado em qualquer banco de dados: enquanto um sistema típico executa muito mais leituras do que escritas, saber construir consultas eficientes é uma das habilidades mais valorizadas no mercado. Os exemplos desta aula continuam operando sobre o schema `loja_virtual` construído na Aula 03 e populado na Aula 04.
+Depois de aprender a modelar, criar e popular um banco de dados (e de aplicar isso ao seu Projeto Integrador na Atividade T1), chegou a hora de consultar dados de verdade. A **DQL** — *Data Query Language* — é o subconjunto do SQL responsável pela consulta de dados. O `SELECT` é o comando mais usado em qualquer banco de dados: enquanto um sistema típico executa muito mais leituras do que escritas, saber construir consultas eficientes é uma das habilidades mais valorizadas no mercado. Os exemplos deste tópico continuam operando sobre o schema `loja_virtual` construído no Tópico 03 e populado no Tópico 04.
 
-![Anatomia do SELECT](../imgs/Aula_06_IMG_01.png)
+![Anatomia do SELECT](../imgs/Topico_05_IMG_01.png)
 
 ---
 
@@ -110,7 +110,7 @@ SELECT DISTINCT estado, cidade FROM enderecos ORDER BY estado, cidade;
 !!! example "🔍 Checkpoint 1 — SELECT e DISTINCT: agricultura de precisão"
     Uma fazenda usa sensores IoT espalhados no campo, registrados na tabela `leituras_sensores (id_leitura PK, sensor_id FK, talhao, umidade_solo, temperatura, medido_em)`. Escreva uma consulta que retorne, sem repetição, todos os talhões que já tiveram alguma leitura registrada — ordenados alfabeticamente — usando um alias `talhao_monitorado` para a coluna no resultado.
 
-    🔑 Resolução no [Gabarito da Aula 06](Aula_06_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 05](Topico_05_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -136,7 +136,7 @@ JOIN   enderecos e ON e.pessoa_id = p.id_pessoa
 WHERE  e.cidade = 'São Paulo' OR e.cidade = 'Campinas';
 ```
 
-> 📌 O último exemplo já usa um `JOIN` só para deixar a consulta executável de verdade (`cidade` mora em `enderecos`, não em `pessoas`) — não se preocupe em entender a sintaxe do `JOIN` agora, ela é o assunto central da Aula 08. Por enquanto, foque no `WHERE ... OR ...`.
+> 📌 O último exemplo já usa um `JOIN` só para deixar a consulta executável de verdade (`cidade` mora em `enderecos`, não em `pessoas`) — não se preocupe em entender a sintaxe do `JOIN` agora, ela é o assunto central do Tópico 07. Por enquanto, foque no `WHERE ... OR ...`.
 
 ### 2.2 BETWEEN — intervalos inclusivos
 
@@ -186,7 +186,7 @@ SELECT nome FROM pessoas WHERE telefone = NULL;  -- sempre retorna vazio!
 !!! example "🔍 Checkpoint 2 — WHERE: app de adoção de pets"
     Um app de adoção tem a tabela `pets (id_pet PK, nome, especie, idade_meses, porte, disponivel_adocao)`, com `especie` podendo ser `'cachorro'`, `'gato'` ou `'outro'`, e `porte` `'pequeno'`, `'medio'` ou `'grande'`. Escreva uma única consulta que retorne `nome`, `especie` e `idade_meses` de todos os pets disponíveis para adoção (`disponivel_adocao = 1`), com idade entre 2 e 24 meses, cuja espécie esteja em `('cachorro', 'gato')`, e cujo nome comece com a letra 'B'.
 
-    🔑 Resolução no [Gabarito da Aula 06](Aula_06_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 05](Topico_05_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -214,7 +214,7 @@ ORDER BY valor DESC;
 !!! example "🔍 Checkpoint 3 — ORDER BY: plataforma de ingressos para shows"
     Na tabela `eventos (id_evento PK, nome, cidade, data_evento, preco_ingresso)`, escreva uma consulta que liste `nome`, `cidade` e `preco_ingresso` de todos os eventos, ordenados primeiro por `cidade` (crescente) e, dentro de cada cidade, do ingresso mais caro para o mais barato.
 
-    🔑 Resolução no [Gabarito da Aula 06](Aula_06_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 05](Topico_05_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -235,7 +235,7 @@ SELECT nome, preco FROM produtos ORDER BY id_produto LIMIT 10, 10;
 !!! example "🔍 Checkpoint 4 — LIMIT/OFFSET: estacionamento inteligente"
     Um app de estacionamento inteligente tem `vagas (id_vaga PK, setor, ocupada)`. A tela do app mostra 5 vagas livres por vez, com botão "ver mais". Escreva a consulta SQL para a **segunda página** de vagas livres (`ocupada = 0`), ordenadas por `id_vaga`, 5 por página.
 
-    🔑 Resolução no [Gabarito da Aula 06](Aula_06_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 05](Topico_05_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
@@ -263,13 +263,13 @@ FROM   pedidos;
 !!! example "🔍 Checkpoint 5 — Funções de String/Data: app de aulas de idiomas online"
     A tabela `alunos_idiomas (id_aluno PK, nome_completo, email, data_matricula)` guarda os alunos de um app de aulas de idiomas. Escreva uma consulta que retorne, para cada aluno: o `nome_completo` em maiúsculas, os 3 primeiros caracteres do `email`, e há quantos anos completos ele está matriculado (a partir de `data_matricula` até hoje) — ordenado do aluno mais antigo para o mais recente.
 
-    🔑 Resolução no [Gabarito da Aula 06](Aula_06_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 05](Topico_05_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
 ## 6. Exercícios de Fixação
 
-> 🔑 As resoluções destes cinco exercícios estão no [Gabarito da Aula 06](Aula_06_Gabarito.md) — tente resolver antes de conferir.
+> 🔑 As resoluções destes cinco exercícios estão no [Gabarito do Tópico 05](Topico_05_Gabarito.md) — tente resolver antes de conferir.
 
 **Exercício 1:** liste o nome e preço de todos os produtos com preço entre R$ 100 e R$ 500, em ordem decrescente de preço.
 
@@ -283,7 +283,7 @@ FROM   pedidos;
 
 ---
 
-## 📚 Referências desta Aula
+## 📚 Referências deste Tópico
 
 - ELMASRI, R.; NAVATHE, S. B. *Sistemas de Banco de Dados*. 7 ed. Cap. 6.3 — SELECT. São Paulo: Pearson, 2018.
 - FORTA, B. *SQL em 10 Minutos por Dia*. 5 ed. Lições 2–7. São Paulo: Novatec, 2021.
@@ -380,37 +380,37 @@ DISTINCT com múltiplas colunas elimina duplicatas considerando a combinação d
 
 ## 📝 Resumo
 
-Nesta aula demos o primeiro passo na Data Query Language: construímos consultas
+Neste tópico demos o primeiro passo na Data Query Language: construímos consultas
 `SELECT` selecionando colunas específicas e eliminando duplicatas com `DISTINCT`,
 filtramos resultados com `WHERE` usando operadores relacionais, `BETWEEN`, `IN`,
 `LIKE` e o tratamento correto de `NULL` (nunca `= NULL`, sempre `IS NULL`),
 ordenamos com `ORDER BY` e paginamos com `LIMIT`/`OFFSET`, e aplicamos funções
-básicas de string e data direto na consulta. Na próxima aula veremos funções de
+básicas de string e data direto na consulta. No próximo tópico veremos funções de
 agregação, `GROUP BY` e `HAVING` para criar consultas que resumem e agrupam dados.
 
 ---
 
-## 🏆 Conquista da Aula
+## 🏆 Conquista do Tópico
 
 !!! success "Selo desbloqueado: 🔍 Investigador(a) de Dados"
     Você já sabe extrair exatamente a informação que precisa de um banco de dados —
     filtrando, ordenando e paginando resultados com precisão. A próxima parada da
-    Trilha do(a) Consultor(a) SQL é aprender a resumir e agrupar esses dados com
+    Trilha do(a) Arquiteto(a) de Dados é aprender a resumir e agrupar esses dados com
     funções de agregação.
 
 ---
 
-## 🔑 Gabarito desta Aula
+## 🔑 Gabarito deste Tópico
 
-As respostas dos 5 checkpoints espalhados pela aula, e dos 5 Exercícios de Fixação da
+As respostas dos 5 checkpoints espalhados pelo tópico, e dos 5 Exercícios de Fixação da
 Seção 6, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
-chegou até aqui: [Gabarito — Aula 06](Aula_06_Gabarito.md).
+chegou até aqui: [Gabarito — Tópico 05](Topico_05_Gabarito.md).
 
 ---
 
 ## 🔗 Navegação
 
-⬅️ 🔒 Aula 05 — ainda não publicada · ➡️ 🔒 Aula 07 — em breve.
+⬅️ [Tópico 04 — SQL DML: Manipulação de Dados](./Topico_04_SQL_DML.md) · ➡️ 🔒 Tópico 06 — em breve.
 
 ---
 

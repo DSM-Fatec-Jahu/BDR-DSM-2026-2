@@ -1,16 +1,16 @@
 <!--
-GABARITO — não faz parte do fluxo principal da aula e fica fora do `nav` do
-mkdocs.yml de propósito. É acessível só pelo link no final de Aula_01_Revisao_Modelagem_Conceitual.md.
+GABARITO — não faz parte do fluxo principal do tópico e fica fora do `nav` do
+mkdocs.yml de propósito. É acessível só pelo link no final de Topico_01_Revisao_Modelagem_Conceitual.md.
 -->
 
-# Gabarito — Aula 01 — Revisão de Modelagem de Dados (Conceitual)
+# Gabarito — Tópico 01 — Revisão de Modelagem de Dados (Conceitual)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
 > ⚠️ Este gabarito é para conferência **depois** de você tentar resolver os checkpoints
-> por conta própria na [Aula 01](Aula_01_Revisao_Modelagem_Conceitual.md). Resolver
+> por conta própria no [Tópico 01](Topico_01_Revisao_Modelagem_Conceitual.md). Resolver
 > antes de tentar reduz o benefício de treinar a recuperação ativa do conteúdo — é
 > exatamente esse esforço de tentar-antes-de-ver-a-resposta que fixa o aprendizado.
 
@@ -27,7 +27,7 @@ mkdocs.yml de propósito. É acessível só pelo link no final de Aula_01_Revisa
 | Usuários | Forte | Existe por si mesma — a pessoa é cadastrada independentemente de já ter alugado algum patinete. |
 | Patinetes | Forte | Existe por si mesmo, com atributos próprios (série, bateria, localização) independentes de qualquer outra entidade. |
 | Estações de Recarga | Forte | Existe independentemente de quais patinetes estão ou não atracados nela no momento. |
-| Manutenções | Fraca | Só existe em relação a um Patinete específico — se o patinete for removido do sistema, o registro de manutenção perde sentido. É o mesmo padrão do exemplo Dependente/Funcionário do texto da aula. |
+| Manutenções | Fraca | Só existe em relação a um Patinete específico — se o patinete for removido do sistema, o registro de manutenção perde sentido. É o mesmo padrão do exemplo Dependente/Funcionário do texto do tópico. |
 
 ---
 
@@ -51,9 +51,9 @@ mkdocs.yml de propósito. É acessível só pelo link no final de Aula_01_Revisa
 
 **Resposta:**
 
-**a)** É um relacionamento **ternário**. A `Compensação` só faz sentido pela combinação das três entidades ao mesmo tempo — qual Empresa, qual Projeto Ambiental e qual Auditor Certificador validou aquela transação específica. Analisar apenas duas delas isoladamente (por exemplo, "Empresa compensou em Projeto") perde a informação de quem auditou aquela transação em particular — o mesmo padrão do exemplo Médico–Medicamento–Paciente do texto da aula.
+**a)** É um relacionamento **ternário**. A `Compensação` só faz sentido pela combinação das três entidades ao mesmo tempo — qual Empresa, qual Projeto Ambiental e qual Auditor Certificador validou aquela transação específica. Analisar apenas duas delas isoladamente (por exemplo, "Empresa compensou em Projeto") perde a informação de quem auditou aquela transação em particular — o mesmo padrão do exemplo Médico–Medicamento–Paciente do texto do tópico.
 
-**b)** A cardinalidade é **1:N** entre Empresas e Compensações — uma empresa pode ter várias compensações ao longo do tempo, mas cada registro de compensação pertence a exatamente uma empresa. A participação de Empresas é **parcial**: uma empresa pode estar cadastrada na plataforma e ainda não ter feito nenhuma compensação (ainda está avaliando projetos, por exemplo) — o mesmo padrão do exemplo Cliente/Pedido do texto da aula.
+**b)** A cardinalidade é **1:N** entre Empresas e Compensações — uma empresa pode ter várias compensações ao longo do tempo, mas cada registro de compensação pertence a exatamente uma empresa. A participação de Empresas é **parcial**: uma empresa pode estar cadastrada na plataforma e ainda não ter feito nenhuma compensação (ainda está avaliando projetos, por exemplo) — o mesmo padrão do exemplo Cliente/Pedido do texto do tópico.
 
 **c)** É um exemplo de **auto-relacionamento** — a entidade `Empresas` se relaciona com ela mesma através da indicação. A FK não pode se chamar `empresa_id` porque, ao referenciar a própria tabela `empresas`, esse nome não diria se representa "a empresa que foi indicada" ou "a empresa que indicou" — ambas são registros da mesma tabela. Por isso o nome usa o papel semântico, por exemplo `empresa_indicadora_id`.
 
@@ -136,7 +136,7 @@ erDiagram
 
 ---
 
-⬅️ [Voltar à Aula 01 — Revisão de Modelagem Conceitual](./Aula_01_Revisao_Modelagem_Conceitual.md)
+⬅️ [Voltar ao Tópico 01 — Revisão de Modelagem Conceitual](./Topico_01_Revisao_Modelagem_Conceitual.md)
 
 ---
 

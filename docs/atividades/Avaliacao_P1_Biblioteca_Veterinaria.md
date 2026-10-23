@@ -1,10 +1,10 @@
-# Avaliação P1 — Biblioteca ou Clínica Veterinária (Aulas 01 a 03)
+# Avaliação P1 — Biblioteca ou Clínica Veterinária (Tópicos 01 a 03)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 **Valor:** 4,0 pontos
-**Modalidade:** em dupla, em um único computador do laboratório, durante a aula
+**Modalidade:** em dupla, em um único computador do laboratório, durante o horário da disciplina
 
 ---
 
@@ -12,10 +12,10 @@
 
 - **Em dupla, em um único computador.** A dupla trabalha junta na mesma máquina e recebe
   a mesma nota.
-- **Somente nos computadores do laboratório** onde a aula acontece — não vale
+- **Somente nos computadores do laboratório** onde a prova acontece — não vale
   resolver em notebook pessoal ou em casa.
 - **Consulta:** somente a **folha de rascunho escrita à mão** que cada aluno foi
-  autorizado a trazer. Não é permitido abrir aulas, práticas, gabaritos, simulados,
+  autorizado a trazer. Não é permitido abrir tópicos, práticas, gabaritos, simulados,
   anotações digitais ou qualquer outro material no computador.
 - **Qual cenário a dupla faz depende do número do computador** (o número da etiqueta na
   máquina em que a dupla está trabalhando):
@@ -27,7 +27,7 @@
 
   É como a fila do posto de saúde que chama por senha par e ímpar: o número decide
   o guichê, e não adianta tentar trocar.
-- **Conteúdo cobrado:** Aulas 01, 02 e 03 (modelagem de entidades e relacionamentos,
+- **Conteúdo cobrado:** Tópicos 01, 02 e 03 (modelagem de entidades e relacionamentos,
   cardinalidade, normalização e SQL DDL).
 - **Só criação do banco.** A parte prática é feita **somente em SQL de criação**:
   `CREATE DATABASE` e `CREATE TABLE`. Não há inserção, consulta, atualização nem
@@ -62,8 +62,8 @@ tempo, sem precisar sair de uma para entrar na outra.
   contra a existência ou a inexistência deles.
 - **A execução pode ser parcial.** Deixe **comentado** qualquer trecho incompleto ou com
   erro, para que ele não impeça a execução do restante do arquivo.
-- Aplique **todas as convenções de nomenclatura, tipos e padrões estruturais** vistos em
-  aula — as **9 regras de nomenclatura da disciplina** (Aula 03 — SQL DDL, Seção 1).
+- Aplique **todas as convenções de nomenclatura, tipos e padrões estruturais** vistos nos
+  tópicos — as **9 regras de nomenclatura da disciplina** (Tópico 03 — SQL DDL, Seção 1).
 - **Cada tabela deve ter a sua própria chave primária (PK)**, sem chaves compostas e sem
   restrições de unicidade que envolvam mais de uma coluna.
 

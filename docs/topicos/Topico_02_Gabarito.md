@@ -1,17 +1,17 @@
 <!--
-GABARITO — não faz parte do fluxo principal da aula e fica fora do `nav` do
-mkdocs.yml de propósito. É acessível só pelo link no final de Aula_02_Normalizacao.md.
+GABARITO — não faz parte do fluxo principal do tópico e fica fora do `nav` do
+mkdocs.yml de propósito. É acessível só pelo link no final de Topico_02_Normalizacao.md.
 -->
 
-# Gabarito — Aula 02 — Normalização e Passagem ao Modelo Lógico Relacional
+# Gabarito — Tópico 02 — Normalização e Passagem ao Modelo Lógico Relacional
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
 > ⚠️ Este gabarito é para conferência **depois** de você tentar resolver os checkpoints
-> e os Exercícios de Fixação por conta própria na [Aula
-> 02](Aula_02_Normalizacao.md). Resolver antes de tentar reduz o benefício de treinar a
+> e os Exercícios de Fixação por conta própria no [Tópico
+> 02](Topico_02_Normalizacao.md). Resolver antes de tentar reduz o benefício de treinar a
 > recuperação ativa do conteúdo.
 
 ---
@@ -236,7 +236,7 @@ EMPRESTIMOS (id_emprestimo PK, usuario_id FK, livro_id FK,
 
 ---
 
-⬅️ [Voltar à Aula 02 — Normalização](./Aula_02_Normalizacao.md)
+⬅️ [Voltar ao Tópico 02 — Normalização](./Topico_02_Normalizacao.md)
 
 ---
 

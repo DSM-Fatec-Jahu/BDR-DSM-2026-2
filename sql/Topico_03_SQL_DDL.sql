@@ -1,15 +1,15 @@
 -- =============================================================================
--- Script de apoio (NÃO faz parte do site) — Aula 03 — SQL e DDL
+-- Script de apoio (NÃO faz parte do site) — Tópico 03 — SQL e DDL
 -- Disciplina: IBD015 — Banco de Dados Relacional — Fatec Jahu — 2º Sem/2026
 -- Professor: Ronan Adriel Zenatti
 --
 -- Objetivo: reunir TODO o SQL "de verdade" apresentado em
--- docs/aulas/Aula_03_SQL_DDL.md em um único arquivo que executa do início ao
+-- docs/topicos/Topico_03_SQL_DDL.md em um único arquivo que executa do início ao
 -- fim SEM ERROS em um MariaDB do XAMPP padrão (usuário root, senha vazia,
 -- host 127.0.0.1, porta 3306).
 --
 -- Como executar (Windows / XAMPP):
---   "C:\xampp\mysql\bin\mysql.exe" -u root -p < sql\Aula_03_SQL_DDL.sql
+--   "C:\xampp\mysql\bin\mysql.exe" -u root -p < sql\Topico_03_SQL_DDL.sql
 --   (pressione Enter na senha — é vazia)
 -- ou cole o conteúdo no phpMyAdmin > SQL.
 --
@@ -18,22 +18,22 @@
 --      (Checkpoint 1 — tabela "Criador"; Exercício 1 — tabela "Produto"):
 --      dariam erro de propósito (FK para tabela inexistente) — não fazem
 --      sentido em um script que precisa rodar sem erro.
---   2) Trechos de sintaxe PostgreSQL (equivalentes mostrados na aula para
+--   2) Trechos de sintaxe PostgreSQL (equivalentes mostrados no tópico para
 --      comparação) — outro SGBD, quebrariam no MariaDB.
 --   3) Fragmentos de coluna isolados (ex.: "id_produto INT(11) NOT NULL"
 --      fora de um CREATE TABLE) — não são comandos executáveis por si só.
 --   4) Enunciados de Checkpoints/Exercícios que pedem para O ALUNO escrever
---      o SQL — a resposta mora só no arquivo de gabarito da aula, não no
---      corpo da aula, então não há código para extrair aqui.
+--      o SQL — a resposta mora só no arquivo de gabarito do tópico, não no
+--      corpo do tópico, então não há código para extrair aqui.
 --   5) "ALTER TABLE produtos ADD CONSTRAINT fk_produto_fornecedor ..."
 --      (Seção 8): referencia a coluna produtos.fornecedor_id e a tabela
 --      fornecedores — NENHUMA das duas existe em qualquer CREATE TABLE
---      desta aula. É um exemplo genérico/isolado no texto. Sinalizado aqui
+--      deste tópico. É um exemplo genérico/isolado no texto. Sinalizado aqui
 --      em vez de inventar uma tabela "fornecedores" que o professor não
 --      escreveu — avise se quiser que essa tabela seja criada de fato.
 --   6) A sequência de DROP da Seção 9 está incluída, mas COMENTADA no final
 --      deste arquivo: se executasse, apagaria o schema que este próprio
---      script acabou de montar — e a Aula 04 (SQL DML) depende dessas
+--      script acabou de montar — e o Tópico 04 (SQL DML) depende dessas
 --      tabelas para os exemplos de INSERT/UPDATE/DELETE.
 -- =============================================================================
 
@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS itens_pedidos (
 
 
 -- =============================================================================
--- Seção 8 — ALTER TABLE (exemplos da aula, aplicados sobre o schema acima)
+-- Seção 8 — ALTER TABLE (exemplos do tópico, aplicados sobre o schema acima)
 -- =============================================================================
 
 -- Adicionar uma nova coluna ao final da tabela:
@@ -278,10 +278,10 @@ ALTER TABLE pessoas
 ALTER TABLE produtos
     DROP COLUMN codigo_interno;
 
--- NOTA: o exemplo da aula "ADD CONSTRAINT fk_produto_fornecedor ... REFERENCES
+-- NOTA: o exemplo do tópico "ADD CONSTRAINT fk_produto_fornecedor ... REFERENCES
 -- fornecedores (id_fornecedor)" foi omitido aqui de propósito — nem a coluna
 -- produtos.fornecedor_id nem a tabela fornecedores existem em nenhum
--- CREATE TABLE desta aula, então executá-lo geraria erro. Avise o professor
+-- CREATE TABLE deste tópico, então executá-lo geraria erro. Avise o professor
 -- se quiser essa tabela fornecedores modelada de fato.
 
 ALTER TABLE pessoas
@@ -329,7 +329,7 @@ RENAME TABLE itens_pedido TO itens_pedidos;
 -- A demonstração roda em uma tabela isolada (demo_renomeacao_constraint),
 -- criada já com as 4 constraints nomeadas (como qualquer tabela real desta
 -- disciplina) e destruída ao final — sem tocar nas tabelas do e-commerce
--- que a Aula 04 vai usar.
+-- que o Tópico 04 vai usar.
 -- =============================================================================
 
 CREATE TABLE IF NOT EXISTS demo_renomeacao_constraint (
@@ -392,7 +392,7 @@ ALTER TABLE demo_renomeacao_constraint
 SHOW CREATE TABLE demo_renomeacao_constraint;
 
 -- Encerrada a demonstração, remove a tabela de exemplo — ela não faz parte
--- do schema de e-commerce ensinado na aula, só existiu para este bloco.
+-- do schema de e-commerce ensinado no tópico, só existiu para este bloco.
 DROP TABLE IF EXISTS demo_renomeacao_constraint;
 
 
@@ -440,7 +440,7 @@ WHERE
 -- =============================================================================
 -- Seção 9 — DROP (mantido como REFERÊNCIA, mas COMENTADO)
 --
--- Executar isto apagaria o schema inteiro montado acima — e a Aula 04 (SQL
+-- Executar isto apagaria o schema inteiro montado acima — e o Tópico 04 (SQL
 -- DML) usa estas mesmas tabelas para os exemplos de INSERT/UPDATE/DELETE.
 -- Remova os "--" de cada linha abaixo apenas se quiser mesmo destruir e
 -- recomeçar o banco loja_virtual.

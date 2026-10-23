@@ -1,4 +1,4 @@
-# Aula 03 — SQL e DDL: Definição de Estruturas
+# Tópico 03 — SQL e DDL: Definição de Estruturas
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,9 +6,9 @@
 
 ---
 
-## 🎯 Objetivos da Aula
+## 🎯 Objetivos do Tópico
 
-Ao final desta aula você deverá ser capaz de:
+Ao final deste tópico você deverá ser capaz de:
 
 - Criar e manipular estruturas de banco de dados usando os comandos DDL do SQL (`CREATE`, `ALTER`, `DROP`);
 - Aplicar as convenções de nomenclatura adotadas nesta disciplina;
@@ -18,7 +18,7 @@ Ao final desta aula você deverá ser capaz de:
 
 ---
 
-## 🗺️ Mapa Mental da Aula
+## 🗺️ Mapa Mental do Tópico
 
 ```mermaid
 flowchart LR
@@ -68,11 +68,11 @@ flowchart LR
 
 ## 🧭 O que é DDL e por que é o primeiro passo?
 
-Na Aula 02 você aprendeu a construir um modelo lógico — um conjunto de tabelas, colunas, chaves primárias e estrangeiras existindo ainda apenas no papel (ou no diagrama). A DDL, **Data Definition Language** (Linguagem de Definição de Dados), é o subconjunto do SQL responsável por transformar esse modelo em estruturas reais dentro do banco de dados.
+No Tópico 02 você aprendeu a construir um modelo lógico — um conjunto de tabelas, colunas, chaves primárias e estrangeiras existindo ainda apenas no papel (ou no diagrama). A DDL, **Data Definition Language** (Linguagem de Definição de Dados), é o subconjunto do SQL responsável por transformar esse modelo em estruturas reais dentro do banco de dados.
 
 Pense na metáfora da construção: se o modelo lógico é a planta arquitetônica, a DDL é o ato de erguer as paredes, instalar as portas e definir as divisões do espaço. Tudo o que vier depois — inserir dados, fazer consultas, criar lógica de negócio — depende de você ter executado a DDL corretamente primeiro.
 
-Os três comandos centrais da DDL são `CREATE` (criar), `ALTER` (modificar) e `DROP` (remover). Eles operam sobre **objetos de banco de dados**: schemas (ou databases), tabelas, índices, views, procedures, entre outros. Nesta aula, o foco é na criação e manipulação de schemas e tabelas.
+Os três comandos centrais da DDL são `CREATE` (criar), `ALTER` (modificar) e `DROP` (remover). Eles operam sobre **objetos de banco de dados**: schemas (ou databases), tabelas, índices, views, procedures, entre outros. Neste tópico, o foco é na criação e manipulação de schemas e tabelas.
 
 ---
 
@@ -145,7 +145,7 @@ deletado_em    DATETIME      NULL
 
     Liste todos os erros encontrados, indicando **qual regra (1 a 9)** cada um viola, e reescreva o `CREATE TABLE` corretamente — incluindo os campos de log da Regra 9.
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -183,13 +183,13 @@ mysql -u root -p --port=3306
 mysql -u root -p -P 3306 -h 127.0.0.1
 ```
 
-**Conexão com usuário e senha já informados (não recomendado em produção, mas útil em aula):**
+**Conexão com usuário e senha já informados (não recomendado em produção, mas útil em sala):**
 
 ```bash
 # A senha fica visível no histórico do terminal — evite em ambientes reais
 mysql -u root -pSUASENHA
 
-# Com porta e host explícitos — útil para scripts de automação em aula
+# Com porta e host explícitos — útil para scripts de automação em sala
 mysql -u root -p123456 -P 3306 -h 127.0.0.1
 ```
 
@@ -244,7 +244,7 @@ CREATE TABLE financeiro.pedidos ( ... );
 CREATE TABLE estoque.produtos ( ... );
 ```
 
-![Compração MySQL / PostgreSQL](../imgs/Aula_03_IMG_01.png)
+![Compração MySQL / PostgreSQL](../imgs/Topico_03_IMG_01.png)
 
 !!! tip "✅ Verificação Rápida — MariaDB, MySQL e PostgreSQL"
     Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
@@ -370,9 +370,9 @@ CREATE DATABASE loja_virtual
 ```
 
 !!! example "🔍 Checkpoint 2 — CREATE DATABASE: carteira digital"
-    Uma fintech está lançando uma carteira digital com transferências via Pix. Escreva o comando `CREATE DATABASE` completo e idiomático para o banco `carteira_digital`, seguindo exatamente o padrão da Seção 4.5 desta aula: idempotente (não falha se o banco já existir), com o charset correto para suportar todos os caracteres Unicode (incluindo emojis, usados nas notificações do app) e a collation recomendada para comparações em português. Ao final, escreva também o comando para confirmar as configurações aplicadas.
+    Uma fintech está lançando uma carteira digital com transferências via Pix. Escreva o comando `CREATE DATABASE` completo e idiomático para o banco `carteira_digital`, seguindo exatamente o padrão da Seção 4.5 deste tópico: idempotente (não falha se o banco já existir), com o charset correto para suportar todos os caracteres Unicode (incluindo emojis, usados nas notificações do app) e a collation recomendada para comparações em português. Ao final, escreva também o comando para confirmar as configurações aplicadas.
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -535,7 +535,7 @@ deletado_em      DATETIME        NULL
 !!! example "🔍 Checkpoint 3 — Tipos de Dados: geração de energia solar residencial"
     Uma plataforma de energia solar residencial (geração distribuída) precisa armazenar, para cada usina instalada na casa de um cliente, os seguintes atributos: `numero_serie_inversor` (sempre 12 caracteres alfanuméricos, tamanho fixo), `potencia_instalada_kwp` (ex.: 5.75), `energia_gerada_hoje_kwh` (ex.: 23.400), `data_instalacao`, `valor_credito_energia_acumulado` (em reais, usado para abater a conta de luz), `esta_ativo` (indica se a usina está gerando energia normalmente) e `observacoes_tecnicas` (texto livre de tamanho imprevisível, preenchido pelo técnico na instalação). Para cada atributo, escreva a declaração de coluna completa (tipo + tamanho, quando aplicável), justificando a escolha com base nesta seção.
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -556,7 +556,7 @@ CREATE TABLE IF NOT EXISTS nome_tabela (
 );
 ```
 
-**Sobre `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`:** especificar essa cláusula é uma **boa prática documental**, mas **não é obrigatória**. Tanto o MariaDB quanto o MySQL modernos já aplicam, no momento da criação, o melhor padrão disponível — InnoDB como engine, `utf8mb4` como charset e a collation associada. Vamos demonstrar a cláusula completa apenas na primeira tabela desta aula (`pessoas`, abaixo). A partir daí, **todos os `CREATE TABLE` desta disciplina serão escritos sem essa cláusula**, confiando no padrão do SGBD — assim o foco fica nas colunas, constraints e relacionamentos, que é o que de fato muda de tabela para tabela.
+**Sobre `ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`:** especificar essa cláusula é uma **boa prática documental**, mas **não é obrigatória**. Tanto o MariaDB quanto o MySQL modernos já aplicam, no momento da criação, o melhor padrão disponível — InnoDB como engine, `utf8mb4` como charset e a collation associada. Vamos demonstrar a cláusula completa apenas na primeira tabela deste tópico (`pessoas`, abaixo). A partir daí, **todos os `CREATE TABLE` desta disciplina serão escritos sem essa cláusula**, confiando no padrão do SGBD — assim o foco fica nas colunas, constraints e relacionamentos, que é o que de fato muda de tabela para tabela.
 
 > **Diferença MariaDB vs MySQL:** ambos usam InnoDB como engine padrão. Você só precisa declarar `ENGINE=...` explicitamente quando quer um engine diferente (`MyISAM`, `Aria`, `Memory` etc.) — algo raro fora de casos muito específicos.
 
@@ -571,7 +571,7 @@ Uma particularidade do MySQL/MariaDB que não existe no PostgreSQL é a **storag
 | `Aria` | Não | Não | Tabela (*table-level*) | Sim | Tabelas internas de sistema do MariaDB; sucessor do MyISAM com recuperação a falhas |
 | `Memory` | Não | Não | Tabela (*table-level*) | Não (dados somem ao reiniciar o servidor) | Cache temporário, tabelas de trabalho voláteis em memória RAM |
 
-**Por que `InnoDB` é a engine padrão desde MariaDB 5.5 / MySQL 5.5:** é a única das quatro que oferece as três garantias que praticamente todo sistema real precisa — suporte a **transações ACID** (`COMMIT`/`ROLLBACK` de forma segura, tema da Aula 13), suporte a **chaves estrangeiras** com `ON DELETE`/`ON UPDATE` (o que usamos nesta própria aula) e **recuperação automática após falha** (*crash recovery*, via logs de redo/undo — se o servidor cair no meio de uma escrita, o InnoDB reconstrói o estado consistente ao reiniciar). Além disso, o `InnoDB` trava apenas a **linha** sendo modificada (*row-level locking*), não a tabela inteira — isso permite que múltiplas transações escrevam em linhas diferentes da mesma tabela simultaneamente, o que é essencial em qualquer sistema com mais de um usuário concorrente.
+**Por que `InnoDB` é a engine padrão desde MariaDB 5.5 / MySQL 5.5:** é a única das quatro que oferece as três garantias que praticamente todo sistema real precisa — suporte a **transações ACID** (`COMMIT`/`ROLLBACK` de forma segura, tema do Tópico 11), suporte a **chaves estrangeiras** com `ON DELETE`/`ON UPDATE` (o que usamos neste próprio tópico) e **recuperação automática após falha** (*crash recovery*, via logs de redo/undo — se o servidor cair no meio de uma escrita, o InnoDB reconstrói o estado consistente ao reiniciar). Além disso, o `InnoDB` trava apenas a **linha** sendo modificada (*row-level locking*), não a tabela inteira — isso permite que múltiplas transações escrevam em linhas diferentes da mesma tabela simultaneamente, o que é essencial em qualquer sistema com mais de um usuário concorrente.
 
 O `MyISAM`, por comparação, é o mecanismo histórico do MySQL (anterior ao InnoDB se tornar padrão): mais simples e, em cargas de **apenas leitura**, ligeiramente mais rápido — mas sem transações, sem FK, sem recuperação a falhas, e com trava de **tabela inteira** a cada escrita (uma única `INSERT`/`UPDATE` bloqueia toda a tabela para outros usuários). O `Aria`, criado pela própria equipe do MariaDB, é essencialmente um MyISAM modernizado com recuperação a falhas — mas ainda sem transações nem FK, por isso é usado majoritariamente para tabelas internas do próprio SGBD, não para dados de aplicação. Já o `Memory` mantém os dados inteiramente em RAM (nunca grava em disco), o que o torna extremamente rápido, mas **todo o conteúdo é perdido** a cada reinício do servidor — apropriado apenas para caches ou tabelas de trabalho temporárias, nunca para dados que precisam sobreviver.
 
@@ -855,7 +855,7 @@ CONSTRAINT ck_data_valida      CHECK (data_fim >= data_inicio)
 !!! example "🔍 Checkpoint 4 — CREATE TABLE e Constraints: plataforma de cursos online"
     Uma plataforma de cursos online (bootcamps de tecnologia) já tem as tabelas `alunos (id_aluno PK, ...)` e `cursos (id_curso PK, ...)`. Escreva o `CREATE TABLE` completo de `matriculas_cursos`, que resolve o relacionamento N:M entre alunos e cursos, com os atributos: `progresso_percentual` (0 a 100), `nota_final` (0 a 10, pode ser NULL enquanto o curso não termina), `data_matricula` e os campos de log da Regra 9. Aplique: PK composta pelas duas FKs; `ON DELETE CASCADE` para aluno (se o aluno for removido, suas matrículas somem) e `ON DELETE RESTRICT` para curso (não pode excluir um curso que tem alunos matriculados); `CHECK` garantindo que `progresso_percentual` esteja entre 0 e 100; `CHECK` garantindo que `nota_final`, quando não for NULL, esteja entre 0 e 10.
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
@@ -930,7 +930,7 @@ ALTER TABLE pessoas RENAME COLUMN telefone TO celular;
 !!! example "🔍 Checkpoint 5 — ALTER TABLE: marketplace de freelancers"
     Um marketplace de freelancers (gig economy) já tem a tabela `freelancers (id_freelancer PK, nome, email, criado_em, alterado_em, deletado_em)` em produção, com dados reais cadastrados. Escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `valor_hora DECIMAL(8, 2) NOT NULL DEFAULT 0.00`; (b) renomear a coluna `email` para `email_contato`, mantendo o tipo `VARCHAR(255)`; (c) adicionar uma `FOREIGN KEY` `categoria_id` referenciando uma nova tabela `categorias_servico (id_categoria_servico PK)`, com `ON DELETE RESTRICT`; (d) adicionar uma constraint `CHECK` garantindo que `valor_hora` seja maior que zero.
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
@@ -974,7 +974,7 @@ SET FOREIGN_KEY_CHECKS = 1;  -- sempre reabilite
     b) Escreva a sequência correta de comandos `DROP TABLE IF EXISTS` para remover as três tabelas sem erro, sem usar `SET FOREIGN_KEY_CHECKS`.
     c) Reescreva a solução do item (b) agora usando `SET FOREIGN_KEY_CHECKS` para desabilitar temporariamente a verificação — em que situação real (fora deste exercício) isso seria útil?
 
-    🔑 Resolução no [Gabarito da Aula 03](Aula_03_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 03](Topico_03_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
 
 ---
 
@@ -1024,7 +1024,7 @@ WHERE
 
 ## 11. Script Completo — Sistema de E-commerce
 
-O script abaixo reúne tudo que foi apresentado nesta aula em um arquivo coeso, seguindo todas as convenções. Este é o padrão esperado para as entregas da disciplina:
+O script abaixo reúne tudo que foi apresentado neste tópico em um arquivo coeso, seguindo todas as convenções. Este é o padrão esperado para as entregas da disciplina:
 
 ```sql
 -- =============================================================================
@@ -1212,7 +1212,7 @@ CREATE TABLE IF NOT EXISTS itens_pedidos (
 
 ## 12. Exercícios de Fixação
 
-> 🔑 As resoluções destes três exercícios estão no [Gabarito da Aula 03](Aula_03_Gabarito.md) — tente resolver antes de conferir.
+> 🔑 As resoluções destes três exercícios estão no [Gabarito do Tópico 03](Topico_03_Gabarito.md) — tente resolver antes de conferir.
 
 **Exercício 1 — Identifique os erros:** o trecho abaixo possui violações das convenções desta disciplina. Liste todos os erros encontrados e reescreva o código corretamente.
 
@@ -1228,11 +1228,11 @@ CREATE TABLE Produto (
 
 **Exercício 2 — Criação guiada:** crie o DDL completo para um sistema de biblioteca com as entidades: `autores`, `livros`, `usuarios`, `emprestimos`. Siga todas as convenções. Um livro pode ter múltiplos autores; um usuário pode ter múltiplos empréstimos; cada empréstimo é de um único livro.
 
-**Exercício 3 — ALTER TABLE:** dada a tabela `produtos` criada nesta aula, escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `peso DECIMAL(8, 3) NULL`; (b) renomear a coluna `ativo` para `disponivel` mantendo o mesmo tipo; (c) adicionar uma constraint CHECK que garanta que `peso > 0` quando não for NULL.
+**Exercício 3 — ALTER TABLE:** dada a tabela `produtos` criada neste tópico, escreva os comandos `ALTER TABLE` para: (a) adicionar a coluna `peso DECIMAL(8, 3) NULL`; (b) renomear a coluna `ativo` para `disponivel` mantendo o mesmo tipo; (c) adicionar uma constraint CHECK que garanta que `peso > 0` quando não for NULL.
 
 ---
 
-## 📚 Referências desta Aula
+## 📚 Referências deste Tópico
 
 - ELMASRI, R.; NAVATHE, S. B. *Sistemas de Banco de Dados*. 7 ed. Cap. 6 — SQL Básico. São Paulo: Pearson, 2018.
 - Documentação oficial do MariaDB — [CREATE TABLE](https://mariadb.com/kb/en/create-table/)
@@ -1334,37 +1334,37 @@ preco_unitario é um snapshot (fotografia) do preço no momento da compra. Se de
 
 ## 📝 Resumo
 
-Nesta aula saímos do papel para o banco de dados de verdade: aplicamos as 9 regras de
+Neste tópico saímos do papel para o banco de dados de verdade: aplicamos as 9 regras de
 nomenclatura desta disciplina, escolhemos os tipos de dados corretos para cada
 situação (com atenção especial a `DECIMAL` para dinheiro e `utf8mb4` para texto),
 e construímos um schema completo de e-commerce com `CREATE TABLE`, incluindo todas
 as constraints de integridade (`PRIMARY KEY`, `FOREIGN KEY` com `ON DELETE`/`ON
 UPDATE`, `UNIQUE`, `CHECK`). Vimos também `ALTER TABLE` e `DROP` para evoluir e
 remover estruturas, e as principais diferenças práticas entre MariaDB e PostgreSQL.
-Na próxima aula, essas tabelas ganham vida com `INSERT`, `UPDATE` e `DELETE`.
+No próximo tópico, essas tabelas ganham vida com `INSERT`, `UPDATE` e `DELETE`.
 
 ---
 
-## 🏆 Conquista da Aula
+## 🏆 Conquista do Tópico
 
 !!! success "Selo desbloqueado: 🛠️ Construtor(a) DDL"
     Você já sabe transformar qualquer modelo lógico em um schema SQL real, seguindo
     convenções profissionais de nomenclatura e tipos de dados. A próxima parada da
-    Trilha do(a) Modelador(a) de Dados: popular essas tabelas com dados de verdade.
+    Trilha do(a) Arquiteto(a) de Dados: popular essas tabelas com dados de verdade.
 
 ---
 
-## 🔑 Gabarito desta Aula
+## 🔑 Gabarito deste Tópico
 
-As respostas dos 6 checkpoints espalhados pela aula, e dos 3 Exercícios de Fixação da
+As respostas dos 6 checkpoints espalhados pelo tópico, e dos 3 Exercícios de Fixação da
 Seção 12, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
-chegou até aqui: [Gabarito — Aula 03](Aula_03_Gabarito.md).
+chegou até aqui: [Gabarito — Tópico 03](Topico_03_Gabarito.md).
 
 ---
 
 ## 🔗 Navegação
 
-⬅️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md) · ➡️ [Aula 04 — SQL DML: Manipulação de Dados](./Aula_04_SQL_DML.md)
+⬅️ [Tópico 02 — Normalização](./Topico_02_Normalizacao.md) · ➡️ [Tópico 04 — SQL DML: Manipulação de Dados](./Topico_04_SQL_DML.md)
 
 ---
 

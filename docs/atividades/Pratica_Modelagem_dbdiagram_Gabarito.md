@@ -7,7 +7,7 @@
 > aprender a modelar.
 
 Para cada exercício: entidades identificadas, o Modelo Lógico em notação textual
-(`TABELA (coluna PK, coluna FK, ...)`, o mesmo padrão usado na Aula 02, Seção 8), o
+(`TABELA (coluna PK, coluna FK, ...)`, o mesmo padrão usado no Tópico 02, Seção 8), o
 código DBML pronto para colar em [dbdiagram.io](https://dbdiagram.io), e os comentários
 sobre as decisões de modelagem mais importantes.
 
@@ -179,13 +179,12 @@ Ref fk_execucao_treino:   execucoes_treino.treino_id   > treinos.id_treino
 
 - `EXECUCOES_TREINO` **não** repete `usuario_id` — o usuário já é alcançável via
   `execucoes_treino.treino_id → treinos.usuario_id`. Guardar `usuario_id` direto em
-  `EXECUCOES_TREINO` recriaria exatamente a **dependência transitiva** que a Aula 02
-  ensinou a eliminar (o mesmo padrão de `TURMAS.professor_nome` na Seção 7 daquela
-  aula).
+  `EXECUCOES_TREINO` recriaria exatamente a **dependência transitiva** que o Tópico 02
+  ensinou a eliminar (o mesmo padrão de `TURMAS.professor_nome` na Seção 7 daquele tópico).
 - `carga_kg`, `series` e `repeticoes` pertencem a `ITENS_TREINO`, não a `EXERCICIOS`
   nem a `TREINOS` isoladamente — são o resultado do **encontro** entre um treino
   específico e um exercício específico (mesma lógica do método das quatro perguntas,
-  Aula 01, Seção 10.1, pergunta 4).
+  Tópico 01, Seção 10.1, pergunta 4).
 - `ordem` como `TINYINT UNSIGNED` é suficiente porque nenhum treino terá centenas de
   exercícios — dimensionar pelo domínio real (Regra 8), não por hábito de sempre usar
   `INT`.
@@ -236,7 +235,7 @@ Table grupos {
   deletado_em    DATETIME
 }
 
-// N:M usuarios <-> grupos — PK composta (Aula 02, 8.3)
+// N:M usuarios <-> grupos — PK composta (Tópico 02, 8.3)
 Table membros_grupo {
   grupo_id       "BIGINT UNSIGNED" [PK, NOT NULL]
   usuario_id     "BIGINT UNSIGNED" [PK, NOT NULL]
@@ -283,7 +282,7 @@ Ref fk_participante_usuario: participantes_despesa.usuario_id > usuarios.id_usua
   **derivado**, calculado a partir da soma de `PARTICIPANTES_DESPESA.valor_devido`
   contra o que cada um pagou em `DESPESAS.pagador_id`. Armazená-lo diretamente
   duplicaria informação e criaria risco de inconsistência a cada nova despesa — o
-  mesmo raciocínio de `idade` vs. `data_nascimento` da Aula 01.
+  mesmo raciocínio de `idade` vs. `data_nascimento` do Tópico 01.
 - `criador_id` e `pagador_id` são dois exemplos de **Regra 7**: ambos referenciam
   `usuarios`, mas em papéis diferentes, então usam o nome do papel — nunca
   `usuario_id` genérico, que seria ambíguo.
@@ -297,7 +296,7 @@ Ref fk_participante_usuario: participantes_despesa.usuario_id > usuarios.id_usua
 
 **Entidades identificadas:** `USUARIOS`, `PLANOS`, `ASSINATURAS` (histórico),
 `PODCASTS`, `AUDIOLIVROS`, `CONTEUDOS` (superclasse), `EPISODIOS_PODCAST` e
-`CAPITULOS_AUDIOLIVRO` (subclasses — Estratégia 2, Aula 01, 8.7), `PLAYLISTS`,
+`CAPITULOS_AUDIOLIVRO` (subclasses — Estratégia 2, Tópico 01, 8.7), `PLAYLISTS`,
 `ITENS_PLAYLIST` (associativa). Todo conteúdo cadastrado é episódio ou capítulo, nunca
 os dois, nunca nenhum.
 
@@ -378,7 +377,7 @@ Table audiolivros {
   deletado_em       DATETIME
 }
 
-// Superclasse (Estratégia 2 — Aula 01, 8.7)
+// Superclasse (Estratégia 2 — Tópico 01, 8.7)
 Table conteudos {
   id_conteudo       "BIGINT UNSIGNED" [PK, INCREMENT]
   titulo            VARCHAR(255)   [NOT NULL]
@@ -445,14 +444,14 @@ Ref fk_item_conteudo:       itens_playlist.conteudo_id         > conteudos.id_co
 - `ITENS_PLAYLIST` referencia `CONTEUDOS` (a superclasse), não `EPISODIOS_PODCAST` nem
   `CAPITULOS_AUDIOLIVRO` diretamente — é exatamente isso que permite misturar os dois
   tipos numa mesma playlist livremente, sem duas FKs opcionais e sem `UNION`. É o
-  mesmo padrão do "item de playlist" citado na Aula 01, Seção 8.6, Exemplo 3.
+  mesmo padrão do "item de playlist" citado no Tópico 01, Seção 8.6, Exemplo 3.
 - A regra de que todo conteúdo é episódio OU capítulo (nunca os dois, nunca nenhum)
   não é 100% garantida só pelo desenho das tabelas — o
   banco relacional puro não impede, por si só, que um `id_conteudo` exista em
   `EPISODIOS_PODCAST` e também em `CAPITULOS_AUDIOLIVRO`. Na prática, isso se reforça
   na camada de aplicação ou com uma coluna discriminadora extra em `CONTEUDOS` (ex.:
   `tipo_conteudo ENUM('podcast','audiolivro')`) combinada com um `CHECK` — vale
-  levantar esse ponto em aula.
+  levantar esse ponto em sala.
 - `ASSINATURAS` guarda **histórico**, não o estado atual — por isso não há coluna
   "plano atual" em `USUARIOS`; o plano vigente é obtido consultando a assinatura mais
   recente com `data_fim IS NULL`.
@@ -585,7 +584,7 @@ Ref fk_avaliacao_avaliado:   avaliacoes.avaliado_id         > pessoas.id_pessoa
   é essa distinção que sustenta `RESERVAS_CARONA.passageiro_id` apontar para
   `PASSAGEIROS`, não direto para `PESSOAS`.
 - `avaliador_id` e `avaliado_id` resolvem a avaliação mútua sem ambiguidade — o mesmo
-  problema do auto-relacionamento `supervisor_id` da Aula 01, Seção 4.3, mas aqui via
+  problema do auto-relacionamento `supervisor_id` do Tópico 01, Seção 4.3, mas aqui via
   duas FKs numa tabela separada em vez de auto-relacionamento direto em `PESSOAS`.
 
 ---
@@ -991,13 +990,13 @@ Ref fk_avaliacao_avaliado:  avaliacoes.avaliado_id                > usuarios.id_
 **Comentários:**
 
 - `PERFIS_PRESTADOR` é uma especialização com **um único subtipo**. Ainda assim é um
-  caso legítimo de especialização (Aula 01, Seção 8.2): nem todo `USUARIOS` tem uma
+  caso legítimo de especialização (Tópico 01, Seção 8.2): nem todo `USUARIOS` tem uma
   linha correspondente em `PERFIS_PRESTADOR`, só quem decidiu virar prestador.
   `SERVICOS_OFERTADOS.prestador_id` aponta para `PERFIS_PRESTADOR.id_usuario` — não
   dá para um usuário sem perfil de prestador anunciar um serviço, e essa regra fica
   garantida pela própria FK, sem precisar de validação na aplicação.
 - `CONTRATOS.proposta_id` é `UNIQUE` — é isso que transforma o 1:N natural (uma
-  proposta pode gerar um contrato) num 1:1 de fato (Aula 02, Seção 8.1, Critério 1):
+  proposta pode gerar um contrato) num 1:1 de fato (Tópico 02, Seção 8.1, Critério 1):
   sem o `UNIQUE`, nada impediria duas linhas de `CONTRATOS` para a mesma proposta.
   `PROPOSTAS` continua guardando `status` — inclusive `'aceita'` — mesmo depois de
   virar contrato, porque é o próprio histórico da negociação, não um dado redundante

@@ -1,16 +1,16 @@
 <!--
-GABARITO — não faz parte do fluxo principal da aula e fica fora do `nav` do
-mkdocs.yml de propósito. É acessível só pelo link no final de Aula_04_SQL_DML.md.
+GABARITO — não faz parte do fluxo principal do tópico e fica fora do `nav` do
+mkdocs.yml de propósito. É acessível só pelo link no final de Topico_04_SQL_DML.md.
 -->
 
-# Gabarito — Aula 04 — SQL DML: Manipulação de Dados
+# Gabarito — Tópico 04 — SQL DML: Manipulação de Dados
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
 **Fatec Jahu — 2º Semestre/2026**
 
 > ⚠️ Este gabarito é para conferência **depois** de você tentar resolver os checkpoints
-> e os Exercícios de Fixação por conta própria na [Aula 04](Aula_04_SQL_DML.md).
+> e os Exercícios de Fixação por conta própria no [Tópico 04](Topico_04_SQL_DML.md).
 > Resolver antes de tentar reduz o benefício de treinar a recuperação ativa do
 > conteúdo.
 
@@ -152,7 +152,7 @@ deliberada e irreversível.
 
 ---
 
-⬅️ [Voltar à Aula 04 — SQL DML](./Aula_04_SQL_DML.md)
+⬅️ [Voltar ao Tópico 04 — SQL DML](./Topico_04_SQL_DML.md)
 
 ---
 

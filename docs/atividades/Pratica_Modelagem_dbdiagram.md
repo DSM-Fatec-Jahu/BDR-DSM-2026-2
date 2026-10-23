@@ -1,4 +1,4 @@
-# Prática — Modelagem com dbdiagram.io (Aulas 01 e 02)
+# Prática — Modelagem com dbdiagram.io (Tópicos 01 e 02)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,8 +6,8 @@
 
 !!! info "🧪 Atividade de treino — não vale nota"
     Esta atividade **não tem peso na média**. Ela existe para você praticar, errar à
-    vontade e tirar dúvidas em aula antes das avaliações que valem nota (T1, P1...).
-    Traga sua tentativa — mesmo incompleta — para a aula: é matéria-prima para
+    vontade e tirar dúvidas em sala antes das avaliações que valem nota (T1, P1...).
+    Traga sua tentativa — mesmo incompleta — para o encontro presencial: é matéria-prima para
     discussão, não algo para entregar "pronto".
 
 ---
@@ -37,7 +37,7 @@ Repare no que a tela **não deixa claro**, mesmo depois de toda essa riqueza vis
   multivalorado, ou uma tabela associativa `N:M` entre `POKEMONS` e `TIPOS`? A tela não
   responde; você teria que decidir sozinho, sem saber se a decisão está certa.
 - A cadeia evolutiva (Pichu → Pikachu → Raichu) é um **auto-relacionamento** — a mesma
-  ideia de `FUNCIONARIOS` supervisionando `FUNCIONARIOS` que vimos na Aula 01. Mas a FK
+  ideia de `FUNCIONARIOS` supervisionando `FUNCIONARIOS` que vimos no Tópico 01. Mas a FK
   se chamaria `evolui_de_id`? E se um Pokémon puder evoluir para **mais de uma** forma
   (como Eevee, que evolui para vários), isso muda a cardinalidade — e nada na tela
   avisa que esse caso especial existe até você esbarrar nele.
@@ -47,7 +47,7 @@ Repare no que a tela **não deixa claro**, mesmo depois de toda essa riqueza vis
   equipe, em outro contexto, para outro propósito.
 - **Habilidades** têm descrição própria e se repetem entre Pokémon diferentes (ex.:
   "Eletricidade Estática" aparece em vários) — isso cheira a dependência parcial/
-  transitiva não resolvida (Aula 02) se você simplesmente copiar o texto da tela para
+  transitiva não resolvida (Tópico 02) se você simplesmente copiar o texto da tela para
   dentro de cada linha de Pokémon.
 - A tela não revela **nada** sobre usuários: existe alguém logado favoritando Pokémon?
   Existe histórico de busca? Múltiplos idiomas por descrição? Você não tem como saber
@@ -70,15 +70,14 @@ negócio apresentados, você deve produzir um diagrama em
 **[dbdiagram.io](https://dbdiagram.io)** que:
 
 1. **Identifique entidades, atributos e chaves** (PK e FK) — decidindo, quando fizer
-   sentido, se há generalização/especialização (nem todo exercício exige isso: releia a
-   Aula 01, Seção 8, para saber quando ela se justifica e quando é complexidade
+   sentido, se há generalização/especialização (nem todo exercício exige isso: releia o Tópico 01, Seção 8, para saber quando ela se justifica e quando é complexidade
    desnecessária).
 2. **Aplique a tipificação de dados correta** e as **convenções de nomenclatura** desta
    disciplina — veja a tabela de tipos e o resumo de convenções logo abaixo.
 3. **Defina cardinalidade e participação** de cada relacionamento (1:1, 1:N, N:M —
-   Aula 01, Seção 4).
+   Tópico 01, Seção 4).
 4. **Aplique normalização até a 3ª Forma Normal** — nenhuma tabela do seu diagrama deve
-   ter dependência parcial ou transitiva (Aula 02).
+   ter dependência parcial ou transitiva (Tópico 02).
 5. **Modele a gestão de usuários e acessos** — item **obrigatório em todo exercício**.
    Nos dois exercícios fáceis (1 e 2), isso significa autenticação simples com um tipo
    básico (`administrador` / `usuario`). Nos dois avançados (6 e 7), significa um
@@ -127,7 +126,7 @@ negócio apresentados, você deve produzir um diagrama em
     Isso vale para **todo** tipo `UNSIGNED` usado nesta atividade —
     `"BIGINT UNSIGNED"`, `"INT UNSIGNED"`, `"SMALLINT UNSIGNED"` e
     `"TINYINT UNSIGNED"` (ver a Tabela de Tipos Permitidos abaixo). Isso é uma
-    particularidade **só do DBML** — no SQL real do MariaDB (Aula 03), `UNSIGNED` é
+    particularidade **só do DBML** — no SQL real do MariaDB (Tópico 03), `UNSIGNED` é
     escrito normalmente, sem aspas.
 
 3. Para colunas com **lista fechada de valores** (nosso `ENUM`), declare um bloco
@@ -146,7 +145,7 @@ negócio apresentados, você deve produzir um diagrama em
     }
     ```
 
-4. Para **chave primária composta** (o padrão de tabela intermediária N:M da Aula 02,
+4. Para **chave primária composta** (o padrão de tabela intermediária N:M do Tópico 02,
    Seção 8.3), marque `[PK]` nas duas colunas envolvidas — o dbdiagram.io entende que a
    chave é a combinação das duas.
 5. Para restrições `UNIQUE` que envolvem mais de uma coluna, use um bloco `Indexes`
@@ -163,9 +162,9 @@ negócio apresentados, você deve produzir um diagrama em
     }
     ```
 
-6. Para entregar/mostrar seu diagrama em aula, use o botão **Share** (gera um link
+6. Para entregar/mostrar seu diagrama em sala, use o botão **Share** (gera um link
    público) ou exporte como PNG/PDF pelo menu — combine o formato exato com o
-   professor no dia da correção em aula.
+   professor no dia da correção em sala.
 
 ---
 
@@ -173,7 +172,7 @@ negócio apresentados, você deve produzir um diagrama em
 
 Estes são **todos** os tipos usados nos gabaritos desta atividade — use apenas o que
 está aqui, escolhendo o mais adequado ao dado, nunca o que "parece mais simples"
-(Regra 8, Aula 03).
+(Regra 8, Tópico 03).
 
 | Tipo (dbdiagram.io / MariaDB) | Tamanho / faixa | Quando usar |
 |---|---|---|
@@ -193,14 +192,14 @@ está aqui, escolhendo o mais adequado ao dado, nunca o que "parece mais simples
 > ⚠️ **Sobre as aspas nos quatro tipos `UNSIGNED` acima:** elas são exigidas pelo
 > **DBML** (a sintaxe do dbdiagram.io), não pelo SQL real — ver a armadilha explicada
 > na Seção "Como modelar no dbdiagram.io". No `CREATE TABLE` de verdade (MariaDB,
-> Aula 03), o mesmo tipo é escrito **sem aspas**: `BIGINT UNSIGNED`.
+> Tópico 03), o mesmo tipo é escrito **sem aspas**: `BIGINT UNSIGNED`.
 
 ---
 
 ## 📐 Convenções Aplicadas nesta Atividade
 
 Recapitulando as **9 regras oficiais** de nomenclatura desta disciplina (detalhadas por
-completo na [Aula 03, Seção 1](../aulas/Aula_03_SQL_DDL.md#1-convencoes-de-nomenclatura-desta-disciplina))
+completo no [Tópico 03, Seção 1](../topicos/Topico_03_SQL_DDL.md#1-convencoes-de-nomenclatura-desta-disciplina))
 — todo diagrama entregue nesta atividade precisa aderir a todas elas:
 
 | # | Regra | Exemplo aplicado nesta atividade |
@@ -218,13 +217,13 @@ completo na [Aula 03, Seção 1](../aulas/Aula_03_SQL_DDL.md#1-convencoes-de-nom
 Além das 9 regras, dois padrões estruturais que você vai usar o tempo todo nesta
 atividade:
 
-**Relacionamento N:M vira tabela intermediária com PK composta** (Aula 02, Seção 8.3):
+**Relacionamento N:M vira tabela intermediária com PK composta** (Tópico 02, Seção 8.3):
 as duas FKs, juntas, formam a chave primária — sem PK substituta própria — e os
 atributos que pertencem ao *relacionamento em si* (não a nenhuma das duas entidades)
 vivem nessa tabela. Exemplo: `itens_pedidos (pedido_id PK FK, produto_id PK FK,
 quantidade)`.
 
-**Generalização/especialização usa a Estratégia 2** (Aula 01, Seção 8.7): uma tabela
+**Generalização/especialização usa a Estratégia 2** (Tópico 01, Seção 8.7): uma tabela
 para a superclasse, e uma tabela por subclasse cuja PK é, ao mesmo tempo, FK única
 para a superclasse. Exemplo: `produtos (id_produto PK)` e `jogos (id_produto PK FK)`.
 
@@ -236,7 +235,7 @@ para a superclasse. Exemplo: `produtos (id_produto PK)` e `jogos (id_produto PK 
 - **Nível RBAC — papéis com permissões (exercícios avançados):** quando o número de
   papéis pode crescer, um mesmo usuário pode acumular mais de um papel, e cada papel
   precisa de um conjunto de permissões configurável **sem alterar código**, um `ENUM`
-  não resolve (lembre da Aula 03: "ENUM exige `ALTER TABLE` para crescer, e isso pode
+  não resolve (lembre do Tópico 03: "ENUM exige `ALTER TABLE` para crescer, e isso pode
   travar uma tabela em produção"). A solução é o padrão **RBAC**: uma tabela `papeis`,
   uma tabela `permissoes`, e duas tabelas de junção N:M —
   `usuarios_papeis` (um usuário pode ter vários papéis) e `papeis_permissoes` (um papel
@@ -247,7 +246,7 @@ para a superclasse. Exemplo: `produtos (id_produto PK)` e `jogos (id_produto PK 
 
 ## 🧾 Exemplo Completo e Comentado — Cupom Fiscal
 
-O exemplo abaixo retoma o mesmo domínio do **Exemplo guiado 2 da Aula 01** (Nota
+O exemplo abaixo retoma o mesmo domínio do **Exemplo guiado 2 do Tópico 01** (Nota
 Fiscal de Venda), já no nível de **Modelo Lógico**, 100% aderente a todas as
 convenções acima. Use-o como referência de "isto está certo" antes de começar os
 exercícios — cole o bloco inteiro em [dbdiagram.io](https://dbdiagram.io) para ver o
@@ -258,14 +257,14 @@ cadastrados; cada cupom tem uma ou mais linhas de item, cada linha referenciando
 produto do catálogo com a quantidade comprada e o valor unitário **no momento da
 venda** (o preço de um produto pode mudar depois, então o cupom precisa guardar o
 valor histórico, não recalcular a partir do preço atual do produto — é exatamente a
-dependência parcial que a Aula 02 ensinou a eliminar). Todo cliente é também um usuário
+dependência parcial que o Tópico 02 ensinou a eliminar). Todo cliente é também um usuário
 do sistema de autoatendimento, com um tipo básico de acesso.
 
 ```dbml
 // ============================================================
 // EXEMPLO — Cupom Fiscal de Venda (mesmo domínio do Exemplo
-// guiado 2 da Aula 01), já no Modelo Lógico, 100% aderente às
-// 9 regras de nomenclatura da disciplina (Aula 03, Seção 1).
+// guiado 2 do Tópico 01), já no Modelo Lógico, 100% aderente às
+// 9 regras de nomenclatura da disciplina (Tópico 03, Seção 1).
 // ============================================================
 
 Enum tipo_usuario_enum {
@@ -314,13 +313,13 @@ Table cupons_fiscais {
   deletado_em      DATETIME
 }
 
-// Relacionamento N:M entre cupons_fiscais e produtos (Aula 02, 8.3):
+// Relacionamento N:M entre cupons_fiscais e produtos (Tópico 02, 8.3):
 // PK composta pelas duas FKs, sem PK substituta própria.
 Table itens_cupom {
   cupom_fiscal_id  "BIGINT UNSIGNED" [PK, NOT NULL]
   produto_id       "BIGINT UNSIGNED" [PK, NOT NULL]
   quantidade       "INT UNSIGNED"    [NOT NULL]
-  valor_unitario   DECIMAL(10,2)   [NOT NULL, note: 'snapshot do preço na venda — evita dependência parcial (Aula 02, 4.2)']
+  valor_unitario   DECIMAL(10,2)   [NOT NULL, note: 'snapshot do preço na venda — evita dependência parcial (Tópico 02, 4.2)']
   criado_em        DATETIME        [NOT NULL, default: `CURRENT_TIMESTAMP`]
   alterado_em      DATETIME        [NOT NULL]
   deletado_em      DATETIME
@@ -415,7 +414,7 @@ repúblicas ou saídas, sem precisar de planilha. Requisitos de negócio:
   total) nunca é digitado por ninguém — ele é sempre **calculado**, somando o que a
   pessoa pagou e subtraindo o que ela deve nas divisões registradas. Pense bem em que
   tipo de atributo isso é, e se ele deveria ocupar uma coluna própria no seu modelo
-  (releia a Aula 01, Seção 3.1, sobre atributos derivados).
+  (releia o Tópico 01, Seção 3.1, sobre atributos derivados).
 - Gestão de acesso no nível básico: `administrador` (gerencia a plataforma, pode
   desativar contas) e `usuario` (uso normal do app).
 

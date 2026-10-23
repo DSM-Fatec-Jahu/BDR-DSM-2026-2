@@ -1,4 +1,4 @@
-# Gabarito — Simulado: Aulas 01 a 03
+# Gabarito — Simulado: Tópicos 01 a 03
 
 > ⚠️ Esta página não aparece no índice de atividades nem no menu do site — só é
 > alcançável pelo link no final do enunciado do simulado, de propósito, para não
@@ -6,7 +6,7 @@
 > qualquer coisa abaixo.
 
 Todo o SQL abaixo foi executado em um MariaDB 10.4.32 (a mesma versão do XAMPP usado
-nas aulas), duas vezes seguidas, sem erro — inclusive as constraints, que foram
+no laboratório da disciplina), duas vezes seguidas, sem erro — inclusive as constraints, que foram
 testadas com inserções válidas e inválidas.
 
 ---
@@ -322,7 +322,7 @@ Resultado esperado (`SHOW CREATE TABLE pessoas`), na ordem das colunas: `id_pess
 
 - **`CHANGE COLUMN` renomeia e redefine ao mesmo tempo** — por isso o `doc_federal`
   já nasce como texto na mesma instrução. `RENAME COLUMN` só existe a partir do
-  MariaDB 10.5.2; no MariaDB 10.4.32 do XAMPP das aulas ele dá erro. `CHANGE COLUMN`
+  MariaDB 10.5.2; no MariaDB 10.4.32 do XAMPP do laboratório ele dá erro. `CHANGE COLUMN`
   funciona em qualquer versão.
 - **`VARCHAR(14)`, não `CHAR`:** CPF tem 11 dígitos e CNPJ tem 14, então o campo passa
   a ter tamanho variável (Regra 8). O tamanho considera os documentos **sem

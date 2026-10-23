@@ -1,4 +1,4 @@
-# Simulado — Aulas 01 a 03
+# Simulado — Tópicos 01 a 03
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -7,7 +7,7 @@
 !!! warning "🧪 Esta atividade não vale nota"
     Ela é uma **réplica do que pode ser solicitado na avaliação**. Resolva como se
     fosse a prova de verdade: sozinho, sem consultar respostas, e traga suas dúvidas
-    para a aula.
+    para o encontro presencial.
 
 ---
 
@@ -15,7 +15,7 @@
 
 A entrega é **um único arquivo `.sql`**. Baixe o modelo e preencha-o:
 
-📥 [Simulado_Aulas_01_03.sql](Simulado_Aulas_01_03.sql){: download }
+📥 [Simulado_Topicos_01_03.sql](Simulado_Topicos_01_03.sql){: download }
 
 - **Marque o que concluiu.** No início de cada exercício do modelo há uma linha
   `-- [ ] Exercício N`. Ao terminar o exercício, troque `[ ]` por `[x]`. Só os
@@ -31,11 +31,11 @@ A entrega é **um único arquivo `.sql`**. Baixe o modelo e preencha-o:
 
 ### Convenções e conteúdo esperado
 
-Todo SQL entregue deve seguir as **9 regras de nomenclatura da disciplina** (Aula 03
+Todo SQL entregue deve seguir as **9 regras de nomenclatura da disciplina** (Tópico 03
 — SQL DDL, Seção 1).
 
 Espera-se que você utilize os conceitos de modelagem e de definição de estruturas
-apresentados nas **Aulas 01, 02 e 03**. Não é necessário citá-los nas respostas — o
+apresentados nos **Tópicos 01, 02 e 03**. Não é necessário citá-los nas respostas — o
 que se avalia é se você os compreendeu o suficiente para aplicá-los.
 
 ---
@@ -167,7 +167,7 @@ Sem refazê-la do zero, altere a estrutura da tabela para atender ao que segue:
 
     1. **Resolva sozinho(a) primeiro**, nas condições da prova: sem consulta, com o
        arquivo `.sql` do modelo. Errar e depurar é o treino que a avaliação cobra.
-    2. Travou? Releia a aula correspondente (Aulas 01, 02 e 03) e tente de novo.
+    2. Travou? Releia o tópico correspondente (Tópicos 01, 02 e 03) e tente de novo.
     3. Só **depois de ter uma versão sua funcionando** — e executada duas vezes seguidas
        sem erro —, abra o gabarito para **comparar**: o que ele fez diferente de você e
        por quê?
@@ -175,7 +175,7 @@ Sem refazê-la do zero, altere a estrutura da tabela para atender ao que segue:
        e confirme que sabe explicar cada linha.
 
 ??? warning "Já resolvi por conta própria e quero ver o gabarito"
-    📖 [Abrir o Gabarito — Simulado: Aulas 01 a 03](Simulado_Aulas_01_03_Gabarito.md)
+    📖 [Abrir o Gabarito — Simulado: Tópicos 01 a 03](Simulado_Topicos_01_03_Gabarito.md)
 
     #### O que o gabarito contém
 

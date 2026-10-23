@@ -1,4 +1,4 @@
-# Aula 02 — Normalização e Passagem ao Modelo Lógico Relacional
+# Tópico 02 — Normalização e Passagem ao Modelo Lógico Relacional
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,9 +6,9 @@
 
 ---
 
-## 🎯 Objetivos da Aula
+## 🎯 Objetivos do Tópico
 
-Ao final desta aula você deverá ser capaz de:
+Ao final deste tópico você deverá ser capaz de:
 
 - Identificar dependências funcionais — parciais e transitivas — em um conjunto de dados;
 - Reconhecer anomalias de inserção, atualização e exclusão causadas por uma estrutura mal projetada;
@@ -17,7 +17,7 @@ Ao final desta aula você deverá ser capaz de:
 
 ---
 
-## 🗺️ Mapa Mental da Aula
+## 🗺️ Mapa Mental do Tópico
 
 ```mermaid
 flowchart LR
@@ -52,11 +52,11 @@ flowchart LR
 
 ## 🧭 Por onde começar?
 
-Na Aula 01 você aprendeu a representar um domínio de negócio como um diagrama de entidades e relacionamentos. Mas um diagrama conceitual bem feito ainda não é um banco de dados — é uma representação abstrata do problema. Para sair do diagrama e chegar às tabelas que realmente vão existir no sistema, precisamos percorrer duas etapas complementares que serão o foco desta aula.
+No Tópico 01 você aprendeu a representar um domínio de negócio como um diagrama de entidades e relacionamentos. Mas um diagrama conceitual bem feito ainda não é um banco de dados — é uma representação abstrata do problema. Para sair do diagrama e chegar às tabelas que realmente vão existir no sistema, precisamos percorrer duas etapas complementares que serão o foco deste tópico.
 
 A primeira é a **normalização**: um processo analítico e matemático, baseado em teoria de conjuntos e álgebra relacional, que garante que cada tabela do banco armazene apenas o que lhe compete, eliminando redundâncias e prevenindo inconsistências. A segunda é a **passagem ao modelo lógico**: a tradução sistemática do MER para um conjunto de tabelas relacionais, seguindo regras precisas para cada tipo de relacionamento.
 
-![Normalização](../imgs/Aula_02_IMG_01.png)
+![Normalização](../imgs/Topico_02_IMG_01.png)
 
 Esses dois processos se complementam: você pode chegar ao modelo lógico pela normalização de tabelas existentes (quando há um banco legado, por exemplo) ou pela passagem direta do MER (quando está projetando do zero). Em ambos os casos, o resultado ideal deve satisfazer as mesmas regras formais. Por isso, estudaremos os dois caminhos.
 
@@ -96,7 +96,7 @@ Esses três tipos de anomalias — **inserção, atualização e exclusão** —
     b) Fernanda Reis mudou de e-mail. Quantas linhas precisam ser atualizadas para manter a consistência, e o que acontece se uma delas for esquecida? Que anomalia é essa?
     c) Se a sessão 502 — a única de Bruno Alves — for excluída do sistema, o que se perde além do próprio registro de recarga? Que anomalia é essa?
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -136,7 +136,7 @@ id_funcionario → id_departamento → nome_departamento
 
 Esse tipo de dependência é o que viola a Terceira Forma Normal.
 
-![Dependencia](../imgs/Aula_02_IMG_02.png)
+![Dependencia](../imgs/Topico_02_IMG_02.png)
 
 ### 2.4 Como Identificar Dependências Funcionais na Prática
 
@@ -169,7 +169,7 @@ Identificar todas as dependências funcionais de uma tabela é o primeiro passo 
     b) Considerando a chave primária composta `(id_assinatura, jogo_titulo)`, classifique `preco_mensal` quanto ao tipo de dependência funcional em relação a essa chave — total, parcial ou nenhuma. Justifique.
     c) Existe alguma dependência transitiva nessa tabela? Se sim, escreva a cadeia (X → Y → Z).
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -211,12 +211,12 @@ Aqui, tentou-se representar múltiplos produtos por pedido criando colunas repet
 
 Para resolver valores não-atômicos, criamos uma tabela separada para o atributo multivalorado:
 
-> 📐 **Por que os diagramas desta aula já usam nomes no plural (`CLIENTES`, `PEDIDOS`...)?**
+> 📐 **Por que os diagramas deste tópico já usam nomes no plural (`CLIENTES`, `PEDIDOS`...)?**
 > É comum — e correto — encontrar entidades nomeadas no singular na literatura acadêmica
 > de modelagem conceitual, seguindo a notação clássica de Peter Chen (como fizemos na
-> Aula 01). A partir desta aula, porém, já estamos falando de **modelo lógico** — um
-> passo mais perto da tabela SQL de verdade, que a Regra 4 (Aula 03) exige no plural.
-> Adotamos o plural já aqui, e não só a partir da Aula 03, para que a transição entre
+> Tópico 01). A partir deste tópico, porém, já estamos falando de **modelo lógico** — um
+> passo mais perto da tabela SQL de verdade, que a Regra 4 (Tópico 03) exige no plural.
+> Adotamos o plural já aqui, e não só a partir do Tópico 03, para que a transição entre
 > "entidade no diagrama" e "tabela no banco" não vire uma fonte extra de confusão — o
 > nome não muda no meio do caminho.
 
@@ -275,7 +275,7 @@ erDiagram
     a) Que violação da 1FN essa tabela apresenta? Aponte os dois problemas concretos que ela traz na prática (pense em um pedido com mais de três itens, e em uma mesa que peça só um item).
     b) Aplique a 1FN: redesenhe a estrutura em tabelas separadas (como foi feito para `PEDIDOS`/`ITENS_PEDIDOS` na Seção 3.3) e desenhe o `erDiagram` correspondente.
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -366,7 +366,7 @@ Agora cada tabela armazena apenas o que lhe compete:
     b) Quais atributos violam a 2FN, e por quê?
     c) Aplique a 2FN: proponha as tabelas resultantes (nomes, colunas, PKs e FKs).
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
@@ -445,7 +445,7 @@ Agora `nome_cidade` e `nome_estado` residem apenas em CIDADES. Um cliente refere
     b) O que acontece se a Clínica Vitalis mudar de cidade? Quantas linhas precisariam ser atualizadas, e qual o risco disso?
     c) Aplique a 3FN: proponha as tabelas resultantes.
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
@@ -459,7 +459,7 @@ A tabela abaixo consolida os conceitos em uma visão única para facilitar a rev
 | **2FN** | Estar na 1FN | Dependências de parte da chave | Dependência parcial | "Algum atributo depende só de parte da chave composta?" |
 | **3FN** | Estar na 2FN | Dependências entre não-chaves | Dependência transitiva | "Algum atributo não-chave depende de outro não-chave?" |
 
-![Dependencia](../imgs/Aula_02_IMG_03.png)
+![Dependencia](../imgs/Topico_02_IMG_03.png)
 
 ---
 
@@ -610,7 +610,7 @@ Agora o modelo está completamente na **3FN**. Cada tabela armazena exatamente o
 
 ## 8. Passagem do Modelo Conceitual ao Modelo Lógico
 
-Quando partimos de um MER bem desenhado (como fizemos na Aula 01), a passagem ao modelo lógico segue regras precisas para cada tipo de relacionamento. Este é um processo mecânico — dado o diagrama, o resultado é determinístico.
+Quando partimos de um MER bem desenhado (como fizemos no Tópico 01), a passagem ao modelo lógico segue regras precisas para cada tipo de relacionamento. Este é um processo mecânico — dado o diagrama, o resultado é determinístico.
 
 > 📐 **Convenções de nomenclatura aplicadas a partir daqui:** toda chave primária
 > segue o padrão `id_` + nome da tabela no singular (**Regra 5**), e toda chave
@@ -619,7 +619,7 @@ Quando partimos de um MER bem desenhado (como fizemos na Aula 01), a passagem ao
 > estético, é o que permite distinguir visualmente "quem é dono da linha" de "quem
 > está apontando para outra tabela" só de olhar o nome da coluna. Essas regras — e as
 > outras sete que regem nomenclatura SQL nesta disciplina — são formalizadas por
-> completo na [Aula 03](./Aula_03_SQL_DDL.md#1-convencoes-de-nomenclatura-desta-disciplina).
+> completo no [Tópico 03](./Topico_03_SQL_DDL.md#1-convencoes-de-nomenclatura-desta-disciplina).
 
 ### 8.1 Regra para Relacionamentos 1:1
 
@@ -749,14 +749,14 @@ motivos práticos são:
 
 Isso **não** significa que a matrícula ou o CPF deixem de existir na tabela — eles
 continuam lá como atributos comuns, protegidos por uma constraint `UNIQUE` (a mesma
-lógica que a Aula 03 vai formalizar com `CONSTRAINT uq_cpf UNIQUE (cpf)`). Você ganha
+lógica que o Tópico 03 vai formalizar com `CONSTRAINT uq_cpf UNIQUE (cpf)`). Você ganha
 o melhor dos dois mundos: a garantia de unicidade do mundo real, e a estabilidade e
 performance da chave substituta como identidade interna da linha.
 
-> 🎯 **Fixe desde já:** toda PK criada por você, em qualquer aula ou atividade daqui em
+> 🎯 **Fixe desde já:** toda PK criada por você, em qualquer tópico ou atividade daqui em
 > diante, é `id_` + nome da tabela no singular — nunca um CPF, matrícula, código de
 > barras ou e-mail, por mais "único" que pareçam. Alunos que se acostumam com exemplos
-> de chave natural nas primeiras aulas costumam travar mais à frente, quando o modelo
+> de chave natural nos primeiros tópicos costumam travar mais à frente, quando o modelo
 > cresce e a FK de uma chave de negócio muda de tabela em tabela. Comece certo agora e
 > essa dúvida nunca mais aparece.
 
@@ -770,13 +770,13 @@ performance da chave substituta como identidade interna da linha.
 
     Escreva o modelo lógico completo (tabelas, colunas, PKs e FKs) aplicando as regras de passagem da Seção 8 a cada um dos quatro relacionamentos acima.
 
-    🔑 Resolução no [Gabarito da Aula 02](Aula_02_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 02](Topico_02_Gabarito.md#checkpoint-6) — tente resolver antes de conferir.
 
 ---
 
 ## 9. Resumo das Regras de Passagem
 
-![Dependencia](../imgs/Aula_02_IMG_04.png)
+![Dependencia](../imgs/Topico_02_IMG_04.png)
 
 | Elemento do MER | Regra de Passagem ao Modelo Lógico |
 |---|---|
@@ -793,7 +793,7 @@ performance da chave substituta como identidade interna da linha.
 
 ## 10. Exercícios de Fixação
 
-> 🔑 As resoluções destes três exercícios estão no [Gabarito da Aula 02](Aula_02_Gabarito.md) — tente resolver antes de conferir.
+> 🔑 As resoluções destes três exercícios estão no [Gabarito do Tópico 02](Topico_02_Gabarito.md) — tente resolver antes de conferir.
 
 ### Exercício 1 — Identificação de Violações
 
@@ -886,7 +886,7 @@ erDiagram
 
 ---
 
-## 📚 Referências desta Aula
+## 📚 Referências deste Tópico
 
 - ELMASRI, R.; NAVATHE, S. B. *Sistemas de Banco de Dados*. 7 ed. Cap. 14 — Dependências Funcionais e Normalização para Bancos de Dados Relacionais. São Paulo: Pearson, 2018.
 - SILBERSCHATZ, A.; KORTH, H. F.; SUNDARSHAN, S. *Sistema de banco de dados*. 6 ed. Cap. 7 — Projeto de Banco de Dados Relacional. Rio de Janeiro: Elsevier, 2016.
@@ -999,7 +999,7 @@ Usar CPF como PK espalha um dado sensível (LGPD) como FK em toda tabela relacio
 
 ## 📝 Resumo
 
-Nesta aula vimos que a normalização resolve anomalias de inserção, atualização e
+Neste tópico vimos que a normalização resolve anomalias de inserção, atualização e
 exclusão através da eliminação sistemática de dependências funcionais parciais e
 transitivas. Percorremos as três primeiras Formas Normais — 1FN (atomicidade), 2FN
 (sem dependência parcial da chave composta) e 3FN (sem dependência transitiva entre
@@ -1007,32 +1007,32 @@ não-chaves) — com um exemplo completo do zero até a 3FN. Também vimos as re
 formais e determinísticas de passagem do MER ao modelo lógico relacional, para
 relacionamentos 1:1, 1:N, N:M, entidades fracas e atributos multivalorados — sempre
 usando chaves substitutas (`id_tabela`) em vez de chaves naturais como CPF ou
-matrícula, e entendemos por quê. Na próxima aula, esse modelo lógico já normalizado
+matrícula, e entendemos por quê. No próximo tópico, esse modelo lógico já normalizado
 vira SQL de verdade, com `CREATE TABLE`.
 
 ---
 
-## 🏆 Conquista da Aula
+## 🏆 Conquista do Tópico
 
 !!! success "Selo desbloqueado: 🧹 Guardião(ã) da Normalização"
     Você aprendeu a identificar e eliminar as três principais fontes de redundância e
     inconsistência em um banco de dados, e já sabe traduzir qualquer MER em tabelas
-    relacionais corretas. A próxima parada da Trilha do(a) Modelador(a) de Dados:
+    relacionais corretas. A próxima parada da Trilha do(a) Arquiteto(a) de Dados:
     transformar esse modelo lógico em SQL de verdade.
 
 ---
 
-## 🔑 Gabarito desta Aula
+## 🔑 Gabarito deste Tópico
 
-As respostas dos 6 checkpoints espalhados pela aula, e dos 3 Exercícios de Fixação da
+As respostas dos 6 checkpoints espalhados pelo tópico, e dos 3 Exercícios de Fixação da
 Seção 10, estão em um arquivo separado, para não estragar a tentativa de quem ainda não
-chegou até aqui: [Gabarito — Aula 02](Aula_02_Gabarito.md).
+chegou até aqui: [Gabarito — Tópico 02](Topico_02_Gabarito.md).
 
 ---
 
 ## 🔗 Navegação
 
-⬅️ [Aula 01 — Revisão de Modelagem Conceitual](./Aula_01_Revisao_Modelagem_Conceitual.md) · ➡️ [Aula 03 — SQL DDL](./Aula_03_SQL_DDL.md)
+⬅️ [Tópico 01 — Revisão de Modelagem Conceitual](./Topico_01_Revisao_Modelagem_Conceitual.md) · ➡️ [Tópico 03 — SQL DDL](./Topico_03_SQL_DDL.md)
 
 ---
 

@@ -1,5 +1,5 @@
 site_name: Banco de Dados — Relacional (IBD015) — 2026/2
-site_description: Material de aulas, atividades e avaliações de Banco de Dados — Relacional (IBD015) — Fatec Jahu — DSM — 2º Semestre 2026
+site_description: Material de tópicos, atividades e avaliações de Banco de Dados — Relacional (IBD015) — Fatec Jahu — DSM — 2º Semestre 2026
 site_url: https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/
 repo_url: https://github.com/DSM-Fatec-Jahu/BDR-DSM-2026-2
 repo_name: DSM-Fatec-Jahu/BDR-DSM-2026-2
@@ -63,8 +63,8 @@ markdown_extensions:
 # padrão) para garantir que todo visitante renderize o mesmo build — a tag flutuante já
 # causou divergência de renderização entre GitHub Pages e a pré-visualização do GitHub
 # (pé de galinha sobreposto às tabelas em erDiagram de auto-relacionamento). Ver
-# docs/javascripts/mermaid.mjs. Ao atualizar, teste o diagrama de auto-relacionamento da
-# Aula 01 antes de trocar a versão.
+# docs/javascripts/mermaid.mjs. Ao atualizar, teste o diagrama de auto-relacionamento do
+# Tópico 01 antes de trocar a versão.
 extra_javascript:
   - javascripts/mermaid.mjs
 
@@ -74,24 +74,23 @@ plugins:
   - mkdocs_quiz
 
 # IMPORTANTE: o nav é explícito (não há discovery automático de arquivos).
-# Toda aula nova adicionada em docs/aulas/ precisa ganhar uma entrada aqui,
-# na seção correta, ou ela existirá como arquivo mas não aparecerá no site.
+# Todo tópico novo adicionado em docs/topicos/ precisa ganhar uma entrada aqui,
+# na ordem correta, ou ele existirá como arquivo mas não aparecerá no site.
 # O pipeline descrito em CLAUDE.md cobre esse passo automaticamente.
 nav:
   - Início: index.md
-  - Bloco 1 — Fundamentos e Modelagem:
-      - aulas/Aula_01_Revisao_Modelagem_Conceitual.md
-      - aulas/Cardinalidade_MER_Completo.md
-      - aulas/Aula_02_Normalizacao.md
-      - aulas/Aula_03_SQL_DDL.md
-      - aulas/Aula_04_SQL_DML.md
-  - Bloco 2 — Consultas e Visões:
-      - aulas/Aula_06_SQL_Consultas_Basicas.md
+  - Tópicos:
+      - topicos/Topico_01_Revisao_Modelagem_Conceitual.md
+      - topicos/Cardinalidade_MER_Completo.md
+      - topicos/Topico_02_Normalizacao.md
+      - topicos/Topico_03_SQL_DDL.md
+      - topicos/Topico_04_SQL_DML.md
+      - topicos/Topico_05_SQL_Consultas_Basicas.md
   - Atividades e Avaliações:
       - atividades/index.md
       - atividades/Pratica_Modelagem_dbdiagram.md
       - atividades/Pratica_DDL_Estruturas.md
-      - atividades/Simulado_Aulas_01_03.md
+      - atividades/Simulado_Topicos_01_03.md
       - atividades/Avaliacao_P1_Biblioteca_Veterinaria.md
 
 extra:

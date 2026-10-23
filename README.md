@@ -12,14 +12,14 @@
 
 ---
 
-Este repositório é a **fonte** do material de aulas, atividades e avaliações da disciplina Banco de Dados — Relacional (IBD015) — Fatec Jahu, curso de Desenvolvimento de Software Multiplataforma (DSM), 2º semestre de 2026.
+Este repositório é a **fonte** do material de tópicos, atividades e avaliações da disciplina Banco de Dados — Relacional (IBD015) — Fatec Jahu, curso de Desenvolvimento de Software Multiplataforma (DSM), 2º semestre de 2026.
 
 > **Para estudar, use o [site publicado](https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/).**
 > Ele é gerado automaticamente a partir destes mesmos arquivos Markdown, com mapas mentais, flashcards e quizzes totalmente funcionais — recursos que o GitHub não renderiza ao abrir um `.md` isoladamente (é por isso que este README, por exemplo, não usa esses recursos: aqui só o que o próprio GitHub sabe renderizar).
 
 ## 🎮 Como este repositório é mantido
 
-As aulas são adicionadas **progressivamente**, uma por semana, em `docs/aulas/`.
+Os tópicos são adicionados **progressivamente** em `docs/topicos/`.
 
 ## 🛠️ Rodando o site localmente
 

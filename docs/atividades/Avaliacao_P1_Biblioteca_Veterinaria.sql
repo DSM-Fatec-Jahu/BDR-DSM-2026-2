@@ -1,6 +1,6 @@
 /* =====================================================================
    AVALIAÇÃO P1 — BIBLIOTECA COMUNITÁRIA OU CLÍNICA VETERINÁRIA
-   Aulas 01 a 03
+   Tópicos 01 a 03
    Disciplina: Banco de Dados — Relacional (IBD015)
    Fatec Jahu — DSM — 2º Semestre/2026
 
@@ -27,7 +27,7 @@
    6. Deixe COMENTADO qualquer trecho incompleto ou com erro, para não
       impedir a execução do restante do arquivo.
    7. Convenções: siga as 9 regras de nomenclatura da disciplina
-      (Aula 03 — SQL DDL, Seção 1).
+      (Tópico 03 — SQL DDL, Seção 1).
    ===================================================================== */
 
 

@@ -1,5 +1,5 @@
 /* =====================================================================
-   SIMULADO — AULAS 01 A 03
+   SIMULADO — TÓPICOS 01 A 03
    Disciplina: Banco de Dados — Relacional (IBD015)
    Fatec Jahu — DSM — 2º Semestre/2026
    Esta atividade não vale nota: é uma réplica do que pode ser solicitado
@@ -25,7 +25,7 @@
       objetos que serão criados e proteja tanto a remoção quanto a criação
       contra a existência ou a inexistência deles.
    8. Convenções: siga as 9 regras de nomenclatura da disciplina
-      (Aula 03 — SQL DDL, Seção 1).
+      (Tópico 03 — SQL DDL, Seção 1).
    ===================================================================== */
 
 -- [ ] Exercício 1

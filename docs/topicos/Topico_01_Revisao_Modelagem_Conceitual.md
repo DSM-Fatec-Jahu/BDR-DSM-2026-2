@@ -1,4 +1,4 @@
-# Aula 01 — Revisão de Modelagem de Dados (Conceitual)
+# Tópico 01 — Revisão de Modelagem de Dados (Conceitual)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
 **Professor:** Ronan Adriel Zenatti · ronan.zenatti@cps.sp.gov.br
@@ -6,9 +6,9 @@
 
 ---
 
-## 🎯 Objetivos da Aula
+## 🎯 Objetivos do Tópico
 
-Ao final desta aula você deverá ser capaz de:
+Ao final deste tópico você deverá ser capaz de:
 
 - Diferenciar dado, informação e conhecimento, situando o papel da modelagem de dados nesse processo;
 - Identificar e diferenciar os elementos fundamentais de um Modelo Entidade-Relacionamento (MER): entidades, atributos e relacionamentos;
@@ -19,7 +19,7 @@ Ao final desta aula você deverá ser capaz de:
 
 ---
 
-## 🗺️ Mapa Mental da Aula
+## 🗺️ Mapa Mental do Tópico
 
 ```mermaid
 flowchart LR
@@ -93,7 +93,7 @@ Ex: matrícula do aluno João Silva"]
 Ex: padrão de evasão por semestre"]
 ```
 
-Essa distinção importa porque é exatamente isso que um banco de dados existe para gerenciar: ele armazena **dados**, estruturados de forma que a aplicação consiga transformá-los em **informação** útil para quem consulta — e, com o tempo e a análise adequada, em **conhecimento** para quem decide. A modelagem — o assunto do restante desta aula — é o processo de decidir *como* estruturar esses dados para que essa transformação seja possível, consistente e eficiente.
+Essa distinção importa porque é exatamente isso que um banco de dados existe para gerenciar: ele armazena **dados**, estruturados de forma que a aplicação consiga transformá-los em **informação** útil para quem consulta — e, com o tempo e a análise adequada, em **conhecimento** para quem decide. A modelagem — o assunto do restante deste tópico — é o processo de decidir *como* estruturar esses dados para que essa transformação seja possível, consistente e eficiente.
 
 !!! tip "✅ Verificação Rápida — Dado, Informação e Conhecimento"
     Bloco puramente conceitual — sem exercício prático ainda, então confira seu entendimento com os dois quizzes abaixo. A resposta é revelada na hora.
@@ -126,7 +126,7 @@ Imagine que você foi contratado para construir um sistema de gerenciamento de u
 
 A modelagem passa por três grandes etapas, e é importante entender como elas se conectam:
 
-![Fases da modelagem](../imgs/Aula_01_IMG_01.png)
+![Fases da modelagem](../imgs/Topico_01_IMG_01.png)
 
 
 A **Modelagem Conceitual** é a primeira etapa — ela é independente de qualquer tecnologia ou banco de dados específico. Aqui, o objetivo é representar o mundo real de forma abstrata, compreensível tanto pelo desenvolvedor quanto pelo cliente. Pense nela como uma planta arquitetônica: antes de construir, você desenha.
@@ -135,7 +135,7 @@ A **Modelagem Lógica** transforma esse diagrama conceitual em estruturas de tab
 
 A **Modelagem Física** é a implementação final em SQL, considerando o SGBD específico (MySQL, PostgreSQL, SQL Server etc.) com seus tipos de dados, índices e particularidades.
 
-Nesta aula, nosso foco é a **etapa conceitual**, usando a abordagem mais consagrada para isso: o **Modelo Entidade-Relacionamento**.
+Neste tópico, nosso foco é a **etapa conceitual**, usando a abordagem mais consagrada para isso: o **Modelo Entidade-Relacionamento**.
 
 ---
 
@@ -164,7 +164,7 @@ A **Entidade Fraca** não tem existência independente — ela só faz sentido e
 !!! example "🔍 Checkpoint 1 — Entidades: app de patinetes elétricos"
     Uma startup está modelando o banco de dados do seu aplicativo de aluguel de patinetes elétricos compartilhados. No sistema existem `Usuários` (que alugam os patinetes), `Patinetes` (cada um com número de série, nível de bateria e localização), `Estações de Recarga` (pontos físicos onde os patinetes ficam disponíveis para retirada) e `Manutenções` (registros de reparo que só existem porque estão vinculados a um patinete específico — se o patinete for removido do sistema, o registro de manutenção perde sentido). Para cada uma dessas quatro entidades, classifique-a como **forte** ou **fraca**, justificando em uma frase.
 
-    🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 01](Topico_01_Gabarito.md#checkpoint-1) — tente resolver antes de conferir.
 
 ---
 
@@ -186,14 +186,14 @@ Entender os tipos de atributos é fundamental para fazer uma modelagem precisa. 
 
 **Atributo Chave (ou Identificador):** é o atributo cujo valor identifica unicamente cada instância da entidade. Exemplo: `cpf` para Pessoa, `matricula` para Aluno. Na notação do MER, é sublinhado.
 
-> 🔑 **Nível conceitual vs. chave real de banco de dados:** aqui, no MER, identificar `cpf` ou `matricula` como atributo chave é só reconhecer o que identifica cada instância no mundo real — é assim que a literatura acadêmica costuma nomear. Quando esse modelo virar tabela de verdade (Aula 02 em diante), a chave primária efetivamente usada **não** vai ser o `cpf` nem a `matricula`, e sim um identificador substituto `id_` criado pelo banco — você vai entender exatamente o porquê na Aula 02.
+> 🔑 **Nível conceitual vs. chave real de banco de dados:** aqui, no MER, identificar `cpf` ou `matricula` como atributo chave é só reconhecer o que identifica cada instância no mundo real — é assim que a literatura acadêmica costuma nomear. Quando esse modelo virar tabela de verdade (Tópico 02 em diante), a chave primária efetivamente usada **não** vai ser o `cpf` nem a `matricula`, e sim um identificador substituto `id_` criado pelo banco — você vai entender exatamente o porquê no Tópico 02.
 
-![Atributos](../imgs/Aula_01_IMG_02.png)
+![Atributos](../imgs/Topico_01_IMG_02.png)
 
 !!! example "🔍 Checkpoint 2 — Atributos: reserva de sala em coworking"
     Uma rede de coworkings está modelando a entidade `Reservas` para permitir que membros reservem salas de reunião pelo aplicativo. Os dados coletados no formulário de reserva são: `codigo_reserva` (identificador único gerado no ato da reserva), `endereco_unidade` (rua, número, bairro, cidade e CEP da unidade escolhida), `data_hora_inicio`, `data_hora_fim`, `duracao_minutos` (calculada a partir do início e do fim) e `recursos_solicitados` (o membro pode marcar quantos quiser, entre projetor, quadro branco, cafeteira e webcam para videoconferência). Classifique cada um desses cinco atributos quanto ao tipo — simples, composto, multivalorado, derivado ou chave — justificando cada classificação.
 
-    🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 01](Topico_01_Gabarito.md#checkpoint-2) — tente resolver antes de conferir.
 
 ---
 
@@ -213,7 +213,7 @@ A **cardinalidade** é o conceito mais importante de um relacionamento. Ela defi
 
 **Muitos para Muitos (N:M):** uma instância de A se relaciona com várias de B, e uma instância de B se relaciona com várias de A. Exemplo: um **Aluno** cursa várias **Disciplinas**, e uma disciplina é cursada por vários alunos.
 
-> 🔑 **Ponto de atenção:** relacionamentos N:M na modelagem conceitual são perfeitamente válidos, mas na passagem para o modelo lógico sempre serão resolvidos com a criação de uma **tabela intermediária** (também chamada de tabela associativa ou tabela de junção). Veremos isso na Aula 02.
+> 🔑 **Ponto de atenção:** relacionamentos N:M na modelagem conceitual são perfeitamente válidos, mas na passagem para o modelo lógico sempre serão resolvidos com a criação de uma **tabela intermediária** (também chamada de tabela associativa ou tabela de junção). Veremos isso no Tópico 02.
 
 ### 4.2 Participação (ou Modalidade)
 
@@ -241,7 +241,7 @@ erDiagram
     FUNCIONARIOS ||--o{ FUNCIONARIOS : "supervisiona"
 ```
 
-> 🔑 **Repare no nome da chave estrangeira:** ela não se chama `funcionario_id` — se chamasse, seria impossível saber, só pelo nome da coluna, se ela representa "o funcionário" ou "o supervisor dele" (afinal, ambos são registros da mesma tabela). Por isso, quando a FK referencia uma tabela cuja entidade pode exercer **papéis diferentes** dentro do relacionamento, o nome usa o **papel** em vez do nome da tabela: `supervisor_id`. Você vai ver essa e outras convenções de nomenclatura formalizadas na Aula 03.
+> 🔑 **Repare no nome da chave estrangeira:** ela não se chama `funcionario_id` — se chamasse, seria impossível saber, só pelo nome da coluna, se ela representa "o funcionário" ou "o supervisor dele" (afinal, ambos são registros da mesma tabela). Por isso, quando a FK referencia uma tabela cuja entidade pode exercer **papéis diferentes** dentro do relacionamento, o nome usa o **papel** em vez do nome da tabela: `supervisor_id`. Você vai ver essa e outras convenções de nomenclatura formalizadas no Tópico 03.
 
 **Relacionamento ternário:** ocorre quando **três entidades** participam de um único relacionamento, e a combinação das três é que define a ocorrência — não faz sentido analisar duas delas isoladamente. Exemplo: um **Médico** prescreve um **Medicamento** para um **Paciente**. Registrar apenas "médico prescreve medicamento" sem saber para qual paciente perde informação essencial da regra de negócio.
 
@@ -259,9 +259,9 @@ erDiagram
 
     a) Que tipo de relacionamento (binário ou ternário) conecta Empresa, Projeto Ambiental e Auditor Certificador em Compensação? Justifique.
     b) Qual é a cardinalidade e a participação (total ou parcial) entre Empresas e Compensações? Toda empresa cadastrada precisa ter feito ao menos uma compensação?
-    c) O relacionamento de indicação entre empresas parceiras é um exemplo de qual caso especial visto nesta aula? Explique por que a FK que ele gera não pode se chamar simplesmente `empresa_id`.
+    c) O relacionamento de indicação entre empresas parceiras é um exemplo de qual caso especial visto neste tópico? Explique por que a FK que ele gera não pode se chamar simplesmente `empresa_id`.
 
-    🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 01](Topico_01_Gabarito.md#checkpoint-3) — tente resolver antes de conferir.
 
 ---
 
@@ -649,9 +649,9 @@ Todo conteúdo cadastrado é música ou filme, nunca os dois ao mesmo tempo — 
 
 ### 8.7 Passagem para o Modelo Lógico
 
-A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens. Nesta aula descrevemos as três apenas **conceitualmente**; a sintaxe SQL para de fato criar essas tabelas fica para a Aula 03 (DDL).
+A hierarquia de generalização/especialização não tem representação direta no modelo relacional — ela precisa ser mapeada para tabelas. Existem três estratégias, cada uma com vantagens e desvantagens. Neste tópico descrevemos as três apenas **conceitualmente**; a sintaxe SQL para de fato criar essas tabelas fica para o Tópico 03 (DDL).
 
-> 📐 **Duas convenções de nomenclatura que você vai ver o tempo todo a partir daqui:** toda **PK** (chave primária) segue o padrão `id_` + nome da tabela no singular (ex.: `id_produto`). Toda **FK** (chave estrangeira) segue o padrão inverso: nome da tabela referenciada no singular + `_id` (ex.: `produto_id`). Repare que a ordem das palavras se inverte entre PK e FK — não é acidente, é assim que se distingue visualmente "quem é dono da linha" de "quem está apontando para outra tabela". Essas regras serão detalhadas com nomes formais (Regra 5 e Regra 6) na Aula 03.
+> 📐 **Duas convenções de nomenclatura que você vai ver o tempo todo a partir daqui:** toda **PK** (chave primária) segue o padrão `id_` + nome da tabela no singular (ex.: `id_produto`). Toda **FK** (chave estrangeira) segue o padrão inverso: nome da tabela referenciada no singular + `_id` (ex.: `produto_id`). Repare que a ordem das palavras se inverte entre PK e FK — não é acidente, é assim que se distingue visualmente "quem é dono da linha" de "quem está apontando para outra tabela". Essas regras serão detalhadas com nomes formais (Regra 5 e Regra 6) no Tópico 03.
 
 **Estratégia 1 — Uma tabela por hierarquia inteira:** cria-se uma única tabela com todas as colunas da superclasse e de todas as subclasses, mais uma coluna discriminadora indicando o tipo de cada linha (ex.: uma coluna `tipo` com valores `fisico`/`digital`). Colunas que não se aplicam a uma subclasse ficam vazias para aquela linha. Simples de implementar, mas gera muitas colunas vazias e mistura dados de naturezas diferentes na mesma tabela.
 
@@ -688,17 +688,17 @@ produtos_fisicos (subclasse)
     a) Proponha a superclasse e as três subclasses, indicando os atributos comuns (na superclasse) e os exclusivos (em cada subclasse).
     b) Seguindo a Estratégia 2 (Seção 8.7), como ficariam as tabelas do modelo lógico — nomes, PKs e FKs — para a superclasse e para a subclasse `Robôs Terrestres`?
 
-    🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 01](Topico_01_Gabarito.md#checkpoint-4) — tente resolver antes de conferir.
 
 ---
 
-## 9. Exemplo Prático — Sistema de Streaming (prévia do T1)
+## 9. Exemplo Prático — Sistema de Streaming
 
-Como a **Atividade T1** desta disciplina envolve modelar um sistema de streaming integrado, vamos já começar a pensar nas entidades envolvidas. Tente identificar, a partir da descrição abaixo, quais seriam as entidades, seus atributos e relacionamentos — e onde caberia uma generalização ou especialização:
+Para treinar o raciocínio que você vai aplicar na **Atividade T1** (a modelagem do seu Projeto Integrador), vamos praticar com um sistema de streaming e começar a pensar nas entidades envolvidas. Tente identificar, a partir da descrição abaixo, quais seriam as entidades, seus atributos e relacionamentos — e onde caberia uma generalização ou especialização:
 
 > *"Uma plataforma de streaming oferece músicas e filmes para seus usuários. As músicas fazem parte de álbuns de artistas; os filmes têm diretores e elenco. Os usuários podem criar playlists que misturem músicas e filmes na ordem que quiserem."*
 
-Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclasse? Como o item de playlist referenciaria os dois tipos de conteúdo? Na **Aula 05** você desenvolverá o modelo completo desse sistema.
+Reflita: o que músicas e filmes têm em comum? Faz sentido criar uma superclasse? Como o item de playlist referenciaria os dois tipos de conteúdo? Esse mesmo raciocínio é o que você vai aplicar ao modelo do seu Projeto Integrador na **Atividade T1**.
 
 ---
 
@@ -803,7 +803,7 @@ A melhor forma de fixar esse método é aplicá-lo, passo a passo, a um document
 
 #### Exemplo guiado 1 — Ficha de Empréstimo da Biblioteca
 
-Voltando ao sistema de biblioteca que abriu esta aula, imagine a ficha de empréstimo abaixo, preenchida no balcão:
+Voltando ao sistema de biblioteca que abriu este tópico, imagine a ficha de empréstimo abaixo, preenchida no balcão:
 
 ```text
 BIBLIOTECA CENTRAL FATEC JAHU
@@ -921,7 +921,7 @@ erDiagram
     PRODUTOS ||--o{ ITENS_NOTA : "aparece em"
 ```
 
-> 🔑 **O mesmo produto pode aparecer em várias notas, com quantidades diferentes a cada venda.** Por isso `quantidade` e `valor_total_item` não pertencem à entidade `PRODUTO` (que é fixa), e sim à entidade associativa `ITEM_NOTA`, que representa o encontro entre uma nota e um produto. Este é exatamente o padrão que resolve todo relacionamento N:M com atributos próprios — você o reverá na Aula 02, ao normalizar o modelo. Repare de passagem que os nomes de chave já seguem a convenção da disciplina: PK no padrão `id_` + tabela no singular (`id_nota_fiscal`) e FK no padrão inverso, tabela referenciada no singular + `_id` (`nota_fiscal_id`, `produto_id`) — as regras formais de nomenclatura virão na Aula 03.
+> 🔑 **O mesmo produto pode aparecer em várias notas, com quantidades diferentes a cada venda.** Por isso `quantidade` e `valor_total_item` não pertencem à entidade `PRODUTO` (que é fixa), e sim à entidade associativa `ITEM_NOTA`, que representa o encontro entre uma nota e um produto. Este é exatamente o padrão que resolve todo relacionamento N:M com atributos próprios — você o reverá no Tópico 02, ao normalizar o modelo. Repare de passagem que os nomes de chave já seguem a convenção da disciplina: PK no padrão `id_` + tabela no singular (`id_nota_fiscal`) e FK no padrão inverso, tabela referenciada no singular + `_id` (`nota_fiscal_id`, `produto_id`) — as regras formais de nomenclatura virão no Tópico 03.
 
 > 💡 **Pratique em casa:** pegue qualquer outro documento real (um boleto, uma nota fiscal de serviço, um formulário de matrícula) e refaça os quatro passos, item por item. É o mesmo raciocínio sempre — só muda o domínio.
 
@@ -945,7 +945,7 @@ erDiagram
 
     Liste os elementos do comprovante, aplique as quatro perguntas a cada um e monte a tabela de conclusões (como nos dois exemplos guiados desta seção), indicando a qual entidade cada elemento pertence — incluindo se algum elemento pertence a uma entidade associativa. Ao final, desenhe o diagrama `erDiagram` correspondente.
 
-    🔑 Resolução no [Gabarito da Aula 01](Aula_01_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
+    🔑 Resolução no [Gabarito do Tópico 01](Topico_01_Gabarito.md#checkpoint-5) — tente resolver antes de conferir.
 
 ---
 
@@ -967,7 +967,7 @@ erDiagram
 
 ---
 
-## 📚 Referências desta Aula
+## 📚 Referências deste Tópico
 
 - ELMASRI, R.; NAVATHE, S. B. *Sistemas de Banco de Dados*. 7 ed. Cap. 3 — Modelagem de Dados usando o Modelo Entidade-Relacionamento; Cap. 4 — Modelo ER Estendido. São Paulo: Pearson, 2018.
 - SILBERSCHATZ, A.; KORTH, H. F.; SUNDARSHAN, S. *Sistema de banco de dados*. 6 ed. Cap. 6 — Projeto de Banco de Dados usando o Modelo ER. Rio de Janeiro: Elsevier, 2016.
@@ -1075,7 +1075,7 @@ Como a FK referencia a própria tabela FUNCIONARIOS, chamá-la de `funcionario_i
 
 ## 📝 Resumo
 
-Nesta aula revisamos a distinção entre dado, informação e conhecimento, situando a
+Neste tópico revisamos a distinção entre dado, informação e conhecimento, situando a
 modelagem de dados como a etapa que estrutura os dados para que virem informação
 confiável. Revisamos também os três elementos centrais do Modelo Entidade-Relacionamento —
 entidades, atributos e relacionamentos — e como cardinalidade e participação
@@ -1084,32 +1084,32 @@ auto-relacionamento e relacionamento ternário. Vimos a notação Crow's Foot, a
 nesta disciplina, um método prático de quatro perguntas para nunca mais confundir
 entidade com atributo, e o mecanismo de generalização/especialização para modelar
 hierarquias com herança, incluindo os sinais para reconhecer quando uma hierarquia se
-justifica. Também já demos uma prévia do sistema de streaming que será a
-base da Atividade T1. Na próxima aula, esse modelo conceitual vira modelo lógico
+justifica. Também já praticamos com um sistema de streaming, treino para a
+modelagem da Atividade T1 (Projeto Integrador). No próximo tópico, esse modelo conceitual vira modelo lógico
 relacional, através da Normalização.
 
 ---
 
-## 🏆 Conquista da Aula
+## 🏆 Conquista do Tópico
 
 !!! success "Selo desbloqueado: 🧭 Explorador(a) de Dados"
-    Você completou a Aula 01 e já domina a leitura e construção de diagramas MER. A
-    próxima parada da Trilha do(a) Modelador(a) de Dados é transformar esse modelo
+    Você completou o Tópico 01 e já domina a leitura e construção de diagramas MER. A
+    próxima parada da Trilha do(a) Arquiteto(a) de Dados é transformar esse modelo
     conceitual em um modelo lógico consistente, livre de redundâncias.
 
 ---
 
-## 🔑 Gabarito desta Aula
+## 🔑 Gabarito deste Tópico
 
-As respostas dos 5 checkpoints espalhados pela aula estão em um arquivo separado, para
-não estragar a tentativa de quem ainda não chegou até aqui: [Gabarito — Aula
-01](Aula_01_Gabarito.md).
+As respostas dos 5 checkpoints espalhados pelo tópico estão em um arquivo separado, para
+não estragar a tentativa de quem ainda não chegou até aqui: [Gabarito — Tópico
+01](Topico_01_Gabarito.md).
 
 ---
 
 ## 🔗 Navegação
 
-⬅️ Você está na primeira aula · ➡️ [Aula 02 — Normalização](./Aula_02_Normalizacao.md)
+⬅️ Você está no primeiro tópico · ➡️ [Tópico 02 — Normalização](./Topico_02_Normalizacao.md)
 
 ---
 
