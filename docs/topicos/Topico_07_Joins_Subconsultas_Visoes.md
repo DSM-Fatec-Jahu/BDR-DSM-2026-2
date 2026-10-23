@@ -716,7 +716,7 @@ chegou até aqui: [Gabarito — Tópico 07](Topico_07_Gabarito.md).
 
 ## 🔗 Navegação
 
-⬅️ [Tópico 06 — SQL DQL: Consultas e Agregação](./Topico_06_SQL_DQL_Agregacao.md) · ➡️ 🔒 Tópico 08 — em breve.
+⬅️ [Tópico 06 — SQL DQL: Consultas e Agregação](./Topico_06_SQL_DQL_Agregacao.md) · ➡️ [Tópico 08 — Integridade Referencial e Restrições](./Topico_08_Integridade_Restricoes.md)
 
 ---
 

@@ -8,8 +8,8 @@
 
 </div>
 
-!!! info "Conteúdo em construção progressiva"
-    Os tópicos deste semestre são publicados progressivamente, conforme a turma avança. A tabela abaixo mostra o planejamento completo — os itens marcados com 🔒 ainda não foram liberados.
+!!! success "Todos os 15 tópicos já estão disponíveis"
+    O Sumário de Tópicos abaixo traz o planejamento completo do semestre, com link para cada tópico. Siga a ordem da trilha: cada tópico se apoia no anterior.
 
 <div align="center" markdown>
 [:material-clipboard-text-clock: Ver Atividades e Avaliações](atividades/index.md){ .md-button .md-button--primary }
@@ -81,16 +81,16 @@ A nota final é calculada pela seguinte fórmula:
 | 03 | [SQL — DDL: Definição de Estruturas](topicos/Topico_03_SQL_DDL.md) | Comandos DDL (CREATE, ALTER, DROP); Tipos de dados; Restrições básicas (PK) | ✅ Disponível |
 | 04 | [SQL DML: Manipulação de Dados](topicos/Topico_04_SQL_DML.md) | Comandos DML (INSERT, UPDATE, DELETE); Controle de transação básico | ✅ Disponível |
 | 05 | [SQL: Consultas Básicas](topicos/Topico_05_SQL_Consultas_Basicas.md) | SELECT; WHERE; Operadores lógicos e relacionais; ORDER BY | ✅ Disponível |
-| 06 | SQL — DQL: Consultas e Agregação | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | 🔒 Em breve |
-| 07 | Junções (JOINs), Subconsultas e Visões | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | 🔒 Em breve |
-| 08 | Integridade Referencial e Restrições | FOREIGN KEY com ON DELETE/UPDATE CASCADE e RESTRICT; CHECK; Índices básicos | 🔒 Em breve |
-| 09 | Stored Procedures | Lógica procedural; PROCEDURE com parâmetros IN/OUT; Tratamento de erros | 🔒 Em breve |
-| 10 | Triggers (Gatilhos) | Gatilhos BEFORE/AFTER (ROW e STATEMENT); Auditoria de dados; Boas práticas | 🔒 Em breve |
-| 11 | Functions (UDF) e Transações | UDFs escalares e de tabela; diferença entre FUNCTION e PROCEDURE; ACID; BEGIN, COMMIT, ROLLBACK; Controle de concorrência | 🔒 Em breve |
-| 12 | Backup, Restauração e Segurança | Backup completo, incremental e diferencial; DUMP e restauração; CREATE USER, GRANT, REVOKE | 🔒 Em breve |
-| 13 | Otimização de Consultas e Índices | Estruturas B-Tree e Hash; EXPLAIN / EXPLAIN ANALYZE; Otimização de JOINs e subconsultas | 🔒 Em breve |
-| 14 | Revisão Geral | Consolidação de todos os tópicos; Exercícios integradores | 🔒 Em breve |
-| 15 | Novas Tecnologias em BD e Encerramento | NewSQL, DBaaS, Big Data, introdução a BD Não Relacional; Fechamento e portfólio | 🔒 Em breve |
+| 06 | [SQL — DQL: Consultas e Agregação](topicos/Topico_06_SQL_DQL_Agregacao.md) | Filtros avançados (LIKE, BETWEEN, IN); Funções de agregação (COUNT, SUM, AVG, MIN, MAX); GROUP BY e HAVING | ✅ Disponível |
+| 07 | [Junções (JOINs), Subconsultas e Visões](topicos/Topico_07_Joins_Subconsultas_Visoes.md) | INNER JOIN, LEFT JOIN, RIGHT JOIN; Subqueries; Criação e uso de VIEW | ✅ Disponível |
+| 08 | [Integridade Referencial e Restrições](topicos/Topico_08_Integridade_Restricoes.md) | FOREIGN KEY com ON DELETE/UPDATE CASCADE e RESTRICT; CHECK; Índices básicos | ✅ Disponível |
+| 09 | [Stored Procedures](topicos/Topico_09_Stored_Procedures.md) | Lógica procedural; PROCEDURE com parâmetros IN/OUT; Tratamento de erros | ✅ Disponível |
+| 10 | [Triggers (Gatilhos)](topicos/Topico_10_Triggers.md) | Gatilhos BEFORE/AFTER (ROW e STATEMENT); Auditoria de dados; Boas práticas | ✅ Disponível |
+| 11 | [Functions (UDF) e Transações](topicos/Topico_11_Functions_Transacoes.md) | UDFs escalares e de tabela; diferença entre FUNCTION e PROCEDURE; ACID; BEGIN, COMMIT, ROLLBACK; Controle de concorrência | ✅ Disponível |
+| 12 | [Backup, Restauração e Segurança](topicos/Topico_12_Backup_Seguranca.md) | Backup completo, incremental e diferencial; DUMP e restauração; CREATE USER, GRANT, REVOKE | ✅ Disponível |
+| 13 | [Otimização de Consultas e Índices](topicos/Topico_13_Otimizacao_Indices.md) | Estruturas B-Tree e Hash; EXPLAIN / EXPLAIN ANALYZE; Otimização de JOINs e subconsultas | ✅ Disponível |
+| 14 | [Revisão Geral](topicos/Topico_14_Revisao_Geral.md) | Consolidação de todos os tópicos; Exercícios integradores | ✅ Disponível |
+| 15 | [Novas Tecnologias em BD e Encerramento](topicos/Topico_15_Novas_Tecnologias_Encerramento.md) | NewSQL, DBaaS, Big Data, introdução a BD Não Relacional; Fechamento e portfólio | ✅ Disponível |
 
 ---
 

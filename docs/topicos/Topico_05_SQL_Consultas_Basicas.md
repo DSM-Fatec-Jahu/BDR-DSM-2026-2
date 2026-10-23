@@ -410,7 +410,7 @@ chegou até aqui: [Gabarito — Tópico 05](Topico_05_Gabarito.md).
 
 ## 🔗 Navegação
 
-⬅️ [Tópico 04 — SQL DML: Manipulação de Dados](./Topico_04_SQL_DML.md) · ➡️ 🔒 Tópico 06 — em breve.
+⬅️ [Tópico 04 — SQL DML: Manipulação de Dados](./Topico_04_SQL_DML.md) · ➡️ [Tópico 06 — SQL DQL: Consultas e Agregação](./Topico_06_SQL_DQL_Agregacao.md)
 
 ---
 

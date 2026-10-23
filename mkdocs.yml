@@ -86,6 +86,16 @@ nav:
       - topicos/Topico_03_SQL_DDL.md
       - topicos/Topico_04_SQL_DML.md
       - topicos/Topico_05_SQL_Consultas_Basicas.md
+      - topicos/Topico_06_SQL_DQL_Agregacao.md
+      - topicos/Topico_07_Joins_Subconsultas_Visoes.md
+      - topicos/Topico_08_Integridade_Restricoes.md
+      - topicos/Topico_09_Stored_Procedures.md
+      - topicos/Topico_10_Triggers.md
+      - topicos/Topico_11_Functions_Transacoes.md
+      - topicos/Topico_12_Backup_Seguranca.md
+      - topicos/Topico_13_Otimizacao_Indices.md
+      - topicos/Topico_14_Revisao_Geral.md
+      - topicos/Topico_15_Novas_Tecnologias_Encerramento.md
   - Atividades e Avaliações:
       - atividades/index.md
       - atividades/Pratica_Modelagem_dbdiagram.md

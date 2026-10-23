@@ -878,7 +878,7 @@ chegou até aqui: [Gabarito — Tópico 06](Topico_06_Gabarito.md).
 
 ## 🔗 Navegação
 
-⬅️ [Tópico 05 — SQL: Consultas Básicas](./Topico_05_SQL_Consultas_Basicas.md) · ➡️ 🔒 Tópico 07 — em breve.
+⬅️ [Tópico 05 — SQL: Consultas Básicas](./Topico_05_SQL_Consultas_Basicas.md) · ➡️ [Tópico 07 — JOINs, Subconsultas e Visões](./Topico_07_Joins_Subconsultas_Visoes.md)
 
 ---
 
