@@ -39,6 +39,7 @@ theme:
 markdown_extensions:
   - admonition
   - md_in_html
+  - sane_lists
   - pymdownx.details
   - pymdownx.superfences:
       custom_fences:
