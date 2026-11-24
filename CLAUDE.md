@@ -106,7 +106,7 @@ deve nomear assim.
 - Deploy: `.github/workflows/deploy-docs.yml`, roda `mkdocs build` e publica em GitHub Pages a cada push em `main`
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+# Sem venv: os pacotes ficam instalados globalmente. NÃO crie nem ative venv.
 pip install -r requirements.txt
 mkdocs build          # build de produção — rode SEMPRE antes de considerar um tópico pronto
 mkdocs serve           # preview local em http://127.0.0.1:8000
