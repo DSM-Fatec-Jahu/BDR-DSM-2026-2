@@ -1,2 +1,2 @@
-mkdocs-material
-mkdocs-quiz
+mkdocs-material>=9.8
+mkdocs-quiz>=1.7
