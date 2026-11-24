@@ -1,24 +1,3 @@
-<!--
-  AVALIAÇÃO P2 — sakila_pt (fora do menu lateral, de propósito)
-
-  Esta página NÃO está no `nav` do mkdocs.yml nem linkada em docs/atividades/index.md.
-  Só chega a ela quem tiver o endereço:
-
-    Página da avaliação:
-      https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/atividades/Avaliacao_P2_Sakila/
-
-    Download direto do modelo .sql:
-      https://dsm-fatec-jahu.github.io/BDR-DSM-2026-2/atividades/Avaliacao_P2_Sakila.sql
-
-    Arquivos no repositório:
-      docs/atividades/Avaliacao_P2_Sakila.md
-      docs/atividades/Avaliacao_P2_Sakila.sql
-      sql/Avaliacao_P2_Gabarito_Sakila.sql   (gabarito — não versionado)
-
-  Para publicar no menu: adicionar `atividades/Avaliacao_P2_Sakila.md` ao nav e
-  linkar a linha P2 em docs/atividades/index.md.
--->
-
 # Avaliação P2 — Inserções, Consultas e Exclusões no `sakila_pt` (Tópicos 04 a 07)
 
 **Disciplina:** Banco de Dados — Relacional (IBD015)
@@ -55,7 +34,7 @@
 |---|---|---|
 | **Atividade 1** — Contratação de funcionário | O fluxo completo de cadastro e atualização | 1,5 pt |
 | **Atividade 2** — Consultas com `SELECT` | **1** consulta da Parte 1 + **1** consulta da Parte 2, à escolha da dupla (0,75 pt cada) | 1,5 pt |
-| **Atividade 3** — Exclusão segura | A exclusão do funcionário criado na Atividade 1 + **1** das 2 exclusões à escolha (0,5 pt cada) | 1,0 pt |
+| **Atividade 3** — Exclusão segura | **2** exclusões (0,5 pt cada): a do funcionário criado na Atividade 1 + **1** das outras 2 à escolha — ou, se a Atividade 1 não foi concluída, as **outras 2** exclusões | 1,0 pt |
 | | **Total** | **4,0 pts** |
 
 ---
@@ -187,8 +166,13 @@ total, 0,75 pt cada. Itens além dos 2 escolhidos não valem nota extra.
 
 ## Atividade 3 — Exclusão Segura de Registros (`DELETE`) · 1,0 pt
 
-A dupla faz **a exclusão 1 (obrigatória)** e **escolhe 1 entre as exclusões 2 e 3** —
-0,5 pt cada.
+A dupla faz **2 exclusões** — 0,5 pt cada. Quais exclusões fazer depende do resultado da
+Atividade 1:
+
+- **Se a dupla concluiu com sucesso a Atividade 1** (o funcionário foi cadastrado): faz
+  **obrigatoriamente a exclusão 1** e **escolhe 1 entre as exclusões 2 e 3**.
+- **Se a dupla não concluiu a Atividade 1** (não há funcionário cadastrado para excluir):
+  **não faz a exclusão 1** e faz **as exclusões 2 e 3**.
 
 **Orientações:** os ids **não são informados**. Para cada exclusão, a dupla deve:
 
@@ -202,8 +186,8 @@ A dupla faz **a exclusão 1 (obrigatória)** e **escolhe 1 entre as exclusões 2
 Todos os registros descritos abaixo não possuem dependências bloqueadoras
 (`ON DELETE RESTRICT`) no banco `sakila_pt`.
 
-1. **Tabela `funcionarios` (obrigatória):** exclua o funcionário cadastrado pela dupla na
-   Atividade 1.
+1. **Tabela `funcionarios` (obrigatória somente se a Atividade 1 foi concluída):** exclua o
+   funcionário cadastrado pela dupla na Atividade 1.
 2. **Tabela `idiomas`:** exclua o idioma `'Alemão'`, que não está vinculado a nenhum filme
    na tabela `filmes`.
 3. **Tabela `pagamentos`:** exclua um pagamento de valor `1.99` que não está vinculado a
